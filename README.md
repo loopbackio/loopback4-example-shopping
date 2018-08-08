@@ -2,7 +2,7 @@
 
 [![LoopBack](<https://github.com/strongloop/loopback-next/raw/master/docs/site/imgs/branding/Powered-by-LoopBack-Badge-(blue)-@2x.png>)](http://loopback.io/)
 
-This project aims to represent an online ecommerce platform APIs to validate /
+This project aims to represent an online E-Commerce platform APIs to validate /
 test the LoopBack 4 framework readiness for GA. See
 https://github.com/strongloop/loopback-next/issues/1476 for more information.
 
