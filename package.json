@@ -18,6 +18,8 @@
     "build:dist10": "lb-tsc es2018",
     "build:watch": "lb-tsc --watch",
     "clean": "lb-clean dist*",
+    "commit": "git-cz",
+    "commitmsg": "commitlint -E GIT_PARAMS",
     "lint": "npm run prettier:check && npm run tslint",
     "lint:fix": "npm run prettier:fix && npm run tslint:fix",
     "prettier:cli": "lb-prettier \"**/*.ts\" \"**/*.js\"",
@@ -55,12 +57,22 @@
     "@loopback/openapi-v3": "^0.12.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^7.0.0",
+    "@commitlint/config-conventional": "^7.0.1",
     "@loopback/build": "^0.6.13",
-    "@types/node": "^10.1.1",
     "@loopback/testlab": "^0.11.2",
     "@types/mocha": "^5.0.0",
+    "@types/node": "^10.1.1",
+    "commitizen": "^2.10.1",
+    "cz-conventional-changelog": "^2.1.0",
+    "husky": "^0.14.3",
     "mocha": "^5.1.1",
     "source-map-support": "^0.5.5"
   },
-  "copyright.owner": "IBM Corp."
+  "copyright.owner": "IBM Corp.",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
