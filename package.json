@@ -36,8 +36,7 @@
   "repository": {
     "type": "git"
   },
-  "author": "",
-  "license": "",
+  "license": "MIT",
   "files": [
     "README.md",
     "index.js",
@@ -62,5 +61,6 @@
     "@types/mocha": "^5.0.0",
     "mocha": "^5.1.1",
     "source-map-support": "^0.5.5"
-  }
+  },
+  "copyright.owner": "IBM Corp."
 }
