@@ -1,0 +1,28 @@
+sudo: false
+language: node_js
+node_js:
+  - '8'
+  - '10'
+
+os:
+  - linux
+  - osx
+
+script: npm run test:ci
+env: TASK=test
+install: npm install --ignore-scripts
+
+matrix:
+  include:
+    - node_js: '8'
+      os: linux
+      env: TASK=code-lint
+      script: npm run lint
+    - node_js: '8'
+      os: linux
+      env: TASK=commit-lint
+      script: commitlint-travis
+
+branches:
+  only:
+    - master
