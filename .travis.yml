@@ -12,7 +12,9 @@ before_script: ./bin/travis.sh
 script: npm run test:ci
 env: TASK=test
 install: npm install
-services: mongodb
+services:
+  - mongodb
+  - redis-server
 
 matrix:
   include:
