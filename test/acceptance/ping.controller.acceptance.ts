@@ -5,7 +5,7 @@
 
 import {createClientForHandler, supertest} from '@loopback/testlab';
 import {RestServer} from '@loopback/rest';
-import {ShoppingApplication} from '../';
+import {ShoppingApplication} from '../..';
 
 describe('PingController', () => {
   let app: ShoppingApplication;
