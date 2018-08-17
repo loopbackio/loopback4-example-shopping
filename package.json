@@ -20,6 +20,7 @@
     "clean": "lb-clean dist*",
     "commit": "git-cz",
     "commitmsg": "commitlint -E GIT_PARAMS",
+    "docker": "./bin/setup.sh",
     "lint": "npm run prettier:check && npm run tslint",
     "lint:fix": "npm run prettier:fix && npm run tslint:fix",
     "prettier:cli": "lb-prettier \"**/*.ts\" \"**/*.js\"",
@@ -27,7 +28,7 @@
     "prettier:fix": "npm run prettier:cli -- --write",
     "tslint": "lb-tslint",
     "tslint:fix": "npm run tslint -- --fix",
-    "pretest": "npm run clean && npm run build",
+    "pretest": "npm run clean && npm run build && npm run docker",
     "pretest:ci": "npm run build",
     "test": "lb-mocha --allow-console-logs \"DIST/test\"",
     "test:ci": "lb-mocha --allow-console-logs \"DIST/test\"",
@@ -50,13 +51,16 @@
     "src"
   ],
   "dependencies": {
-    "@loopback/context": "^0.12.2",
     "@loopback/boot": "^0.12.2",
+    "@loopback/context": "^0.12.2",
     "@loopback/core": "^0.11.2",
     "@loopback/dist-util": "^0.3.5",
+    "@loopback/openapi-v3": "^0.12.2",
     "@loopback/repository": "^0.14.2",
     "@loopback/rest": "^0.19.2",
-    "@loopback/openapi-v3": "^0.12.2"
+    "bcryptjs": "^2.4.3",
+    "isemail": "^3.1.3",
+    "loopback-connector-mongodb": "^1.18.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.0.0",
@@ -64,6 +68,7 @@
     "@commitlint/travis-cli": "^7.0.0",
     "@loopback/build": "^0.6.13",
     "@loopback/testlab": "^0.11.2",
+    "@types/bcryptjs": "^2.4.1",
     "@types/mocha": "^5.0.0",
     "@types/node": "^10.1.1",
     "commitizen": "^2.10.1",

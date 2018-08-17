@@ -10,5 +10,8 @@
     "node_modules/**",
     "packages/*/node_modules/**",
     "**/*.d.ts"
-  ]
+  ],
+  "compilerOptions": {
+    "lib": ["es2018", "dom", "esnext.asynciterable"]
+  }
 }
