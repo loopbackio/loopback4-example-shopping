@@ -8,9 +8,11 @@ os:
   - linux
   - osx
 
+before_script: ./bin/travis.sh
 script: npm run test:ci
 env: TASK=test
-install: npm install --ignore-scripts
+install: npm install
+services: mongodb
 
 matrix:
   include:

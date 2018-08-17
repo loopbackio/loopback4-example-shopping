@@ -3,6 +3,9 @@ environment:
     - nodejs_version: '8'
     - nodejs_version: '10'
 
+services:
+  - mongodb
+
 install:
   - ps: Install-Product node $env:nodejs_version
   - node --version
