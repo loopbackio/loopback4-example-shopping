@@ -20,7 +20,7 @@
     "clean": "lb-clean dist*",
     "commit": "git-cz",
     "commitmsg": "commitlint -E GIT_PARAMS",
-    "docker": "./bin/setup.sh",
+    "docker": "./bin/start-dbs.sh",
     "lint": "npm run prettier:check && npm run tslint",
     "lint:fix": "npm run prettier:fix && npm run tslint:fix",
     "prettier:cli": "lb-prettier \"**/*.ts\" \"**/*.js\"",
