@@ -66,7 +66,7 @@ describe('UserController', () => {
       .expect(422);
 
     const errorText = JSON.parse(res.error.text);
-    expect(errorText.details[0].info.missingProperty).to.equal('email');
+    expect(errorText.error.details[0].info.missingProperty).to.equal('email');
   });
 
   it('throws error for POST /users with an invalid email', async () => {
@@ -80,7 +80,7 @@ describe('UserController', () => {
       })
       .expect(422);
 
-    expect(res.body.message).to.equal('invalid email');
+    expect(res.body.error.message).to.equal('invalid email');
   });
 
   it('throws error for POST /users with a missing password', async () => {
@@ -94,7 +94,9 @@ describe('UserController', () => {
       .expect(422);
 
     const errorText = JSON.parse(res.error.text);
-    expect(errorText.details[0].info.missingProperty).to.equal('password');
+    expect(errorText.error.details[0].info.missingProperty).to.equal(
+      'password',
+    );
   });
 
   it('throws error for POST /users with a string', async () => {
@@ -111,7 +113,7 @@ describe('UserController', () => {
     // since the REST API returns a string for the id property.
     newUser.id = newUser.id.toString();
 
-    await client.get(`/users/${newUser.id}`).expect(200, newUser);
+    await client.get(`/users/${newUser.id}`).expect(200, newUser.toJSON());
   });
 
   function givenAnApplication() {
