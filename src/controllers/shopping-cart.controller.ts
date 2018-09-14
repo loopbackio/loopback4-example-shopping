@@ -3,10 +3,18 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {put, get, del, param, requestBody, HttpErrors} from '@loopback/rest';
+import {
+  put,
+  get,
+  del,
+  param,
+  requestBody,
+  HttpErrors,
+  post,
+} from '@loopback/rest';
 import {repository} from '@loopback/repository';
 import {ShoppingCartRepository} from '../repositories';
-import {ShoppingCart} from '../models';
+import {ShoppingCart, ShoppingCartItem} from '../models';
 
 /**
  * Controller for shopping cart
@@ -58,5 +66,18 @@ export class ShoppingCartController {
   @del('/shoppingCarts/{userId}')
   async remove(@param.path.string('userId') userId: string) {
     await this.shoppingCartRepository.delete(userId);
+  }
+
+  /**
+   * Add an item to the shopping cart for a given user
+   * @param userId User id
+   * @param cart Shopping cart item to be added
+   */
+  @post('/shoppingCarts/{userId}/items')
+  async addItem(
+    @param.path.string('userId') userId: string,
+    @requestBody({description: 'shopping cart item'}) item: ShoppingCartItem,
+  ) {
+    await this.shoppingCartRepository.addItem(userId, item);
   }
 }

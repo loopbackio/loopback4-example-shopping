@@ -3,12 +3,12 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {createClientForHandler, supertest} from '@loopback/testlab';
+import {createClientForHandler, supertest, expect} from '@loopback/testlab';
 import {RestServer} from '@loopback/rest';
 import {ShoppingApplication} from '../..';
 import {ShoppingCartRepository} from '../../src/repositories';
 import {RedisDataSource} from '../../src/datasources';
-import {ShoppingCart} from '../../src/models';
+import {ShoppingCart, ShoppingCartItem} from '../../src/models';
 
 describe('ShoppingCartController', () => {
   let app: ShoppingApplication;
@@ -82,6 +82,25 @@ describe('ShoppingCartController', () => {
     await client.get(`/shoppingCarts/${cart.userId}`).expect(404);
   });
 
+  it('adds a shopping cart item', async () => {
+    const cart = givenShoppingCart();
+    const newItem = givenAnItem();
+    // Set the shopping cart
+    await client
+      .put(`/shoppingCarts/${cart.userId}`)
+      .send(cart)
+      .expect(200);
+    // Now we can see it
+    await client
+      .post(`/shoppingCarts/${cart.userId}/items`)
+      .send(newItem)
+      .expect(200);
+    const newCart = (await client
+      .get(`/shoppingCarts/${cart.userId}`)
+      .expect(200)).body;
+    expect(newCart.items).to.containEql(newItem.toJSON());
+  });
+
   function givenAnApplication() {
     app = new ShoppingApplication({
       rest: {
@@ -102,12 +121,20 @@ describe('ShoppingCartController', () => {
     return new ShoppingCart({
       userId: 'user-0001',
       items: [
-        {
+        new ShoppingCartItem({
           productId: 'iPhone XS Max',
           quantity: 1,
           price: 1200,
-        },
+        }),
       ],
+    });
+  }
+
+  function givenAnItem() {
+    return new ShoppingCartItem({
+      productId: 'iPhone XS',
+      quantity: 2,
+      price: 2000,
     });
   }
 });

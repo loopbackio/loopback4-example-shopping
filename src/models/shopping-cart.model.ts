@@ -9,11 +9,11 @@ import {Entity, model, property} from '@loopback/repository';
  * Item in a shopping cart
  */
 @model()
-export class ShoppingCartItem {
+export class ShoppingCartItem extends Entity {
   /**
    * Product id
    */
-  @property()
+  @property({id: true})
   productId: string;
   /**
    * Quantity
@@ -25,6 +25,10 @@ export class ShoppingCartItem {
    */
   @property()
   price?: number;
+
+  constructor(data?: Partial<ShoppingCartItem>) {
+    super(data);
+  }
 }
 
 @model()
