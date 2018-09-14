@@ -8,18 +8,22 @@ import {Entity, model, property} from '@loopback/repository';
 /**
  * Item in a shopping cart
  */
+@model()
 export class ShoppingCartItem {
   /**
    * Product id
    */
+  @property()
   productId: string;
   /**
    * Quantity
    */
+  @property()
   quantity: number;
   /**
    * Price
    */
+  @property()
   price?: number;
 }
 
