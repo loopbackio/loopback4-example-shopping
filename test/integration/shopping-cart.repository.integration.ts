@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {ShoppingCartRepository} from '../../src/repositories';
-import {ShoppingCart} from '../../src/models';
+import {ShoppingCart, ShoppingCartItem} from '../../src/models';
 import {expect} from '@loopback/testlab';
 import {RedisDataSource} from '../../src/datasources';
 
@@ -30,9 +30,9 @@ describe('ShoppingCart KeyValue Repository', () => {
 
   it('gets data by key', async () => {
     let result = await repo.get(cart1.userId);
-    expect(result).to.eql(cart1);
+    expect(result.toJSON()).to.eql(cart1.toJSON());
     result = await repo.get(cart2.userId);
-    expect(result).to.eql(cart2);
+    expect(result.toJSON()).to.eql(cart2.toJSON());
   });
 
   it('list keys', async () => {
@@ -49,17 +49,28 @@ describe('ShoppingCart KeyValue Repository', () => {
     const result = await repo.get(cart1.userId);
     expect(result).to.be.null();
   });
+
+  it('adds an item', async () => {
+    const item = new ShoppingCartItem({
+      productId: 'p3',
+      quantity: 10,
+      price: 200,
+    });
+    await repo.addItem(cart1.userId, item);
+    const result = await repo.get(cart1.userId);
+    expect(result.items).to.containEql(item.toJSON());
+  });
 });
 
 function givenShoppingCart1() {
   return new ShoppingCart({
     userId: 'u01',
     items: [
-      {
+      new ShoppingCartItem({
         productId: 'p1',
         quantity: 10,
         price: 100,
-      },
+      }),
     ],
   });
 }
@@ -68,16 +79,16 @@ function givenShoppingCart2() {
   return new ShoppingCart({
     userId: 'u02',
     items: [
-      {
+      new ShoppingCartItem({
         productId: 'p1',
         quantity: 1,
         price: 10,
-      },
-      {
+      }),
+      new ShoppingCartItem({
         productId: 'p2',
         quantity: 5,
         price: 20,
-      },
+      }),
     ],
   });
 }
