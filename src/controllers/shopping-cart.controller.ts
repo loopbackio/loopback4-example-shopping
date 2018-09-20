@@ -15,6 +15,8 @@ import {
 import {repository} from '@loopback/repository';
 import {ShoppingCartRepository} from '../repositories';
 import {ShoppingCart, ShoppingCartItem} from '../models';
+import * as debugFactory from 'debug';
+const debug = debugFactory('loopback:example:shopping');
 
 /**
  * Controller for shopping cart
@@ -35,6 +37,7 @@ export class ShoppingCartController {
     @param.path.string('userId') userId: string,
     @requestBody({description: 'shopping cart'}) cart: ShoppingCart,
   ) {
+    debug('Create shopping cart %s: %j', userId, cart);
     if (userId !== cart.userId) {
       throw new HttpErrors.BadRequest(
         `User id does not match: ${userId} !== ${cart.userId}`,
@@ -49,7 +52,9 @@ export class ShoppingCartController {
    */
   @get('/shoppingCarts/{userId}')
   async get(@param.path.string('userId') userId: string) {
+    debug('Get shopping cart %s', userId);
     const cart = await this.shoppingCartRepository.get(userId);
+    debug('Shopping cart %s: %j', userId, cart);
     if (cart == null) {
       throw new HttpErrors.NotFound(
         `Shopping cart not found for user: ${userId}`,
@@ -65,6 +70,7 @@ export class ShoppingCartController {
    */
   @del('/shoppingCarts/{userId}')
   async remove(@param.path.string('userId') userId: string) {
+    debug('Remove shopping cart %s', userId);
     await this.shoppingCartRepository.delete(userId);
   }
 
@@ -78,6 +84,7 @@ export class ShoppingCartController {
     @param.path.string('userId') userId: string,
     @requestBody({description: 'shopping cart item'}) item: ShoppingCartItem,
   ) {
-    await this.shoppingCartRepository.addItem(userId, item);
+    debug('Add item %j to shopping cart %s', item, userId);
+    return this.shoppingCartRepository.addItem(userId, item);
   }
 }

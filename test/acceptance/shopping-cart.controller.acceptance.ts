@@ -41,7 +41,7 @@ describe('ShoppingCartController', () => {
       .put(`/shoppingCarts/${cart.userId}`)
       .set('Content-Type', 'application/json')
       .send(cart)
-      .expect(200);
+      .expect(204);
   });
 
   it('throws error if userId does not match the cart', async () => {
@@ -59,7 +59,7 @@ describe('ShoppingCartController', () => {
     await client
       .put(`/shoppingCarts/${cart.userId}`)
       .send(cart)
-      .expect(200);
+      .expect(204);
     await client
       .get(`/shoppingCarts/${cart.userId}`)
       .expect(200, cart.toJSON());
@@ -71,13 +71,13 @@ describe('ShoppingCartController', () => {
     await client
       .put(`/shoppingCarts/${cart.userId}`)
       .send(cart)
-      .expect(200);
+      .expect(204);
     // Now we can see it
     await client
       .get(`/shoppingCarts/${cart.userId}`)
       .expect(200, cart.toJSON());
     // Delete the shopping cart
-    await client.del(`/shoppingCarts/${cart.userId}`).expect(200);
+    await client.del(`/shoppingCarts/${cart.userId}`).expect(204);
     // Now it's gone
     await client.get(`/shoppingCarts/${cart.userId}`).expect(404);
   });
@@ -89,7 +89,7 @@ describe('ShoppingCartController', () => {
     await client
       .put(`/shoppingCarts/${cart.userId}`)
       .send(cart)
-      .expect(200);
+      .expect(204);
     // Now we can see it
     await client
       .post(`/shoppingCarts/${cart.userId}/items`)
@@ -117,24 +117,23 @@ describe('ShoppingCartController', () => {
     await cartRepo.deleteAll();
   }
 
+  function givenAnItem(item?: Partial<ShoppingCartItem>) {
+    return new ShoppingCartItem(
+      Object.assign(
+        {
+          productId: 'iPhone XS',
+          quantity: 2,
+          price: 2000,
+        },
+        item,
+      ),
+    );
+  }
+
   function givenShoppingCart() {
     return new ShoppingCart({
       userId: 'user-0001',
-      items: [
-        new ShoppingCartItem({
-          productId: 'iPhone XS Max',
-          quantity: 1,
-          price: 1200,
-        }),
-      ],
-    });
-  }
-
-  function givenAnItem() {
-    return new ShoppingCartItem({
-      productId: 'iPhone XS',
-      quantity: 2,
-      price: 2000,
+      items: [givenAnItem()],
     });
   }
 });
