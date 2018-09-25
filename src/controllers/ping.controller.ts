@@ -3,11 +3,14 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Request, RestBindings} from '@loopback/rest';
-import {get} from '@loopback/openapi-v3';
+import {Request, RestBindings, get} from '@loopback/rest';
 import {inject} from '@loopback/context';
+import {ResponseObject} from '@loopback/openapi-v3-types';
 
-const PING_RESPONSE = {
+/**
+ * OpenAPI response for ping()
+ */
+const PING_RESPONSE: ResponseObject = {
   description: 'Ping Response',
   content: {
     'application/json': {
@@ -43,6 +46,7 @@ export class PingController {
     },
   })
   ping(): object {
+    // Reply with a greeting, the current time, the url, and request headers
     return {
       greeting: 'Hello from LoopBack',
       date: new Date(),

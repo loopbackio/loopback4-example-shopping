@@ -57,6 +57,7 @@
     "@loopback/core": "^0.11.11",
     "@loopback/dist-util": "^0.3.7",
     "@loopback/openapi-v3": "^0.14.4",
+    "@loopback/openapi-v3-types": "^0.9.3",
     "@loopback/repository": "^0.17.1",
     "@loopback/rest": "^0.24.0",
     "bcryptjs": "^2.4.3",
