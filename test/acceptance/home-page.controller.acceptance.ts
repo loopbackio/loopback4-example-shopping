@@ -3,14 +3,18 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {createRestAppClient, Client, expect} from '@loopback/testlab';
+import {createClientForHandler, Client, expect} from '@loopback/testlab';
 import {ShoppingApplication} from '../..';
+import {RestServer} from '@loopback/rest';
 
 describe('HomePageController', () => {
   let app: ShoppingApplication;
+  let server: RestServer;
   let client: Client;
 
   before(givenAnApplication);
+
+  before(givenARestServer);
 
   before(async () => {
     await app.boot();
@@ -18,7 +22,7 @@ describe('HomePageController', () => {
   });
 
   before(() => {
-    client = createRestAppClient(app);
+    client = createClientForHandler(server.requestHandler);
   });
 
   after(async () => {
@@ -39,5 +43,9 @@ describe('HomePageController', () => {
         port: 0,
       },
     });
+  }
+
+  async function givenARestServer() {
+    server = await app.getServer(RestServer);
   }
 });

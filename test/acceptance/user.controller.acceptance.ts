@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {createClientForHandler, supertest, expect} from '@loopback/testlab';
+import {createClientForHandler, Client, expect} from '@loopback/testlab';
 import {RestServer} from '@loopback/rest';
 import {ShoppingApplication} from '../..';
 import {UserRepository} from '../../src/repositories';
@@ -12,7 +12,7 @@ import {UserDataSource} from '../../src/datasources';
 describe('UserController', () => {
   let app: ShoppingApplication;
   let server: RestServer;
-  let client: supertest.SuperTest<supertest.Test>;
+  let client: Client;
   const userRepo = new UserRepository(new UserDataSource());
 
   const user = {

@@ -3,14 +3,14 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {createClientForHandler, supertest, expect} from '@loopback/testlab';
+import {createClientForHandler, Client, expect} from '@loopback/testlab';
 import {RestServer} from '@loopback/rest';
 import {ShoppingApplication} from '../..';
 
 describe('PingController', () => {
   let app: ShoppingApplication;
   let server: RestServer;
-  let client: supertest.SuperTest<supertest.Test>;
+  let client: Client;
 
   before(givenAnApplication);
 
