@@ -5,13 +5,13 @@
 
 import {inject} from '@loopback/core';
 import {juggler, AnyObject} from '@loopback/repository';
-const config = require('./user.datasource.json');
+const config = require('./mongo.datasource.json');
 
-export class UserDataSource extends juggler.DataSource {
-  static dataSourceName = 'user';
+export class MongoDataSource extends juggler.DataSource {
+  static dataSourceName = 'mongo';
 
   constructor(
-    @inject('datasources.config.user', {optional: true})
+    @inject('datasources.config.mongo', {optional: true})
     dsConfig: AnyObject = config,
   ) {
     super(dsConfig);

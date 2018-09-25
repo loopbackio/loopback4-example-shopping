@@ -46,10 +46,7 @@ export class ShoppingCart extends Entity {
   /**
    * Items in the shopping cart
    */
-  @property({
-    type: 'array',
-    itemType: ShoppingCartItem,
-  })
+  @property.array(ShoppingCartItem)
   items?: ShoppingCartItem[];
 
   constructor(data?: Partial<ShoppingCart>) {

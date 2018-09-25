@@ -5,3 +5,4 @@
 
 export * from './user.model';
 export * from './shopping-cart.model';
+export * from './order.model';
