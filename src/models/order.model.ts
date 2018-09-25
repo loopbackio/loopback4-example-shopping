@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {Entity, model, property} from '@loopback/repository';
-import {ShoppingCartItem} from './shopping-cart.model';
+import {ShoppingCartItem} from './shopping-cart-item.model';
 
 @model()
 export class Order extends Entity {
