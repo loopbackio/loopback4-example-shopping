@@ -84,7 +84,7 @@ describe('ShoppingCartController', () => {
     await client
       .post(`/shoppingCarts/${cart.userId}/items`)
       .send(newItem)
-      .expect(204);
+      .expect(200);
     const newCart = (await client
       .get(`/shoppingCarts/${cart.userId}`)
       .expect(200)).body;
