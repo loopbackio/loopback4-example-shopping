@@ -1,14 +1,13 @@
 import {ShoppingApplication} from '../..';
 import {
-  createClientForHandler,
+  createRestAppClient,
   givenHttpServerConfig,
-  supertest,
+  Client,
 } from '@loopback/testlab';
-import {RestServer} from '@loopback/rest';
 
 export interface setupApp {
   app: ShoppingApplication;
-  client: supertest.SuperTest<supertest.Test>;
+  client: Client;
 }
 
 export async function setupApplication(): Promise<setupApp> {
@@ -19,8 +18,7 @@ export async function setupApplication(): Promise<setupApp> {
   await app.boot();
   await app.start();
 
-  const server = await app.getServer(RestServer);
-  const client = createClientForHandler(server.requestHandler);
+  const client = createRestAppClient(app);
 
   return {app, client};
 }
