@@ -4,7 +4,6 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {Client, expect} from '@loopback/testlab';
-import {RestServer} from '@loopback/rest';
 import {ShoppingApplication} from '../..';
 import {ShoppingCartRepository} from '../../src/repositories';
 import {RedisDataSource} from '../../src/datasources';
