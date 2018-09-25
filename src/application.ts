@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {ApplicationConfig} from '@loopback/core';
+import {ApplicationConfig, BindingKey} from '@loopback/core';
 import {RestApplication} from '@loopback/rest';
 import {MySequence} from './sequence';
 
@@ -20,11 +20,26 @@ import {
 } from '@loopback/repository';
 /* tslint:enable:no-unused-variable */
 
+/**
+ * Information from package.json
+ */
+export interface PackageInfo {
+  name: string;
+  version: string;
+  description: string;
+}
+export const PackageKey = BindingKey.create<PackageInfo>('application.package');
+
+const pkg: PackageInfo = require('../../package.json');
+
 export class ShoppingApplication extends BootMixin(
   RepositoryMixin(RestApplication),
 ) {
   constructor(options?: ApplicationConfig) {
     super(options);
+
+    // Bind package.json to the application context
+    this.bind(PackageKey).to(pkg);
 
     // Set up the custom sequence
     this.sequence(MySequence);

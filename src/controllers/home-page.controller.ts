@@ -9,19 +9,15 @@ import * as path from 'path';
 import {template, TemplateExecutor} from 'lodash';
 import {inject} from '@loopback/context';
 import {RestBindings, Response} from '@loopback/rest';
-
-const pkg = require('../../../package.json');
+import {PackageInfo, PackageKey} from '../application';
 
 export class HomePageController {
-  name: string;
-  version: string;
-  description: string;
   render: TemplateExecutor;
 
-  constructor(@inject(RestBindings.Http.RESPONSE) private res: Response) {
-    this.name = pkg.name;
-    this.version = pkg.version;
-    this.description = pkg.description || pkg.name;
+  constructor(
+    @inject(PackageKey) private pkg: PackageInfo,
+    @inject(RestBindings.Http.RESPONSE) private response: Response,
+  ) {
     const html = fs.readFileSync(
       path.join(__dirname, '../../../public/index.html.template'),
       'utf-8',
@@ -38,8 +34,8 @@ export class HomePageController {
     },
   })
   homePage() {
-    const homePage = this.render(this);
-    this.res
+    const homePage = this.render(this.pkg);
+    this.response
       .status(200)
       .contentType('html')
       .send(homePage);
