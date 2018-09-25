@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {createClientForHandler, supertest, expect} from '@loopback/testlab';
+import {createClientForHandler, Client, expect} from '@loopback/testlab';
 import {RestServer} from '@loopback/rest';
 import {ShoppingApplication} from '../..';
 import {ShoppingCartRepository} from '../../src/repositories';
@@ -13,7 +13,7 @@ import {ShoppingCart, ShoppingCartItem} from '../../src/models';
 describe('ShoppingCartController', () => {
   let app: ShoppingApplication;
   let server: RestServer;
-  let client: supertest.SuperTest<supertest.Test>;
+  let client: Client;
   const cartRepo = new ShoppingCartRepository(new RedisDataSource());
 
   before(givenAnApplication);
