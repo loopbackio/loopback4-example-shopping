@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {DefaultKeyValueRepository} from '@loopback/repository';
-import {ShoppingCart, ShoppingCartItem} from '../models/shopping-cart.model';
+import {ShoppingCart, ShoppingCartItem} from '../models';
 import {RedisDataSource} from '../datasources/redis.datasource';
 import {inject} from '@loopback/context';
 import {promisify} from 'util';

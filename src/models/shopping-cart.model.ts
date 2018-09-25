@@ -4,32 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {Entity, model, property} from '@loopback/repository';
-
-/**
- * Item in a shopping cart
- */
-@model()
-export class ShoppingCartItem extends Entity {
-  /**
-   * Product id
-   */
-  @property({id: true})
-  productId: string;
-  /**
-   * Quantity
-   */
-  @property()
-  quantity: number;
-  /**
-   * Price
-   */
-  @property()
-  price?: number;
-
-  constructor(data?: Partial<ShoppingCartItem>) {
-    super(data);
-  }
-}
+import {ShoppingCartItem} from './shopping-cart-item.model';
 
 @model()
 export class ShoppingCart extends Entity {
