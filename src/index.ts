@@ -6,7 +6,7 @@
 import {ShoppingApplication} from './application';
 import {ApplicationConfig} from '@loopback/core';
 
-export {ShoppingApplication};
+export {ShoppingApplication, PackageInfo, PackageKey} from './application';
 
 export async function main(options?: ApplicationConfig) {
   const app = new ShoppingApplication(options);
