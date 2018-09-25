@@ -3,17 +3,17 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {createClientForHandler, Client, expect} from '@loopback/testlab';
-import {RestServer} from '@loopback/rest';
+import {Client, expect} from '@loopback/testlab';
 import {ShoppingApplication} from '../..';
-import {UserRepository} from '../../src/repositories';
-import {UserDataSource} from '../../src/datasources';
+import {UserRepository, OrderRepository} from '../../src/repositories';
+import {MongoDataSource} from '../../src/datasources';
+import {setupApplication} from './helper';
 
 describe('UserController', () => {
   let app: ShoppingApplication;
-  let server: RestServer;
   let client: Client;
-  const userRepo = new UserRepository(new UserDataSource());
+  const orderRepo = new OrderRepository(new MongoDataSource());
+  const userRepo = new UserRepository(new MongoDataSource(), orderRepo);
 
   const user = {
     email: 'test@loopback.io',
@@ -22,21 +22,11 @@ describe('UserController', () => {
     surname: 'User',
   };
 
-  before(givenAnApplication);
-
-  before(givenARestServer);
-
-  before(async () => {
-    await app.boot();
-    await app.start();
-  });
-
-  before(() => {
-    client = createClientForHandler(server.requestHandler);
+  before('setupApplication', async () => {
+    ({app, client} = await setupApplication());
   });
 
   beforeEach(clearDatabase);
-
   after(async () => {
     await app.stop();
   });
@@ -109,24 +99,13 @@ describe('UserController', () => {
   it('returns a user with given id when GET /user/{id} is invoked', async () => {
     const newUser = await userRepo.create(user);
     delete newUser.password;
+    delete newUser.orders;
     // MongoDB returns an id object we need to convert to string
     // since the REST API returns a string for the id property.
     newUser.id = newUser.id.toString();
 
     await client.get(`/users/${newUser.id}`).expect(200, newUser.toJSON());
   });
-
-  function givenAnApplication() {
-    app = new ShoppingApplication({
-      rest: {
-        port: 0,
-      },
-    });
-  }
-
-  async function givenARestServer() {
-    server = await app.getServer(RestServer);
-  }
 
   async function clearDatabase() {
     await userRepo.deleteAll();

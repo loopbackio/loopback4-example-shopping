@@ -3,34 +3,24 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {createClientForHandler, Client, expect} from '@loopback/testlab';
+import {Client, expect} from '@loopback/testlab';
 import {RestServer} from '@loopback/rest';
 import {ShoppingApplication} from '../..';
 import {ShoppingCartRepository} from '../../src/repositories';
 import {RedisDataSource} from '../../src/datasources';
 import {ShoppingCart, ShoppingCartItem} from '../../src/models';
+import {setupApplication} from './helper';
 
 describe('ShoppingCartController', () => {
   let app: ShoppingApplication;
-  let server: RestServer;
   let client: Client;
   const cartRepo = new ShoppingCartRepository(new RedisDataSource());
 
-  before(givenAnApplication);
-
-  before(givenARestServer);
-
-  before(async () => {
-    await app.boot();
-    await app.start();
-  });
-
-  before(() => {
-    client = createClientForHandler(server.requestHandler);
+  before('setupApplication', async () => {
+    ({app, client} = await setupApplication());
   });
 
   beforeEach(clearDatabase);
-
   after(async () => {
     await app.stop();
   });
@@ -94,24 +84,12 @@ describe('ShoppingCartController', () => {
     await client
       .post(`/shoppingCarts/${cart.userId}/items`)
       .send(newItem)
-      .expect(200);
+      .expect(204);
     const newCart = (await client
       .get(`/shoppingCarts/${cart.userId}`)
       .expect(200)).body;
     expect(newCart.items).to.containEql(newItem.toJSON());
   });
-
-  function givenAnApplication() {
-    app = new ShoppingApplication({
-      rest: {
-        port: 0,
-      },
-    });
-  }
-
-  async function givenARestServer() {
-    server = await app.getServer(RestServer);
-  }
 
   async function clearDatabase() {
     await cartRepo.deleteAll();
