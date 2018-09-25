@@ -5,12 +5,12 @@ import {
   Client,
 } from '@loopback/testlab';
 
-export interface setupApp {
+export interface AppWithClient {
   app: ShoppingApplication;
   client: Client;
 }
 
-export async function setupApplication(): Promise<setupApp> {
+export async function setupApplication(): Promise<AppWithClient> {
   const app = new ShoppingApplication({
     rest: givenHttpServerConfig(),
   });
