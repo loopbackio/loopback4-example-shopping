@@ -15,7 +15,7 @@ export function createRecommendationServer(port: number = 3001) {
 
   return app.listen(port, () => {
     console.log(
-      'Mock Product Recommender powered by Express started on port 3001',
+      `Mock Product Recommender powered by Express started on port ${port}`,
     );
   });
 }
