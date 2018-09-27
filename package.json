@@ -36,7 +36,9 @@
     "posttest": "npm run lint",
     "test:dev": "lb-mocha --allow-console-logs DIST/test/**/*.js && npm run posttest",
     "prestart": "npm run build",
-    "start": "node .",
+    "start": "concurrently --kill-others \"npm run start:app\" \"npm run start:recommender\"",
+    "start:app": "node .",
+    "start:recommender": "node recommender",
     "prepublishOnly": "npm run test"
   },
   "repository": {
@@ -59,12 +61,15 @@
     "@loopback/openapi-v3": "^0.15.0",
     "@loopback/repository": "^0.18.0",
     "@loopback/rest": "^0.25.0",
+    "@loopback/service-proxy": "^0.8.6",
     "bcryptjs": "^2.4.3",
     "debug": "^4.0.1",
+    "express": "^4.16.3",
     "isemail": "^3.1.3",
     "lodash": "^4.17.11",
     "loopback-connector-kv-redis": "^3.0.0",
-    "loopback-connector-mongodb": "^3.8.0"
+    "loopback-connector-mongodb": "^3.8.0",
+    "loopback-connector-rest": "^3.3.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.1.2",
@@ -74,10 +79,12 @@
     "@loopback/testlab": "^0.14.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/debug": "^0.0.30",
+    "@types/express": "^4.16.0",
     "@types/lodash": "^4.14.116",
     "@types/mocha": "^5.0.0",
     "@types/node": "^10.11.0",
     "commitizen": "^2.10.1",
+    "concurrently": "^4.0.1",
     "cz-conventional-changelog": "^2.1.0",
     "husky": "^0.14.3",
     "mocha": "^5.2.0",
