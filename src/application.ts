@@ -3,22 +3,12 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig, BindingKey} from '@loopback/core';
+import {RepositoryMixin} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
+import {ServiceMixin} from '@loopback/service-proxy';
 import {MySequence} from './sequence';
-
-/* tslint:disable:no-unused-variable */
-// Binding and Booter imports are required to infer types for BootMixin!
-import {BootMixin, Booter, Binding} from '@loopback/boot';
-
-// juggler imports are required to infer types for RepositoryMixin!
-import {
-  Class,
-  Repository,
-  RepositoryMixin,
-  juggler,
-} from '@loopback/repository';
-/* tslint:enable:no-unused-variable */
 
 /**
  * Information from package.json
@@ -33,7 +23,7 @@ export const PackageKey = BindingKey.create<PackageInfo>('application.package');
 const pkg: PackageInfo = require('../../package.json');
 
 export class ShoppingApplication extends BootMixin(
-  RepositoryMixin(RestApplication),
+  ServiceMixin(RepositoryMixin(RestApplication)),
 ) {
   constructor(options?: ApplicationConfig) {
     super(options);

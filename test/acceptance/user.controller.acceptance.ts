@@ -8,6 +8,8 @@ import {ShoppingApplication} from '../..';
 import {UserRepository, OrderRepository} from '../../src/repositories';
 import {MongoDataSource} from '../../src/datasources';
 import {setupApplication} from './helper';
+import {recommender} from '../../recommender';
+const recommendations = require('../../recommender/recommendations.json');
 
 describe('UserController', () => {
   let app: ShoppingApplication;
@@ -105,6 +107,15 @@ describe('UserController', () => {
     newUser.id = newUser.id.toString();
 
     await client.get(`/users/${newUser.id}`).expect(200, newUser.toJSON());
+  });
+
+  describe('user product recommendation (service) api', () => {
+    beforeEach(recommender.start);
+    afterEach(recommender.stop);
+
+    it('returns product recommendations for a user', async () => {
+      await client.get(`/users/userid/recommend`).expect(200, recommendations);
+    });
   });
 
   async function clearDatabase() {

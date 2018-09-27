@@ -5,17 +5,21 @@
 
 import {repository} from '@loopback/repository';
 import {post, param, get, requestBody, HttpErrors} from '@loopback/rest';
-import {User} from '../models';
+import {User, Product} from '../models';
 import {UserRepository} from '../repositories';
 import {hash} from 'bcryptjs';
 import {promisify} from 'util';
 import * as isemail from 'isemail';
+import {RecommenderService} from '../services/recommender.service';
+import {inject} from '@loopback/core';
 
 const hashAsync = promisify(hash);
 
 export class UserController {
   constructor(
     @repository(UserRepository) public userRepository: UserRepository,
+    @inject('services.RecommenderService')
+    public recommender: RecommenderService,
   ) {}
 
   @post('/users')
@@ -43,9 +47,15 @@ export class UserController {
 
   @get('/users/{id}')
   async findById(@param.path.string('id') id: string): Promise<User> {
-    const user = await this.userRepository.findById(id, {
+    return this.userRepository.findById(id, {
       fields: {password: false},
     });
-    return user;
+  }
+
+  @get('/users/{id}/recommend')
+  async productRecommendations(
+    @param.path.string('id') id: string,
+  ): Promise<Product[]> {
+    return this.recommender.recommend(id);
   }
 }
