@@ -8,7 +8,7 @@ import {ShoppingApplication} from '../..';
 import {UserRepository, OrderRepository} from '../../src/repositories';
 import {MongoDataSource} from '../../src/datasources';
 import {setupApplication} from './helper';
-import {recommender} from '../../recommender';
+import {createRecommendationServer} from '../../recommender';
 const recommendations = require('../../recommender/recommendations.json');
 
 describe('UserController', () => {
@@ -110,8 +110,17 @@ describe('UserController', () => {
   });
 
   describe('user product recommendation (service) api', () => {
-    beforeEach(recommender.start);
-    afterEach(recommender.stop);
+    // tslint:disable-next-line:no-any
+    let recommendationService: any;
+
+    before(() => {
+      recommendationService = createRecommendationServer();
+      recommendationService.start();
+    });
+
+    after(() => {
+      recommendationService.stop();
+    });
 
     it('returns product recommendations for a user', async () => {
       await client.get(`/users/userid/recommend`).expect(200, recommendations);

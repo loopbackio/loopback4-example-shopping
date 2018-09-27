@@ -56,6 +56,6 @@ export class UserController {
   async productRecommendations(
     @param.path.string('id') id: string,
   ): Promise<Product[]> {
-    return this.recommender.recommend(id);
+    return this.recommender.getProductRecommendations(id);
   }
 }

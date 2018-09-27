@@ -9,7 +9,7 @@ import {RecommenderDataSource} from '../datasources/recommender.datasource';
 import {Product} from '../models';
 
 export interface RecommenderService {
-  recommend(userId: string): Promise<Product[]>;
+  getProductRecommendations(userId: string): Promise<Product[]>;
 }
 
 export class RecommenderServiceProvider

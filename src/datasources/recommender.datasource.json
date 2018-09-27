@@ -14,7 +14,7 @@
         "url": "http://localhost:3001/{userId}"
       },
       "functions": {
-        "recommend": ["userId"]
+        "getProductRecommendations": ["userId"]
       }
     }
   ]
