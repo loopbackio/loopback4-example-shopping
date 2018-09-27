@@ -9,6 +9,7 @@ import {UserRepository, OrderRepository} from '../../src/repositories';
 import {MongoDataSource} from '../../src/datasources';
 import {setupApplication} from './helper';
 import {createRecommendationServer} from '../../recommender';
+import {Server} from 'http';
 const recommendations = require('../../recommender/recommendations.json');
 
 describe('UserController', () => {
@@ -111,15 +112,14 @@ describe('UserController', () => {
 
   describe('user product recommendation (service) api', () => {
     // tslint:disable-next-line:no-any
-    let recommendationService: any;
+    let recommendationService: Server;
 
     before(() => {
       recommendationService = createRecommendationServer();
-      recommendationService.start();
     });
 
     after(() => {
-      recommendationService.stop();
+      recommendationService.close();
     });
 
     it('returns product recommendations for a user', async () => {

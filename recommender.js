@@ -12,4 +12,4 @@ const app = require(path.join(
   '/recommender',
 ));
 
-module.exports = app.createRecommendationServer().start();
+module.exports = app.createRecommendationServer();

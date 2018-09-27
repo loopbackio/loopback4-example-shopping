@@ -4,28 +4,18 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import * as express from 'express';
-import {Server} from 'http';
 const recommendations = require('./recommendations.json');
 
 export function createRecommendationServer(port: number = 3001) {
-  let server: Server;
   const app = express();
 
   app.get('/:userId', (req: express.Request, res: express.Response) => {
     res.send(recommendations);
   });
 
-  return {
-    start: () => {
-      server = app.listen(3001, () => {
-        console.log(
-          'Mock Product Recommender powered by Express started on port 3001',
-        );
-      });
-    },
-
-    stop: () => {
-      return server.close();
-    },
-  };
+  return app.listen(port, () => {
+    console.log(
+      'Mock Product Recommender powered by Express started on port 3001',
+    );
+  });
 }
