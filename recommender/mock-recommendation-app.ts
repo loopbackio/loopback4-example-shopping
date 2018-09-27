@@ -5,26 +5,27 @@
 
 import * as express from 'express';
 import {Server} from 'http';
-const recommednations = require('./recommendations.json');
+const recommendations = require('./recommendations.json');
 
-const app = express();
+export function createRecommendationServer(port: number = 3001) {
+  let server: Server;
+  const app = express();
 
-app.get('/:userId', (req: express.Request, res: express.Response) => {
-  res.send(recommednations);
-});
+  app.get('/:userId', (req: express.Request, res: express.Response) => {
+    res.send(recommendations);
+  });
 
-let server: Server;
+  return {
+    start: () => {
+      server = app.listen(3001, () => {
+        console.log(
+          'Mock Product Recommender powered by Express started on port 3001',
+        );
+      });
+    },
 
-export const recommender = {
-  start: () => {
-    server = app.listen(3001, () => {
-      console.log(
-        'Mock Product Recommender powered by Express started on port 3001',
-      );
-    });
-  },
-
-  stop: () => {
-    return server.close();
-  },
-};
+    stop: () => {
+      return server.close();
+    },
+  };
+}
