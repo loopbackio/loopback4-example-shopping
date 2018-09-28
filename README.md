@@ -6,6 +6,8 @@ This project aims to represent an online ecommerce platform APIs to validate /
 test the LoopBack 4 framework readiness for GA. See
 https://github.com/strongloop/loopback-next/issues/1476 for more information.
 
+![Shopping example overview diagram](example-shopping.png)
+
 ## Installation
 
 Make sure you have Node.js >= 8.9.0 installed. Then do the following to clone
