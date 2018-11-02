@@ -99,7 +99,7 @@ describe('UserController', () => {
       .expect(415);
   });
 
-  it('returns a user with given id when GET /user/{id} is invoked', async () => {
+  it('returns a user with given id when GET /users/{id} is invoked', async () => {
     const newUser = await userRepo.create(user);
     delete newUser.password;
     delete newUser.orders;
@@ -123,7 +123,10 @@ describe('UserController', () => {
     });
 
     it('returns product recommendations for a user', async () => {
-      await client.get(`/users/userid/recommend`).expect(200, recommendations);
+      const newUser = await userRepo.create(user);
+      await client
+        .get(`/users/${newUser.id}/recommend`)
+        .expect(200, recommendations);
     });
   });
 

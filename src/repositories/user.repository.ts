@@ -26,7 +26,7 @@ export class UserRepository extends DefaultCrudRepository<
     super(User, datasource);
     this.orders = this._createHasManyRepositoryFactoryFor(
       'orders',
-      orderRepository,
+      async () => orderRepository,
     );
   }
 }

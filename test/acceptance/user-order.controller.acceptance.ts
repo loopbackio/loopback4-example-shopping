@@ -89,7 +89,7 @@ describe('UserOrderController acceptance tests', () => {
       await client
         .patch(`/users/${userId}/orders`)
         .send({total: 9.99})
-        .expect(200, '2');
+        .expect(200, {count: 2});
     });
 
     // TODO(virkt25): Implement after issue below is fixed.
@@ -97,7 +97,7 @@ describe('UserOrderController acceptance tests', () => {
     it.skip('patches orders matching filter for a given user');
 
     it('deletes all orders for a given user', async () => {
-      await client.del(`/users/${userId}/orders`).expect(200, '2');
+      await client.del(`/users/${userId}/orders`).expect(200, {count: 2});
     });
 
     // TODO(virkt25): Implement after issue below is fixed.

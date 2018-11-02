@@ -36,7 +36,7 @@ export class User extends Entity {
   })
   surname?: string;
 
-  @hasMany(Order)
+  @hasMany(() => Order)
   orders: Order[];
 
   constructor(data?: Partial<User>) {

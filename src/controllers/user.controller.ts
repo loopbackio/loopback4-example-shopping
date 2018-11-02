@@ -45,17 +45,46 @@ export class UserController {
     return savedUser;
   }
 
-  @get('/users/{id}')
-  async findById(@param.path.string('id') id: string): Promise<User> {
-    return this.userRepository.findById(id, {
+  @get('/users/{userId}', {
+    responses: {
+      '200': {
+        description: 'User',
+        content: {
+          'application/json': {
+            schema: {
+              'x-ts-type': User,
+            },
+          },
+        },
+      },
+    },
+  })
+  async findById(@param.path.string('userId') userId: string): Promise<User> {
+    return this.userRepository.findById(userId, {
       fields: {password: false},
     });
   }
 
-  @get('/users/{id}/recommend')
+  @get('/users/{userId}/recommend', {
+    responses: {
+      '200': {
+        description: 'Products',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'array',
+              items: {
+                'x-ts-type': Product,
+              },
+            },
+          },
+        },
+      },
+    },
+  })
   async productRecommendations(
-    @param.path.string('id') id: string,
+    @param.path.string('userId') userId: string,
   ): Promise<Product[]> {
-    return this.recommender.getProductRecommendations(id);
+    return this.recommender.getProductRecommendations(userId);
   }
 }

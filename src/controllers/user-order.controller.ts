@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {repository, Filter, Where} from '@loopback/repository';
+import {repository, Filter, Where, Count} from '@loopback/repository';
 import {UserRepository} from '../repositories';
 import {
   post,
@@ -74,7 +74,16 @@ export class UserOrderController {
     responses: {
       '200': {
         description: 'User.Order PATCH success count',
-        content: {'application/json': {'x-ts-type': Number}},
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                count: 'number',
+              },
+            },
+          },
+        },
       },
     },
   })
@@ -82,7 +91,7 @@ export class UserOrderController {
     @param.path.string('userId') userId: string,
     @requestBody() order: Partial<Order>,
     @param.query.string('where') where?: Where,
-  ): Promise<number> {
+  ): Promise<Count> {
     return await this.userRepo
       .orders(userId)
       .patch(order, where, {strictObjectIDCoercion: true});
@@ -92,14 +101,23 @@ export class UserOrderController {
     responses: {
       '200': {
         description: 'User.Order DELETE success count',
-        content: {'application/json': {'x-ts-type': Number}},
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                count: 'number',
+              },
+            },
+          },
+        },
       },
     },
   })
   async deleteOrders(
     @param.path.string('userId') userId: string,
     @param.query.string('where') where?: Where,
-  ): Promise<number> {
+  ): Promise<Count> {
     return await this.userRepo
       .orders(userId)
       .delete(where, {strictObjectIDCoercion: true});
