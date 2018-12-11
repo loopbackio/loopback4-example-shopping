@@ -12,6 +12,10 @@ import {
 import {User, Order} from '../models';
 import {inject} from '@loopback/core';
 import {OrderRepository} from './order.repository';
+export type Credentials = {
+  email: string;
+  password: string;
+};
 
 export class UserRepository extends DefaultCrudRepository<
   User,
@@ -24,7 +28,7 @@ export class UserRepository extends DefaultCrudRepository<
     @repository(OrderRepository) protected orderRepository: OrderRepository,
   ) {
     super(User, datasource);
-    this.orders = this._createHasManyRepositoryFactoryFor(
+    this.orders = this.createHasManyRepositoryFactoryFor(
       'orders',
       async () => orderRepository,
     );

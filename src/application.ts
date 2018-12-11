@@ -10,6 +10,12 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import {MySequence} from './sequence';
 import * as path from 'path';
+import {
+  AuthenticationBindings,
+  AuthenticationComponent,
+} from '@loopback/authentication';
+import {StrategyResolverProvider} from './providers/strategy.resolver.provider';
+import {AuthenticateActionProvider} from './providers/custom.authentication.provider';
 
 /**
  * Information from package.json
@@ -31,6 +37,14 @@ export class ShoppingApplication extends BootMixin(
 
     // Bind package.json to the application context
     this.bind(PackageKey).to(pkg);
+
+    this.component(AuthenticationComponent);
+    this.bind(AuthenticationBindings.AUTH_ACTION).toProvider(
+      AuthenticateActionProvider,
+    );
+    this.bind(AuthenticationBindings.STRATEGY).toProvider(
+      StrategyResolverProvider,
+    );
 
     // Set up the custom sequence
     this.sequence(MySequence);

@@ -13,8 +13,9 @@ import {setupApplication} from './helper';
 describe('UserOrderController acceptance tests', () => {
   let app: ShoppingApplication;
   let client: supertest.SuperTest<supertest.Test>;
-  const orderRepo = new OrderRepository(new MongoDataSource());
-  const userRepo = new UserRepository(new MongoDataSource(), orderRepo);
+  const mongodbDS = new MongoDataSource();
+  const orderRepo = new OrderRepository(mongodbDS);
+  const userRepo = new UserRepository(mongodbDS, orderRepo);
 
   before('setupApplication', async () => {
     ({app, client} = await setupApplication());
