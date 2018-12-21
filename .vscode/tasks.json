@@ -4,6 +4,17 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Build Server",
+      "type": "shell",
+      "command": "npm",
+      "args": ["--silent", "run", "build"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$tsc"
+    },
+    {
       "label": "Watch and Compile Project",
       "type": "shell",
       "command": "npm",
