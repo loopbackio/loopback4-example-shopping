@@ -3,14 +3,20 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-// Consider turn it to a binding
-const SECRET = 'secretforjwt';
+import {JWTAuthenticationBindings} from '../keys';
 import {Request, HttpErrors} from '@loopback/rest';
 import {UserProfile} from '@loopback/authentication';
 import {AuthenticationStrategy} from './authentication.strategy';
-import {decodeAccessToken} from '../utils/user.authentication';
+import {inject} from '@loopback/core';
+import {JWTAuthenticationService} from '../services/JWT.authentication.service';
 
 export class JWTStrategy implements AuthenticationStrategy {
+  constructor(
+    @inject(JWTAuthenticationBindings.SERVICE)
+    public jwt_authentication_service: JWTAuthenticationService,
+    @inject(JWTAuthenticationBindings.SECRET)
+    public jwt_secret: string,
+  ) {}
   async authenticate(request: Request): Promise<UserProfile | undefined> {
     let token = request.query.access_token || request.headers['authorization'];
     if (!token) throw new HttpErrors.Unauthorized('No access token found!');
@@ -20,7 +26,9 @@ export class JWTStrategy implements AuthenticationStrategy {
     }
 
     try {
-      const user = await decodeAccessToken(token, SECRET);
+      const user = await this.jwt_authentication_service.decodeAccessToken(
+        token,
+      );
       return user;
     } catch (err) {
       Object.assign(err, {

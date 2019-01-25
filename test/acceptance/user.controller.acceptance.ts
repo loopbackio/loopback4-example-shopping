@@ -13,9 +13,10 @@ import {createRecommendationServer} from '../../recommender';
 import {Server} from 'http';
 import * as _ from 'lodash';
 import {
-  getAccessTokenForUser,
-  hashPassword,
-} from '../../src/utils/user.authentication';
+  JWT_SECRET,
+  JWTAuthenticationService,
+} from '../../src/services/JWT.authentication.service';
+import {hashPassword} from '../../src/services/hash.password.bcryptjs';
 const recommendations = require('../../recommender/recommendations.json');
 
 describe('UserController', () => {
@@ -139,10 +140,12 @@ describe('UserController', () => {
 
   describe('authentication functions', () => {
     let plainPassword: string;
+    let jwt_auth_service: JWTAuthenticationService;
 
     before('create new user', async () => {
       plainPassword = user.password;
       user.password = await hashPassword(user.password, 4);
+      jwt_auth_service = new JWTAuthenticationService(userRepo, JWT_SECRET);
     });
 
     it('login returns a valid token', async () => {
@@ -170,7 +173,7 @@ describe('UserController', () => {
 
     it('/me returns the current user', async () => {
       const newUser = await userRepo.create(user);
-      const token = await getAccessTokenForUser(userRepo, {
+      const token = await jwt_auth_service.getAccessTokenForUser({
         email: newUser.email,
         password: plainPassword,
       });
@@ -186,7 +189,7 @@ describe('UserController', () => {
 
     it('/me returns 401 when the token is not provided', async () => {
       const newUser = await userRepo.create(user);
-      await getAccessTokenForUser(userRepo, {
+      await jwt_auth_service.getAccessTokenForUser({
         email: newUser.email,
         password: plainPassword,
       });

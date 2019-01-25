@@ -6,16 +6,15 @@
 import {expect, toJSON} from '@loopback/testlab';
 import {MongoDataSource} from '../../src/datasources';
 import {
-  decodeAccessToken,
-  getAccessTokenForUser,
-  hashPassword,
-} from '../../src/utils/user.authentication';
+  JWT_SECRET,
+  JWTAuthenticationService,
+} from '../../src/services/JWT.authentication.service';
+import {hashPassword} from '../../src/services/hash.password.bcryptjs';
 import {UserRepository, OrderRepository} from '../../src/repositories';
 import {User} from '../../src/models';
 import * as _ from 'lodash';
 import {JsonWebTokenError} from 'jsonwebtoken';
 import {HttpErrors} from '@loopback/rest';
-const SECRET = 'secretforjwt';
 
 describe('authentication utilities', () => {
   const mongodbDS = new MongoDataSource();
@@ -28,12 +27,14 @@ describe('authentication utilities', () => {
     surname: 'test',
   };
   let newUser: User;
+  let jwt_service: JWTAuthenticationService;
 
   before(clearDatabase);
   before(createUser);
+  before(createService);
 
   it('getAccessTokenForUser creates valid jwt access token', async () => {
-    const token = await getAccessTokenForUser(userRepo, {
+    const token = await jwt_service.getAccessTokenForUser({
       email: 'unittest@loopback.io',
       password: 'p4ssw0rd',
     });
@@ -45,7 +46,7 @@ describe('authentication utilities', () => {
       `User with email fake@loopback.io not found.`,
     );
     return expect(
-      getAccessTokenForUser(userRepo, {
+      jwt_service.getAccessTokenForUser({
         email: 'fake@loopback.io',
         password: 'fake',
       }),
@@ -57,7 +58,7 @@ describe('authentication utilities', () => {
       'The credentials are not correct.',
     );
     return expect(
-      getAccessTokenForUser(userRepo, {
+      jwt_service.getAccessTokenForUser({
         email: 'unittest@loopback.io',
         password: 'fake',
       }),
@@ -65,19 +66,21 @@ describe('authentication utilities', () => {
   });
 
   it('decodeAccessToken decodes valid access token', async () => {
-    const token = await getAccessTokenForUser(userRepo, {
+    const token = await jwt_service.getAccessTokenForUser({
       email: 'unittest@loopback.io',
       password: 'p4ssw0rd',
     });
     const expectedUser = getExpectedUser(newUser);
-    const currentUser = await decodeAccessToken(token, SECRET);
+    const currentUser = await jwt_service.decodeAccessToken(token);
     expect(currentUser).to.deepEqual(expectedUser);
   });
 
   it('decodeAccessToken throws error for invalid accesstoken', async () => {
     const token = 'fake';
     const error = new JsonWebTokenError('jwt malformed');
-    return expect(decodeAccessToken(token, SECRET)).to.be.rejectedWith(error);
+    return expect(jwt_service.decodeAccessToken(token)).to.be.rejectedWith(
+      error,
+    );
   });
 
   async function createUser() {
@@ -86,6 +89,9 @@ describe('authentication utilities', () => {
   }
   async function clearDatabase() {
     await userRepo.deleteAll();
+  }
+  async function createService() {
+    jwt_service = new JWTAuthenticationService(userRepo, JWT_SECRET);
   }
 });
 

@@ -15,11 +15,10 @@ import {
   AuthenticationBindings,
 } from '@loopback/authentication';
 import {Credentials} from '../repositories/user.repository';
-import {
-  validateCredentials,
-  getAccessTokenForUser,
-  hashPassword,
-} from '../utils/user.authentication';
+import {HashPassword} from '../services/hash.password.bcryptjs';
+import {JWTAuthenticationService} from '../services/JWT.authentication.service';
+import {JWTAuthenticationBindings, OtherServicesBindings} from '../keys';
+import {validateCredentials} from '../services/JWT.authentication.service';
 import * as _ from 'lodash';
 
 // TODO(jannyHou): This should be moved to @loopback/authentication
@@ -40,12 +39,16 @@ export class UserController {
     public recommender: RecommenderService,
     @inject.setter(AuthenticationBindings.CURRENT_USER)
     public setCurrentUser: Setter<UserProfile>,
+    @inject(OtherServicesBindings.HASH_PASSWORD)
+    public hashPassword: HashPassword,
+    @inject(JWTAuthenticationBindings.SERVICE)
+    public jwt_authentication_service: JWTAuthenticationService,
   ) {}
 
   @post('/users')
   async create(@requestBody() user: User): Promise<User> {
     validateCredentials(_.pick(user, ['email', 'password']));
-    user.password = await hashPassword(user.password, 10);
+    user.password = await this.hashPassword(user.password, 10);
 
     // Save & Return Result
     const savedUser = await this.userRepository.create(user);
@@ -143,7 +146,9 @@ export class UserController {
     @requestBody() credentials: Credentials,
   ): Promise<{token: string}> {
     validateCredentials(credentials);
-    const token = await getAccessTokenForUser(this.userRepository, credentials);
+    const token = await this.jwt_authentication_service.getAccessTokenForUser(
+      credentials,
+    );
     return {token};
   }
 }

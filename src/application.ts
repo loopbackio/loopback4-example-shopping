@@ -14,8 +14,15 @@ import {
   AuthenticationBindings,
   AuthenticationComponent,
 } from '@loopback/authentication';
+import {JWTAuthenticationBindings, OtherServicesBindings} from './keys';
 import {StrategyResolverProvider} from './providers/strategy.resolver.provider';
 import {AuthenticateActionProvider} from './providers/custom.authentication.provider';
+import {
+  JWTAuthenticationService,
+  JWT_SECRET,
+} from './services/JWT.authentication.service';
+import {hashPassword} from './services/hash.password.bcryptjs';
+import {JWTStrategy} from './authentication-strategies/JWT.strategy';
 
 /**
  * Information from package.json
@@ -38,6 +45,7 @@ export class ShoppingApplication extends BootMixin(
     // Bind package.json to the application context
     this.bind(PackageKey).to(pkg);
 
+    // Bind authentication component related elements
     this.component(AuthenticationComponent);
     this.bind(AuthenticationBindings.AUTH_ACTION).toProvider(
       AuthenticateActionProvider,
@@ -45,6 +53,16 @@ export class ShoppingApplication extends BootMixin(
     this.bind(AuthenticationBindings.STRATEGY).toProvider(
       StrategyResolverProvider,
     );
+
+    // Bind JWT authentication strategy related elements
+    this.bind(JWTAuthenticationBindings.STRATEGY).toClass(JWTStrategy);
+    this.bind(JWTAuthenticationBindings.SECRET).to(JWT_SECRET);
+    this.bind(JWTAuthenticationBindings.SERVICE).toClass(
+      JWTAuthenticationService,
+    );
+
+    // Bind other services
+    this.bind(OtherServicesBindings.HASH_PASSWORD).to(hashPassword);
 
     // Set up the custom sequence
     this.sequence(MySequence);
