@@ -3,15 +3,12 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-const jwt = require('jsonwebtoken');
-import {promisify} from 'util';
-const verifyAsync = promisify(jwt.verify);
 // Consider turn it to a binding
 const SECRET = 'secretforjwt';
 import {Request, HttpErrors} from '@loopback/rest';
 import {UserProfile} from '@loopback/authentication';
-import * as _ from 'lodash';
 import {AuthenticationStrategy} from './authentication.strategy';
+import {decodeAccessToken} from '../utils/user.authentication';
 
 export class JWTStrategy implements AuthenticationStrategy {
   async authenticate(request: Request): Promise<UserProfile | undefined> {
@@ -23,10 +20,7 @@ export class JWTStrategy implements AuthenticationStrategy {
     }
 
     try {
-      const decoded = await verifyAsync(token, SECRET);
-      let user = _.pick(decoded, ['id', 'email', 'firstName']);
-      (user as UserProfile).name = user.firstName;
-      delete user.firstName;
+      const user = await decodeAccessToken(token, SECRET);
       return user;
     } catch (err) {
       Object.assign(err, {
