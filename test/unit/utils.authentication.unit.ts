@@ -12,9 +12,14 @@ import {
 import {UserRepository, OrderRepository} from '../../src/repositories';
 import {User} from '../../src/models';
 import * as _ from 'lodash';
+import {promisify} from 'util';
+import {hash} from 'bcryptjs';
+import {JsonWebTokenError} from 'jsonwebtoken';
+import {HttpErrors} from '@loopback/rest';
+const hashAsync = promisify(hash);
 const SECRET = 'secretforjwt';
 
-describe('authentication', () => {
+describe('authentication utilities', () => {
   const mongodbDS = new MongoDataSource();
   const orderRepo = new OrderRepository(mongodbDS);
   const userRepo = new UserRepository(mongodbDS, orderRepo);
@@ -26,11 +31,42 @@ describe('authentication', () => {
   };
   let newUser: User;
 
-  before('create user', async () => {
-    newUser = await userRepo.create(user);
+  before(clearDatabase);
+  before(createUser);
+
+  it('getAccessTokenForUser creates valid jwt access token', async () => {
+    const token = await getAccessTokenForUser(userRepo, {
+      email: 'unittest@loopback.io',
+      password: 'p4ssw0rd',
+    });
+    expect(token).to.not.be.empty();
   });
 
-  it('decodes valid access token', async () => {
+  it('getAccessTokenForUser rejects non-existing user with error Not Found', async () => {
+    const expectedError = new HttpErrors['NotFound'](
+      `User with email fake@loopback.io not found.`,
+    );
+    return expect(
+      getAccessTokenForUser(userRepo, {
+        email: 'fake@loopback.io',
+        password: 'fake',
+      }),
+    ).to.be.rejectedWith(expectedError);
+  });
+
+  it('getAccessTokenForUser rejects wrong credential with error Unauthorized', async () => {
+    const expectedError = new HttpErrors.Unauthorized(
+      'The credentials are not correct.',
+    );
+    return expect(
+      getAccessTokenForUser(userRepo, {
+        email: 'unittest@loopback.io',
+        password: 'fake',
+      }),
+    ).to.be.rejectedWith(expectedError);
+  });
+
+  it('decodeAccessToken decodes valid access token', async () => {
     const token = await getAccessTokenForUser(userRepo, {
       email: 'unittest@loopback.io',
       password: 'p4ssw0rd',
@@ -40,15 +76,19 @@ describe('authentication', () => {
     expect(currentUser).to.deepEqual(expectedUser);
   });
 
-  it('throws error for invalid accesstoken', async () => {
+  it('decodeAccessToken throws error for invalid accesstoken', async () => {
     const token = 'fake';
-    try {
-      await decodeAccessToken(token, SECRET);
-      expect('throws error').to.be.true();
-    } catch (err) {
-      expect(err.message).to.equal('jwt malformed');
-    }
+    const error = new JsonWebTokenError('jwt malformed');
+    return expect(decodeAccessToken(token, SECRET)).to.be.rejectedWith(error);
   });
+
+  async function createUser() {
+    user.password = await hashAsync(user.password, 10);
+    newUser = await userRepo.create(user);
+  }
+  async function clearDatabase() {
+    await userRepo.deleteAll();
+  }
 });
 
 function getExpectedUser(originalUser: User) {

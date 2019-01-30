@@ -10,6 +10,8 @@ import {promisify} from 'util';
 import * as isemail from 'isemail';
 import {HttpErrors} from '@loopback/rest';
 import {UserProfile} from '@loopback/authentication';
+import {compare} from 'bcryptjs';
+const compareAsync = promisify(compare);
 const jwt = require('jsonwebtoken');
 const signAsync = promisify(jwt.sign);
 const verifyAsync = promisify(jwt.verify);
@@ -19,10 +21,19 @@ export async function getAccessTokenForUser(
   credentials: Credentials,
 ): Promise<string> {
   const foundUser = await userRepository.findOne({
-    where: {email: credentials.email, password: credentials.password},
+    where: {email: credentials.email},
   });
   if (!foundUser) {
-    throw new HttpErrors.Unauthorized('Wrong credentials!');
+    throw new HttpErrors['NotFound'](
+      `User with email ${credentials.email} not found.`,
+    );
+  }
+  const passwordMatched = await compareAsync(
+    credentials.password,
+    foundUser.password,
+  );
+  if (!passwordMatched) {
+    throw new HttpErrors.Unauthorized('The credentials are not correct.');
   }
 
   const currentUser = _.pick(toJSON(foundUser), ['id', 'email', 'firstName']);
@@ -49,6 +60,8 @@ export function validateCredentials(credentials: Credentials) {
 }
 
 // secret should be injected
+// the refactor PR is in progress
+// https://github.com/strongloop/loopback4-example-shopping/pull/33
 export async function decodeAccessToken(
   token: string,
   secret: string,

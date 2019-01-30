@@ -12,8 +12,11 @@ import {setupApplication} from './helper';
 import {createRecommendationServer} from '../../recommender';
 import {Server} from 'http';
 import * as _ from 'lodash';
+import {promisify} from 'util';
+import {hash} from 'bcryptjs';
 import {getAccessTokenForUser} from '../../src/utils/user.authentication';
 const recommendations = require('../../recommender/recommendations.json');
+const hashAsync = promisify(hash);
 
 describe('UserController', () => {
   let app: ShoppingApplication;
@@ -135,28 +138,34 @@ describe('UserController', () => {
   });
 
   describe('authentication functions', () => {
-    // TODO: fix storing the plain password in the following issue:
-    // https://github.com/strongloop/loopback-next/issues/1996
+    let plainPassword: string;
+
+    before('create new user', async () => {
+      plainPassword = user.password;
+      // Salt + Hash Password
+      user.password = await hashAsync(user.password, 10);
+    });
+
     it('login returns a valid token', async () => {
       const newUser = await userRepo.create(user);
       await client
         .post('/users/login')
-        .send({email: newUser.email, password: newUser.password})
+        .send({email: newUser.email, password: plainPassword})
         .expect(200)
-        .then(getToken);
+        .then(verifyToken);
 
-      function getToken(res: Response) {
+      function verifyToken(res: Response) {
         const token = res.body.token;
         expect(token).to.not.be.empty();
       }
     });
 
     it('login returns an error when invalid credentials are used', async () => {
+      // tslint:disable-next-line:no-unused
       const newUser = await userRepo.create(user);
-      newUser.password = 'wrong password';
       await client
         .post('/users/login')
-        .send({email: newUser.email, password: newUser.password})
+        .send({email: user.email, password: 'wrongpassword'})
         .expect(401);
     });
 
@@ -164,7 +173,7 @@ describe('UserController', () => {
       const newUser = await userRepo.create(user);
       const token = await getAccessTokenForUser(userRepo, {
         email: newUser.email,
-        password: newUser.password,
+        password: plainPassword,
       });
 
       newUser.id = newUser.id.toString();
@@ -180,7 +189,7 @@ describe('UserController', () => {
       const newUser = await userRepo.create(user);
       await getAccessTokenForUser(userRepo, {
         email: newUser.email,
-        password: newUser.password,
+        password: plainPassword,
       });
 
       await client.get('/users/me').expect(401);
