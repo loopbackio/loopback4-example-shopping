@@ -4,12 +4,12 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import * as _ from 'lodash';
-import { Credentials, UserRepository } from '../repositories/user.repository';
-import { toJSON } from '@loopback/testlab';
-import { promisify } from 'util';
+import {Credentials, UserRepository} from '../repositories/user.repository';
+import {toJSON} from '@loopback/testlab';
+import {promisify} from 'util';
 import * as isemail from 'isemail';
-import { HttpErrors } from '@loopback/rest';
-import { compare } from 'bcryptjs';
+import {HttpErrors} from '@loopback/rest';
+import {compare} from 'bcryptjs';
 
 const jwt = require('jsonwebtoken');
 const signAsync = promisify(jwt.sign);
@@ -19,13 +19,15 @@ export async function getAccessTokenForUser(
   credentials: Credentials,
 ): Promise<string> {
   const foundUser = await userRepository.findOne({
-    where: { email: credentials.email }
+    where: {email: credentials.email},
   });
   if (!foundUser) {
     throw new HttpErrors.Unauthorized('Wrong credentials: email!');
   } else {
-    const validPassword = await compare(credentials.password, foundUser.password);
-    console.log(validPassword);
+    const validPassword = await compare(
+      credentials.password,
+      foundUser.password,
+    );
     if (!validPassword) {
       throw new HttpErrors.Unauthorized('Wrong credentials: password!');
     }
