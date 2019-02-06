@@ -12,11 +12,11 @@ import {setupApplication} from './helper';
 import {createRecommendationServer} from '../../recommender';
 import {Server} from 'http';
 import * as _ from 'lodash';
-import {promisify} from 'util';
-import {hash} from 'bcryptjs';
-import {getAccessTokenForUser} from '../../src/utils/user.authentication';
+import {
+  getAccessTokenForUser,
+  hashPassword,
+} from '../../src/utils/user.authentication';
 const recommendations = require('../../recommender/recommendations.json');
-const hashAsync = promisify(hash);
 
 describe('UserController', () => {
   let app: ShoppingApplication;
@@ -142,8 +142,7 @@ describe('UserController', () => {
 
     before('create new user', async () => {
       plainPassword = user.password;
-      // Salt + Hash Password
-      user.password = await hashAsync(user.password, 10);
+      user.password = await hashPassword(user.password, 4);
     });
 
     it('login returns a valid token', async () => {
