@@ -8,15 +8,13 @@ import {MongoDataSource} from '../../src/datasources';
 import {
   decodeAccessToken,
   getAccessTokenForUser,
+  hashPassword,
 } from '../../src/utils/user.authentication';
 import {UserRepository, OrderRepository} from '../../src/repositories';
 import {User} from '../../src/models';
 import * as _ from 'lodash';
-import {promisify} from 'util';
-import {hash} from 'bcryptjs';
 import {JsonWebTokenError} from 'jsonwebtoken';
 import {HttpErrors} from '@loopback/rest';
-const hashAsync = promisify(hash);
 const SECRET = 'secretforjwt';
 
 describe('authentication utilities', () => {
@@ -83,7 +81,7 @@ describe('authentication utilities', () => {
   });
 
   async function createUser() {
-    user.password = await hashAsync(user.password, 10);
+    user.password = await hashPassword(user.password, 4);
     newUser = await userRepo.create(user);
   }
   async function clearDatabase() {

@@ -10,11 +10,18 @@ import {promisify} from 'util';
 import * as isemail from 'isemail';
 import {HttpErrors} from '@loopback/rest';
 import {UserProfile} from '@loopback/authentication';
-import {compare} from 'bcryptjs';
-const compareAsync = promisify(compare);
+import {genSalt, compare, hash} from 'bcryptjs';
 const jwt = require('jsonwebtoken');
 const signAsync = promisify(jwt.sign);
 const verifyAsync = promisify(jwt.verify);
+
+export async function hashPassword(
+  password: string,
+  rounds: number,
+): Promise<string> {
+  const salt = await genSalt(rounds);
+  return await hash(password, salt);
+}
 
 export async function getAccessTokenForUser(
   userRepository: UserRepository,
@@ -28,7 +35,7 @@ export async function getAccessTokenForUser(
       `User with email ${credentials.email} not found.`,
     );
   }
-  const passwordMatched = await compareAsync(
+  const passwordMatched = await compare(
     credentials.password,
     foundUser.password,
   );
