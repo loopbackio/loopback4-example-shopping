@@ -1,8 +1,7 @@
 # @loopback/example-shopping
 
+[![Travis Build Status](https://travis-ci.org/strongloop/loopback4-example-shopping.svg?branch=master)](https://travis-ci.org/strongloop/opback4-example-shopping)
 [![Greenkeeper badge](https://badges.greenkeeper.io/strongloop/loopback4-example-shopping.svg)](https://greenkeeper.io/)
-
-[![LoopBack](<https://github.com/strongloop/loopback-next/raw/master/docs/site/imgs/branding/Powered-by-LoopBack-Badge-(blue)-@2x.png>)](http://loopback.io/)
 
 This project aims to represent an online ecommerce platform APIs to validate /
 test the LoopBack 4 framework readiness for GA. See
@@ -48,3 +47,5 @@ See
 ## License
 
 [MIT](LICENSE)
+
+[![LoopBack](<https://github.com/strongloop/loopback-next/raw/master/docs/site/imgs/branding/Powered-by-LoopBack-Badge-(blue)-@2x.png>)](http://loopback.io/)
