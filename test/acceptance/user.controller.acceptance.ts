@@ -12,11 +12,11 @@ import {setupApplication} from './helper';
 import {createRecommendationServer} from '../../recommender';
 import {Server} from 'http';
 import * as _ from 'lodash';
+import {JWTAuthenticationService} from '../../src/services/JWT.authentication.service';
 import {
-  JWT_SECRET,
-  JWTAuthenticationService,
-} from '../../src/services/JWT.authentication.service';
-import {hashPassword} from '../../src/services/hash.password.bcryptjs';
+  PasswordHasherBindings,
+  JWTAuthenticationBindings,
+} from '../../src/keys';
 const recommendations = require('../../recommender/recommendations.json');
 
 describe('UserController', () => {
@@ -140,12 +140,17 @@ describe('UserController', () => {
 
   describe('authentication functions', () => {
     let plainPassword: string;
-    let jwt_auth_service: JWTAuthenticationService;
+    let jwtAuthService: JWTAuthenticationService;
 
     before('create new user', async () => {
+      app.bind(PasswordHasherBindings.ROUNDS).to(4);
+
+      const passwordHasher = await app.get(
+        PasswordHasherBindings.PASSWORD_HASHER,
+      );
       plainPassword = user.password;
-      user.password = await hashPassword(user.password, 4);
-      jwt_auth_service = new JWTAuthenticationService(userRepo, JWT_SECRET);
+      user.password = await passwordHasher.hashPassword(user.password);
+      jwtAuthService = await app.get(JWTAuthenticationBindings.SERVICE);
     });
 
     it('login returns a valid token', async () => {
@@ -173,7 +178,7 @@ describe('UserController', () => {
 
     it('/me returns the current user', async () => {
       const newUser = await userRepo.create(user);
-      const token = await jwt_auth_service.getAccessTokenForUser({
+      const token = await jwtAuthService.getAccessTokenForUser({
         email: newUser.email,
         password: plainPassword,
       });
@@ -189,7 +194,7 @@ describe('UserController', () => {
 
     it('/me returns 401 when the token is not provided', async () => {
       const newUser = await userRepo.create(user);
-      await jwt_auth_service.getAccessTokenForUser({
+      await jwtAuthService.getAccessTokenForUser({
         email: newUser.email,
         password: plainPassword,
       });

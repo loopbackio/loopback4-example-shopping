@@ -14,14 +14,14 @@ import {
   AuthenticationBindings,
   AuthenticationComponent,
 } from '@loopback/authentication';
-import {JWTAuthenticationBindings, OtherServicesBindings} from './keys';
+import {JWTAuthenticationBindings, PasswordHasherBindings} from './keys';
 import {StrategyResolverProvider} from './providers/strategy.resolver.provider';
 import {AuthenticateActionProvider} from './providers/custom.authentication.provider';
 import {
   JWTAuthenticationService,
   JWT_SECRET,
 } from './services/JWT.authentication.service';
-import {hashPassword} from './services/hash.password.bcryptjs';
+import {BcryptHasher} from './services/hash.password.bcryptjs';
 import {JWTStrategy} from './authentication-strategies/JWT.strategy';
 
 /**
@@ -61,8 +61,9 @@ export class ShoppingApplication extends BootMixin(
       JWTAuthenticationService,
     );
 
-    // Bind other services
-    this.bind(OtherServicesBindings.HASH_PASSWORD).to(hashPassword);
+    // Bind bcrypt hash services
+    this.bind(PasswordHasherBindings.ROUNDS).to(10);
+    this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher);
 
     // Set up the custom sequence
     this.sequence(MySequence);

@@ -10,10 +10,10 @@ import {promisify} from 'util';
 import * as isemail from 'isemail';
 import {HttpErrors} from '@loopback/rest';
 import {UserProfile} from '@loopback/authentication';
-import {compare} from 'bcryptjs';
 import {repository} from '@loopback/repository';
 import {inject} from '@loopback/core';
-import {JWTAuthenticationBindings} from '../keys';
+import {JWTAuthenticationBindings, PasswordHasherBindings} from '../keys';
+import {PasswordHasher} from './hash.password.bcryptjs';
 const jwt = require('jsonwebtoken');
 const signAsync = promisify(jwt.sign);
 const verifyAsync = promisify(jwt.verify);
@@ -34,6 +34,8 @@ export class JWTAuthenticationService {
   constructor(
     @repository(UserRepository) public userRepository: UserRepository,
     @inject(JWTAuthenticationBindings.SECRET) public jwt_secret: string,
+    @inject(PasswordHasherBindings.PASSWORD_HASHER)
+    public passwordHasher: PasswordHasher,
   ) {}
 
   /**
@@ -54,10 +56,12 @@ export class JWTAuthenticationService {
         `User with email ${credentials.email} not found.`,
       );
     }
-    const passwordMatched = await compare(
+
+    const passwordMatched = await this.passwordHasher.comparePassword(
       credentials.password,
       foundUser.password,
     );
+
     if (!passwordMatched) {
       throw new HttpErrors.Unauthorized('The credentials are not correct.');
     }

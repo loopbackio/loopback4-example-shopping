@@ -1,7 +1,7 @@
 import {BindingKey} from '@loopback/context';
 import {JWTAuthenticationService} from './services/JWT.authentication.service';
-import {HashPassword} from './services/hash.password.bcryptjs';
 import {JWTStrategy} from './authentication-strategies/JWT.strategy';
+import {PasswordHasher} from './services/hash.password.bcryptjs';
 
 // Discussion point for reviewers:
 // What would be the good naming conversion for bindings?
@@ -15,8 +15,9 @@ export namespace JWTAuthenticationBindings {
   );
 }
 
-export namespace OtherServicesBindings {
-  export const HASH_PASSWORD = BindingKey.create<HashPassword>(
-    'services.hash_password',
+export namespace PasswordHasherBindings {
+  export const PASSWORD_HASHER = BindingKey.create<PasswordHasher>(
+    'services.hasher',
   );
+  export const ROUNDS = BindingKey.create<number>('services.hasher.round');
 }

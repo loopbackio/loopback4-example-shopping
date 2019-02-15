@@ -5,21 +5,27 @@
 
 import {expect, toJSON} from '@loopback/testlab';
 import {MongoDataSource} from '../../src/datasources';
-import {
-  JWT_SECRET,
-  JWTAuthenticationService,
-} from '../../src/services/JWT.authentication.service';
-import {hashPassword} from '../../src/services/hash.password.bcryptjs';
+import {JWTAuthenticationService} from '../../src/services/JWT.authentication.service';
+import {ShoppingApplication} from '../..';
+import {PasswordHasher} from '../../src/services/hash.password.bcryptjs';
 import {UserRepository, OrderRepository} from '../../src/repositories';
 import {User} from '../../src/models';
 import * as _ from 'lodash';
 import {JsonWebTokenError} from 'jsonwebtoken';
 import {HttpErrors} from '@loopback/rest';
+import {
+  PasswordHasherBindings,
+  JWTAuthenticationBindings,
+} from '../../src/keys';
+import {setupApplication} from './helper';
 
-describe('authentication utilities', () => {
+describe('authentication services', () => {
+  let app: ShoppingApplication;
+
   const mongodbDS = new MongoDataSource();
   const orderRepo = new OrderRepository(mongodbDS);
   const userRepo = new UserRepository(mongodbDS, orderRepo);
+
   const user = {
     email: 'unittest@loopback.io',
     password: 'p4ssw0rd',
@@ -27,14 +33,16 @@ describe('authentication utilities', () => {
     surname: 'test',
   };
   let newUser: User;
-  let jwt_service: JWTAuthenticationService;
+  let jwtService: JWTAuthenticationService;
+  let bcryptHasher: PasswordHasher;
 
+  before(setupApp);
   before(clearDatabase);
   before(createUser);
   before(createService);
 
   it('getAccessTokenForUser creates valid jwt access token', async () => {
-    const token = await jwt_service.getAccessTokenForUser({
+    const token = await jwtService.getAccessTokenForUser({
       email: 'unittest@loopback.io',
       password: 'p4ssw0rd',
     });
@@ -46,7 +54,7 @@ describe('authentication utilities', () => {
       `User with email fake@loopback.io not found.`,
     );
     return expect(
-      jwt_service.getAccessTokenForUser({
+      jwtService.getAccessTokenForUser({
         email: 'fake@loopback.io',
         password: 'fake',
       }),
@@ -58,7 +66,7 @@ describe('authentication utilities', () => {
       'The credentials are not correct.',
     );
     return expect(
-      jwt_service.getAccessTokenForUser({
+      jwtService.getAccessTokenForUser({
         email: 'unittest@loopback.io',
         password: 'fake',
       }),
@@ -66,32 +74,40 @@ describe('authentication utilities', () => {
   });
 
   it('decodeAccessToken decodes valid access token', async () => {
-    const token = await jwt_service.getAccessTokenForUser({
+    const token = await jwtService.getAccessTokenForUser({
       email: 'unittest@loopback.io',
       password: 'p4ssw0rd',
     });
     const expectedUser = getExpectedUser(newUser);
-    const currentUser = await jwt_service.decodeAccessToken(token);
+    const currentUser = await jwtService.decodeAccessToken(token);
     expect(currentUser).to.deepEqual(expectedUser);
   });
 
   it('decodeAccessToken throws error for invalid accesstoken', async () => {
     const token = 'fake';
     const error = new JsonWebTokenError('jwt malformed');
-    return expect(jwt_service.decodeAccessToken(token)).to.be.rejectedWith(
+    return expect(jwtService.decodeAccessToken(token)).to.be.rejectedWith(
       error,
     );
   });
 
+  async function setupApp() {
+    app = await setupApplication();
+    app.bind(PasswordHasherBindings.ROUNDS).to(4);
+  }
+
   async function createUser() {
-    user.password = await hashPassword(user.password, 4);
+    bcryptHasher = await app.get(PasswordHasherBindings.PASSWORD_HASHER);
+    user.password = await bcryptHasher.hashPassword(user.password);
     newUser = await userRepo.create(user);
   }
+
   async function clearDatabase() {
     await userRepo.deleteAll();
   }
+
   async function createService() {
-    jwt_service = new JWTAuthenticationService(userRepo, JWT_SECRET);
+    jwtService = await app.get(JWTAuthenticationBindings.SERVICE);
   }
 });
 
