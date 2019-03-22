@@ -112,7 +112,8 @@
       "dependencyUpdate": "chore: update ${dependency} to version ${version}",
       "devDependencyUpdate": "chore: update ${dependency} to version ${version}",
       "dependencyPin": "chore: pin ${dependency} to ${oldVersion}",
-      "devDependencyPin": "chore: pin ${dependency} to ${oldVersion}"
+      "devDependencyPin": "chore: pin ${dependency} to ${oldVersion}",
+      "lockfileUpdate": "chore: update lockfile ${lockfilePath}"
     },
     "prTitles": {
       "initialPR": "[greenkeeper] update dependencies to enable Greenkeeper",
