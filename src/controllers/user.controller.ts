@@ -14,23 +14,16 @@ import {
   UserProfile,
   AuthenticationBindings,
 } from '@loopback/authentication';
+import {
+  CredentialsRequestBody,
+  UserProfileSchema,
+} from './specs/user-controller.specs';
 import {Credentials} from '../repositories/user.repository';
 import {PasswordHasher} from '../services/hash.password.bcryptjs';
 import {JWTAuthenticationService} from '../services/JWT.authentication.service';
 import {JWTAuthenticationBindings, PasswordHasherBindings} from '../keys';
 import {validateCredentials} from '../services/JWT.authentication.service';
 import * as _ from 'lodash';
-
-// TODO(jannyHou): This should be moved to @loopback/authentication
-const UserProfileSchema = {
-  type: 'object',
-  required: ['id'],
-  properties: {
-    id: {type: 'string'},
-    email: {type: 'string'},
-    name: {type: 'string'},
-  },
-};
 
 export class UserController {
   constructor(
@@ -141,9 +134,8 @@ export class UserController {
       },
     },
   })
-  // @authenticate('jwt', {action: 'generateAccessToken'})
   async login(
-    @requestBody() credentials: Credentials,
+    @requestBody(CredentialsRequestBody) credentials: Credentials,
   ): Promise<{token: string}> {
     validateCredentials(credentials);
     const token = await this.jwtAuthenticationService.getAccessTokenForUser(
