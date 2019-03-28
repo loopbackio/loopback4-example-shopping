@@ -118,6 +118,36 @@ describe('UserController', () => {
     await client.get(`/users/${newUser.id}`).expect(200, newUser.toJSON());
   });
 
+  it.only('finds user by id', async () => {
+    const users = [
+      {
+        email: 'test1@loopback.io',
+        password: 'p4ssw0rd',
+        firstname: 'Example1',
+        surname: 'User',
+      },
+      {
+        email: 'test2@loopback.io',
+        password: 'p4ssw0rd',
+        firstname: 'Example2',
+        surname: 'User',
+      },
+    ];
+
+    const createdUsers = await userRepo.createAll(users);
+    const ids = _.map(createdUsers, u => u.id);
+    expect(ids.length).to.equal(2);
+    console.log(ids);
+
+    const filter = {where: {id: ids[0]}};
+    const result = await userRepo.find(filter);
+    console.log(
+      `find ${result.length} result, \n the result is ${JSON.stringify(
+        result,
+      )}`,
+    );
+  });
+
   describe('user product recommendation (service) api', () => {
     // tslint:disable-next-line:no-any
     let recommendationService: Server;

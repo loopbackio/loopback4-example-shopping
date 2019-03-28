@@ -11,6 +11,7 @@ export class User extends Entity {
   @property({
     type: 'string',
     id: true,
+    generated: true,
   })
   id: string;
 
