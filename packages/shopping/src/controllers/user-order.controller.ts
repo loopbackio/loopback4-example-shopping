@@ -15,6 +15,8 @@ import {
   HttpErrors,
 } from '@loopback/rest';
 import {Order} from '../models';
+import {authenticate, UserProfile} from '@loopback/authentication';
+import {inject} from '@loopback/core';
 
 /**
  * Controller for User's Orders
@@ -35,10 +37,20 @@ export class UserOrderController {
       },
     },
   })
+  @authenticate('jwt')
   async createOrder(
     @param.path.string('userId') userId: string,
+    @inject('authentication.currentUser') currentUser: UserProfile,
     @requestBody() order: Order,
   ): Promise<Order> {
+    if (currentUser.id !== userId) {
+      throw new HttpErrors.BadRequest(
+        `User id does not match looged in user: ${userId} !== ${
+          currentUser.id
+        }`,
+      );
+    }
+
     if (userId !== order.userId) {
       throw new HttpErrors.BadRequest(
         `User id does not match: ${userId} !== ${order.userId}`,

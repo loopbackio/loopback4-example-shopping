@@ -9,6 +9,11 @@ import {OrderRepository, UserRepository} from '../../repositories';
 import {MongoDataSource} from '../../datasources';
 import {User, Order} from '../../models';
 import {setupApplication} from './helper';
+import {JWTAuthenticationService} from '../../src/services/JWT.authentication.service';
+import {
+  PasswordHasherBindings,
+  JWTAuthenticationBindings,
+} from '../../src/keys';
 
 describe('UserOrderController acceptance tests', () => {
   let app: ShoppingApplication;
@@ -26,42 +31,113 @@ describe('UserOrderController acceptance tests', () => {
     await app.stop();
   });
 
-  it('creates an order for a user with a given orderId', async () => {
-    const user = await givenAUser();
-    const userId = user.id.toString();
-    const order = givenAOrder({userId: userId, orderId: '1'});
+  describe('Creating new orders for authenticated users', () => {
+    let plainPassword: string;
+    let jwtAuthService: JWTAuthenticationService;
 
-    await client
-      .post(`/users/${userId}/orders`)
-      .send(order)
-      .expect(200, order);
-  });
+    const user = {
+      email: 'loopback@example.com',
+      password: 'p4ssw0rd',
+      firstname: 'Example',
+      surname: 'User',
+    };
 
-  it('creates an order for a user without a given orderId', async () => {
-    const user = await givenAUser();
-    const userId = user.id.toString();
-    const order = givenAOrder({userId: userId});
+    before('create new user for user orders', async () => {
+      app.bind(PasswordHasherBindings.ROUNDS).to(4);
 
-    const res = await client
-      .post(`/users/${userId}/orders`)
-      .send(order)
-      .expect(200);
+      const passwordHasher = await app.get(
+        PasswordHasherBindings.PASSWORD_HASHER,
+      );
+      plainPassword = user.password;
+      user.password = await passwordHasher.hashPassword(user.password);
+      jwtAuthService = await app.get(JWTAuthenticationBindings.SERVICE);
+    });
 
-    expect(res.body.orderId).to.be.a.String();
-    delete res.body.orderId;
-    expect(res.body).to.deepEqual(order);
-  });
+    it('creates an order for a user with a given orderId', async () => {
+      const newUser = await userRepo.create(user);
+      const userId = newUser.id.toString();
+      const order = givenAOrder({userId: userId, orderId: '1'});
 
-  it('throws an error when a userId in path does not match body', async () => {
-    const user = await givenAUser();
-    const userId = user.id.toString();
-    const order = givenAOrder({userId: 'hello'});
+      const token = await jwtAuthService.getAccessTokenForUser({
+        email: newUser.email,
+        password: plainPassword,
+      });
 
-    await client
-      .post(`/users/${userId}/orders`)
-      .set('Content-Type', 'application/json')
-      .send(order)
-      .expect(400);
+      await client
+        .post(`/users/${userId}/orders`)
+        .send(order)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200, order);
+    });
+
+    it('creates an order for a user without a given orderId', async () => {
+      const newUser = await userRepo.create(user);
+      const userId = newUser.id.toString();
+
+      const token = await jwtAuthService.getAccessTokenForUser({
+        email: newUser.email,
+        password: plainPassword,
+      });
+
+      const order = givenAOrder({userId: userId});
+
+      const res = await client
+        .post(`/users/${userId}/orders`)
+        .send(order)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200);
+
+      expect(res.body.orderId).to.be.a.String();
+      delete res.body.orderId;
+      expect(res.body).to.deepEqual(order);
+    });
+
+    it('throws an error when a userId in path does not match body', async () => {
+      const newUser = await userRepo.create(user);
+      const userId = newUser.id.toString();
+
+      const token = await jwtAuthService.getAccessTokenForUser({
+        email: newUser.email,
+        password: plainPassword,
+      });
+
+      const order = givenAOrder({userId: 'hello'});
+
+      await client
+        .post(`/users/${userId}/orders`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + token)
+        .send(order)
+        .expect(400);
+    });
+
+    it('throws an error when a user is not authenticated', async () => {
+      const newUser = await userRepo.create(user);
+      const userId = newUser.id.toString();
+
+      const order = givenAOrder({userId: userId});
+
+      await client
+        .post(`/users/${userId}/orders`)
+        .send(order)
+        .expect(401);
+    });
+
+    it('throws an error when a user with wrong token is provided', async () => {
+      const newUser = await userRepo.create(user);
+      const userId = newUser.id.toString();
+
+      const order = givenAOrder({userId: userId});
+
+      await client
+        .post(`/users/${userId}/orders`)
+        .send(order)
+        .set(
+          'Authorization',
+          'Bearer ' + 'Wrong token - IjoidGVzdEBsb29wYmFjay5p',
+        )
+        .expect(401);
+    });
   });
 
   // TODO(virkt25): Implement after issue below is fixed.
@@ -128,7 +204,6 @@ describe('UserOrderController acceptance tests', () => {
       firstname: 'Example',
       surname: 'User',
     };
-
     return await userRepo.create(user);
   }
 
