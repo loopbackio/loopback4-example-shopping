@@ -43,7 +43,7 @@ export class UserOrderController {
     @inject('authentication.currentUser') currentUser: UserProfile,
     @requestBody() order: Order,
   ): Promise<Order> {
-    if (currentUser.id !== userId) {
+    if (currentUser.id !== order.userId) {
       throw new HttpErrors.BadRequest(
         `User id does not match looged in user: ${userId} !== ${
           currentUser.id
