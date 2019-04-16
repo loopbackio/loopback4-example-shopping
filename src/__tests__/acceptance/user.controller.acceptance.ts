@@ -6,18 +6,15 @@
 import {Client, expect, toJSON} from '@loopback/testlab';
 import {Response} from 'superagent';
 import {ShoppingApplication} from '../..';
-import {UserRepository, OrderRepository} from '../../src/repositories';
-import {MongoDataSource} from '../../src/datasources';
+import {UserRepository, OrderRepository} from '../../repositories';
+import {MongoDataSource} from '../../datasources';
 import {setupApplication} from './helper';
-import {createRecommendationServer} from '../../recommender';
+import {createRecommendationServer} from '../../../recommender';
 import {Server} from 'http';
 import * as _ from 'lodash';
-import {JWTAuthenticationService} from '../../src/services/JWT.authentication.service';
-import {
-  PasswordHasherBindings,
-  JWTAuthenticationBindings,
-} from '../../src/keys';
-const recommendations = require('../../recommender/recommendations.json');
+import {JWTAuthenticationService} from '../../services/JWT.authentication.service';
+import {PasswordHasherBindings, JWTAuthenticationBindings} from '../../keys';
+const recommendations = require('../../../recommender/recommendations.json');
 
 describe('UserController', () => {
   let app: ShoppingApplication;
