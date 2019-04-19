@@ -5,9 +5,9 @@
 
 import {supertest, expect} from '@loopback/testlab';
 import {ShoppingApplication} from '../..';
-import {OrderRepository, UserRepository} from '../../src/repositories';
-import {MongoDataSource} from '../../src/datasources';
-import {User, Order} from '../../src/models';
+import {OrderRepository, UserRepository} from '../../repositories';
+import {MongoDataSource} from '../../datasources';
+import {User, Order} from '../../models';
 import {setupApplication} from './helper';
 
 describe('UserOrderController acceptance tests', () => {

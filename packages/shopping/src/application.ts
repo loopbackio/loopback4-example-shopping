@@ -34,7 +34,7 @@ export interface PackageInfo {
 }
 export const PackageKey = BindingKey.create<PackageInfo>('application.package');
 
-const pkg: PackageInfo = require('../../package.json');
+const pkg: PackageInfo = require('../package.json');
 
 export class ShoppingApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -69,7 +69,7 @@ export class ShoppingApplication extends BootMixin(
     this.sequence(MySequence);
 
     // Set up default home page
-    this.static('/', path.join(__dirname, '../../public'));
+    this.static('/', path.join(__dirname, '../public'));
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here

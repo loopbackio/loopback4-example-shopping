@@ -6,18 +6,17 @@
 import {Client, expect, toJSON} from '@loopback/testlab';
 import {Response} from 'superagent';
 import {ShoppingApplication} from '../..';
-import {UserRepository, OrderRepository} from '../../src/repositories';
-import {MongoDataSource} from '../../src/datasources';
+import {UserRepository, OrderRepository} from '../../repositories';
+import {MongoDataSource} from '../../datasources';
 import {setupApplication} from './helper';
-import {createRecommendationServer} from '../../recommender';
-import {Server} from 'http';
-import * as _ from 'lodash';
-import {JWTAuthenticationService} from '../../src/services/JWT.authentication.service';
 import {
-  PasswordHasherBindings,
-  JWTAuthenticationBindings,
-} from '../../src/keys';
-const recommendations = require('../../recommender/recommendations.json');
+  createRecommendationServer,
+  HttpServer,
+} from 'loopback4-example-recommender';
+import * as _ from 'lodash';
+import {JWTAuthenticationService} from '../../services/JWT.authentication.service';
+import {PasswordHasherBindings, JWTAuthenticationBindings} from '../../keys';
+const recommendations = require('loopback4-example-recommender/data/recommendations.json');
 
 describe('UserController', () => {
   let app: ShoppingApplication;
@@ -120,14 +119,15 @@ describe('UserController', () => {
 
   describe('user product recommendation (service) api', () => {
     // tslint:disable-next-line:no-any
-    let recommendationService: Server;
+    let recommendationService: HttpServer;
 
-    before(() => {
+    before(async () => {
       recommendationService = createRecommendationServer();
+      await recommendationService.start();
     });
 
-    after(() => {
-      recommendationService.close();
+    after(async () => {
+      await recommendationService.stop();
     });
 
     it('returns product recommendations for a user', async () => {
