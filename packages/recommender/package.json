@@ -1,0 +1,47 @@
+{
+  "name": "loopback4-example-recommender",
+  "version": "1.0.0",
+  "description": "Mock up product recommendation",
+  "keywords": [
+    "loopback-application",
+    "loopback"
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=8.9"
+  },
+  "scripts": {
+    "build": "lb-tsc es2017 --outDir dist --copy-resources",
+    "build:watch": "lb-tsc es2017 --outDir dist --watch",
+    "clean": "lb-clean dist",
+    "pretest": "npm run clean && npm run build",
+    "test": "lb-mocha --allow-console-logs \"dist/__tests__/**/*.js\"",
+    "test:dev": "lb-mocha --allow-console-logs dist/__tests__/**/*.js && npm run posttest",
+    "prestart": "npm run build",
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git"
+  },
+  "license": "MIT",
+  "files": [
+    "README.md",
+    "index.js",
+    "index.d.ts",
+    "dist*/src",
+    "dist*/index*",
+    "src"
+  ],
+  "dependencies": {
+    "@loopback/http-server": "^1.1.13",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "@loopback/build": "^1.4.3",
+    "@loopback/tslint-config": "^2.0.4",
+    "@types/express": "^4.16.1",
+    "@types/node": "^11.13.5",
+    "typescript": "^3.4.4"
+  },
+  "copyright.owner": "IBM Corp."
+}
