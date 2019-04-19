@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {ShoppingApplication} from '../..';
+import {ShoppingApplication} from '../../application';
 import {givenHttpServerConfig} from '@loopback/testlab';
 
 export async function setupApplication(): Promise<ShoppingApplication> {

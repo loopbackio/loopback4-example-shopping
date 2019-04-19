@@ -3,10 +3,10 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {ShoppingCartRepository} from '../../src/repositories';
-import {ShoppingCart, ShoppingCartItem} from '../../src/models';
+import {ShoppingCartRepository} from '../../repositories';
+import {ShoppingCart, ShoppingCartItem} from '../../models';
 import {expect} from '@loopback/testlab';
-import {RedisDataSource} from '../../src/datasources';
+import {RedisDataSource} from '../../datasources';
 
 describe('ShoppingCart KeyValue Repository', () => {
   let repo: ShoppingCartRepository;

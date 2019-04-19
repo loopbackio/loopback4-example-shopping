@@ -5,9 +5,9 @@
 
 import {Client, expect} from '@loopback/testlab';
 import {ShoppingApplication} from '../..';
-import {ShoppingCartRepository} from '../../src/repositories';
-import {RedisDataSource} from '../../src/datasources';
-import {ShoppingCart, ShoppingCartItem} from '../../src/models';
+import {ShoppingCartRepository} from '../../repositories';
+import {RedisDataSource} from '../../datasources';
+import {ShoppingCart, ShoppingCartItem} from '../../models';
 import {setupApplication} from './helper';
 
 describe('ShoppingCartController', () => {

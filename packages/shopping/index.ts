@@ -3,8 +3,4 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-const path = require('path');
-
-const app = require('./dist/recommender');
-
-module.exports = app.createRecommendationServer();
+export * from './src';

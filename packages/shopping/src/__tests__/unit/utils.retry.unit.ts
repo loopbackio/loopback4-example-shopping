@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {expect} from '@loopback/testlab';
-import {sleep, Task, retry} from '../../src/utils/retry';
+import {sleep, Task, retry} from '../../utils/retry';
 
 describe('sleep()', () => {
   it('waits for given milliseconds', async () => {

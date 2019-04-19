@@ -4,19 +4,16 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {expect, toJSON} from '@loopback/testlab';
-import {MongoDataSource} from '../../src/datasources';
-import {JWTAuthenticationService} from '../../src/services/JWT.authentication.service';
+import {MongoDataSource} from '../../datasources';
+import {JWTAuthenticationService} from '../../services/JWT.authentication.service';
 import {ShoppingApplication} from '../..';
-import {PasswordHasher} from '../../src/services/hash.password.bcryptjs';
-import {UserRepository, OrderRepository} from '../../src/repositories';
-import {User} from '../../src/models';
+import {PasswordHasher} from '../../services/hash.password.bcryptjs';
+import {UserRepository, OrderRepository} from '../../repositories';
+import {User} from '../../models';
 import * as _ from 'lodash';
 import {JsonWebTokenError} from 'jsonwebtoken';
 import {HttpErrors} from '@loopback/rest';
-import {
-  PasswordHasherBindings,
-  JWTAuthenticationBindings,
-} from '../../src/keys';
+import {PasswordHasherBindings, JWTAuthenticationBindings} from '../../keys';
 import {setupApplication} from './helper';
 
 describe('authentication services', () => {
