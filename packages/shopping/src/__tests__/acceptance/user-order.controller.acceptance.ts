@@ -9,11 +9,8 @@ import {OrderRepository, UserRepository} from '../../repositories';
 import {MongoDataSource} from '../../datasources';
 import {User, Order} from '../../models';
 import {setupApplication} from './helper';
-import {JWTAuthenticationService} from '../../src/services/JWT.authentication.service';
-import {
-  PasswordHasherBindings,
-  JWTAuthenticationBindings,
-} from '../../src/keys';
+import {JWTAuthenticationService} from '../../services/JWT.authentication.service';
+import {PasswordHasherBindings, JWTAuthenticationBindings} from '../../keys';
 
 describe('UserOrderController acceptance tests', () => {
   let app: ShoppingApplication;
