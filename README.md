@@ -1,6 +1,6 @@
 # @loopback/example-shopping
 
-[![Travis Build Status](https://travis-ci.org/strongloop/loopback4-example-shopping.svg?branch=master)](https://travis-ci.org/strongloop/opback4-example-shopping)
+[![Travis Build Status](https://travis-ci.com/strongloop/loopback4-example-shopping.svg?branch=master)](https://travis-ci.com/strongloop/loopback4-example-shopping)
 [![Greenkeeper badge](https://badges.greenkeeper.io/strongloop/loopback4-example-shopping.svg)](https://greenkeeper.io/)
 
 This project aims to represent an online ecommerce platform APIs to validate /
