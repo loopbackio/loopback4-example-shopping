@@ -35,6 +35,11 @@
   "separateMajorMinor": true,
   "separateMinorPatch": false,
 
+  "packageRules": [{
+    "sourceUrlPrefixes": ["https://github.com/strongloop/loopback-next"],
+    "groupName": "loopback packages"
+  }],
+
   "masterIssue": true,
   "masterIssueApproval": false,
   "masterIssueAutoclose": true
