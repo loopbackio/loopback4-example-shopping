@@ -1,0 +1,46 @@
+{
+  "extends": [
+    ":gitSignOff",
+    "group:monorepos",
+    "group:recommended",
+    ":pinAllExceptPeerDependencies",
+    "helpers:disableTypesNodeMajor"
+  ],
+
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/__tests__/**",
+    "**/test/**"
+  ],
+
+  "automerge": false,
+  "branchPrefix": "renovate/",
+  "ignoreUnstable": true,
+  "statusCheckVerify": true,
+  "updateNotScheduled": true,
+
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": "before 5am on monday"
+  },
+
+  "prConcurrentLimit": 20,
+  "prCreation": "immediate",
+  "prHourlyLimit": 2,
+
+  "semanticCommits": true,
+  "semanticCommitType": "chore",
+  "semanticCommitScope": null,
+
+  "separateMajorMinor": true,
+  "separateMinorPatch": false,
+
+  "packageRules": [{
+    "sourceUrlPrefixes": ["https://github.com/strongloop/loopback-next"],
+    "groupName": "loopback packages"
+  }],
+
+  "masterIssue": true,
+  "masterIssueApproval": false,
+  "masterIssueAutoclose": true
+}
