@@ -51,7 +51,7 @@
     "@loopback/build": "1.4.3",
     "@loopback/testlab": "1.2.4",
     "@loopback/tslint-config": "2.0.4",
-    "@types/node": "11.13.5",
+    "@types/node": "11.13.10",
     "commitizen": "3.1.1",
     "concurrently": "4.1.0",
     "cz-conventional-changelog": "2.1.0",
