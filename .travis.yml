@@ -30,5 +30,4 @@ matrix:
 branches:
   only:
     - master
-    - /^greenkeeper/.*$/
     - /^renovate/.*$/
