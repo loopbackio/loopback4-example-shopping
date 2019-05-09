@@ -33,15 +33,15 @@
     "src"
   ],
   "dependencies": {
-    "@loopback/http-server": "^1.1.13",
-    "express": "^4.16.4"
+    "@loopback/http-server": "1.1.13",
+    "express": "4.16.4"
   },
   "devDependencies": {
-    "@loopback/build": "^1.4.3",
-    "@loopback/tslint-config": "^2.0.4",
-    "@types/express": "^4.16.1",
-    "@types/node": "^11.13.5",
-    "typescript": "^3.4.4"
+    "@loopback/build": "1.4.3",
+    "@loopback/tslint-config": "2.0.4",
+    "@types/express": "4.16.1",
+    "@types/node": "11.13.5",
+    "typescript": "3.4.4"
   },
   "copyright.owner": "IBM Corp."
 }
