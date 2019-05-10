@@ -4,19 +4,25 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {BindingKey} from '@loopback/context';
-import {JWTAuthenticationService} from './services/JWT.authentication.service';
-import {JWTStrategy} from './authentication-strategies/JWT.strategy';
 import {PasswordHasher} from './services/hash.password.bcryptjs';
+import {TokenService, UserService} from '@loopback/authentication';
+import {User} from './models';
+import {Credentials} from './repositories';
 
-// Discussion point for reviewers:
-// What would be the good naming conversion for bindings?
-export namespace JWTAuthenticationBindings {
-  export const STRATEGY = BindingKey.create<JWTStrategy>(
-    'authentication.strategies.jwt.strategy',
+export namespace TokenServiceConstants {
+  export const TOKEN_SECRET_VALUE = 'myjwts3cr3t';
+  export const TOKEN_EXPIRES_IN_VALUE = '600';
+}
+
+export namespace TokenServiceBindings {
+  export const TOKEN_SECRET = BindingKey.create<string>(
+    'authentication.jwt.secret',
   );
-  export const SECRET = BindingKey.create<string>('authentication.jwt.secret');
-  export const SERVICE = BindingKey.create<JWTAuthenticationService>(
-    'services.authentication.jwt.service',
+  export const TOKEN_EXPIRES_IN = BindingKey.create<string>(
+    'authentication.jwt.expires.in.seconds',
+  );
+  export const TOKEN_SERVICE = BindingKey.create<TokenService>(
+    'services.authentication.jwt.tokenservice',
   );
 }
 
@@ -25,4 +31,10 @@ export namespace PasswordHasherBindings {
     'services.hasher',
   );
   export const ROUNDS = BindingKey.create<number>('services.hasher.round');
+}
+
+export namespace UserServiceBindings {
+  export const USER_SERVICE = BindingKey.create<UserService<User, Credentials>>(
+    'services.user.service',
+  );
 }

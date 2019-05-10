@@ -4,6 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {repository} from '@loopback/repository';
+import {validateCredentials} from '../services/validator';
 import {post, param, get, requestBody} from '@loopback/rest';
 import {User, Product} from '../models';
 import {UserRepository} from '../repositories';
@@ -13,6 +14,8 @@ import {
   authenticate,
   UserProfile,
   AuthenticationBindings,
+  TokenService,
+  UserService,
 } from '@loopback/authentication';
 import {
   CredentialsRequestBody,
@@ -20,9 +23,12 @@ import {
 } from './specs/user-controller.specs';
 import {Credentials} from '../repositories/user.repository';
 import {PasswordHasher} from '../services/hash.password.bcryptjs';
-import {JWTAuthenticationService} from '../services/JWT.authentication.service';
-import {JWTAuthenticationBindings, PasswordHasherBindings} from '../keys';
-import {validateCredentials} from '../services/JWT.authentication.service';
+
+import {
+  TokenServiceBindings,
+  PasswordHasherBindings,
+  UserServiceBindings,
+} from '../keys';
 import * as _ from 'lodash';
 
 export class UserController {
@@ -33,19 +39,25 @@ export class UserController {
     @inject.setter(AuthenticationBindings.CURRENT_USER)
     public setCurrentUser: Setter<UserProfile>,
     @inject(PasswordHasherBindings.PASSWORD_HASHER)
-    public passwordHahser: PasswordHasher,
-    @inject(JWTAuthenticationBindings.SERVICE)
-    public jwtAuthenticationService: JWTAuthenticationService,
+    public passwordHasher: PasswordHasher,
+    @inject(TokenServiceBindings.TOKEN_SERVICE)
+    public jwtService: TokenService,
+    @inject(UserServiceBindings.USER_SERVICE)
+    public userService: UserService<User, Credentials>,
   ) {}
 
   @post('/users')
   async create(@requestBody() user: User): Promise<User> {
+    // ensure a valid email value and password value
     validateCredentials(_.pick(user, ['email', 'password']));
-    user.password = await this.passwordHahser.hashPassword(user.password);
 
-    // Save & Return Result
+    // encrypt the password
+    user.password = await this.passwordHasher.hashPassword(user.password);
+
+    // create the new user
     const savedUser = await this.userRepository.create(user);
     delete savedUser.password;
+
     return savedUser;
   }
 
@@ -83,15 +95,11 @@ export class UserController {
   })
   @authenticate('jwt')
   async printCurrentUser(
-    @inject('authentication.currentUser') currentUser: UserProfile,
+    @inject('authentication.currentUser') currentUserProfile: UserProfile,
   ): Promise<UserProfile> {
-    return currentUser;
+    return currentUserProfile;
   }
 
-  // TODO(@jannyHou): missing logout function.
-  // as a stateless authentication method, JWT doesn't actually
-  // have a logout operation. See article for details:
-  // https://medium.com/devgorilla/how-to-log-out-when-using-jwt-a8c7823e8a6
   @get('/users/{userId}/recommend', {
     responses: {
       '200': {
@@ -137,10 +145,15 @@ export class UserController {
   async login(
     @requestBody(CredentialsRequestBody) credentials: Credentials,
   ): Promise<{token: string}> {
-    validateCredentials(credentials);
-    const token = await this.jwtAuthenticationService.getAccessTokenForUser(
-      credentials,
-    );
+    // ensure the user exists, and the password is correct
+    const user = await this.userService.verifyCredentials(credentials);
+
+    // convert a User object into a UserProfile object (reduced set of properties)
+    const userProfile = this.userService.convertToUserProfile(user);
+
+    // create a JSON Web Token based on the user profile
+    const token = await this.jwtService.generateToken(userProfile);
+
     return {token};
   }
 }

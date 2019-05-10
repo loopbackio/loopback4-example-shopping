@@ -5,7 +5,6 @@
 
 import {ShoppingApplication} from './application';
 import {ApplicationConfig} from '@loopback/core';
-
 export {ShoppingApplication, PackageInfo, PackageKey} from './application';
 
 export async function main(options?: ApplicationConfig) {

@@ -28,7 +28,7 @@ describe('UserOrderController acceptance tests', () => {
 
   it('creates an order for a user with a given orderId', async () => {
     const user = await givenAUser();
-    const userId = user.id.toString();
+    const userId = user.id;
     const order = givenAOrder({userId: userId, orderId: '1'});
 
     await client
@@ -39,7 +39,7 @@ describe('UserOrderController acceptance tests', () => {
 
   it('creates an order for a user without a given orderId', async () => {
     const user = await givenAUser();
-    const userId = user.id.toString();
+    const userId = user.id;
     const order = givenAOrder({userId: userId});
 
     const res = await client
@@ -54,7 +54,7 @@ describe('UserOrderController acceptance tests', () => {
 
   it('throws an error when a userId in path does not match body', async () => {
     const user = await givenAUser();
-    const userId = user.id.toString();
+    const userId = user.id;
     const order = givenAOrder({userId: 'hello'});
 
     await client
@@ -107,7 +107,7 @@ describe('UserOrderController acceptance tests', () => {
 
     async function givenUserAndOrders() {
       user = await givenAUser();
-      userId = user.id.toString();
+      userId = user.id;
       order1 = givenAOrder();
       savedOrder1 = await saveOrder(user, order1);
       order2 = givenAOrder();
@@ -125,11 +125,15 @@ describe('UserOrderController acceptance tests', () => {
     const user = {
       email: 'loopback@example.com',
       password: 'p4ssw0rd',
-      firstname: 'Example',
-      surname: 'User',
+      firstName: 'Example',
+      lastName: 'User',
     };
 
-    return await userRepo.create(user);
+    const newUser = await userRepo.create(user);
+    // MongoDB returns an id object we need to convert to string
+    newUser.id = newUser.id.toString();
+
+    return newUser;
   }
 
   function givenAOrder(partial: Partial<Order> = {}) {
