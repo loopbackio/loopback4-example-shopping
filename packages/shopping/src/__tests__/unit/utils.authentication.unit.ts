@@ -3,18 +3,21 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {expect, toJSON} from '@loopback/testlab';
+import {expect} from '@loopback/testlab';
+import {validateCredentials} from '../../services/validator';
 import {MongoDataSource} from '../../datasources';
-import {JWTAuthenticationService} from '../../services/JWT.authentication.service';
 import {ShoppingApplication} from '../..';
 import {PasswordHasher} from '../../services/hash.password.bcryptjs';
-import {UserRepository, OrderRepository} from '../../repositories';
+import {UserRepository, OrderRepository, Credentials} from '../../repositories';
 import {User} from '../../models';
-import * as _ from 'lodash';
-import {JsonWebTokenError} from 'jsonwebtoken';
 import {HttpErrors} from '@loopback/rest';
-import {PasswordHasherBindings, JWTAuthenticationBindings} from '../../keys';
+import {
+  PasswordHasherBindings,
+  UserServiceBindings,
+  TokenServiceBindings,
+} from '../../keys';
 import {setupApplication} from './helper';
+import {TokenService, UserService} from '@loopback/authentication';
 
 describe('authentication services', () => {
   let app: ShoppingApplication;
@@ -26,66 +29,169 @@ describe('authentication services', () => {
   const user = {
     email: 'unittest@loopback.io',
     password: 'p4ssw0rd',
-    firstname: 'unit',
-    surname: 'test',
+    firstName: 'unit',
+    lastName: 'test',
   };
+
   let newUser: User;
-  let jwtService: JWTAuthenticationService;
+  let jwtService: TokenService;
+  let userService: UserService<User, Credentials>;
   let bcryptHasher: PasswordHasher;
 
   before(setupApp);
   before(clearDatabase);
   before(createUser);
-  before(createService);
+  before(createTokenService);
+  before(createUserService);
 
-  it('getAccessTokenForUser creates valid jwt access token', async () => {
-    const token = await jwtService.getAccessTokenForUser({
-      email: 'unittest@loopback.io',
-      password: 'p4ssw0rd',
-    });
-    expect(token).to.not.be.empty();
+  it('validateCredentials() succeeds', () => {
+    const credentials = {email: 'dom@example.com', password: 'p4ssw0rd'};
+    expect(() => validateCredentials(credentials)).to.not.throw();
   });
 
-  it('getAccessTokenForUser rejects non-existing user with error Not Found', async () => {
-    const expectedError = new HttpErrors['NotFound'](
-      `User with email fake@loopback.io not found.`,
+  it('validateCredentials() fails with invalid email', () => {
+    const expectedError = new HttpErrors.UnprocessableEntity('invalid email');
+    const credentials = {email: 'domdomdom', password: 'p4ssw0rd'};
+    expect(() => validateCredentials(credentials)).to.throw(expectedError);
+  });
+
+  it('validateCredentials() fails with invalid password', () => {
+    const expectedError = new HttpErrors.UnprocessableEntity(
+      'password must be minimum 8 characters',
     );
-    return expect(
-      jwtService.getAccessTokenForUser({
-        email: 'fake@loopback.io',
-        password: 'fake',
-      }),
-    ).to.be.rejectedWith(expectedError);
+    const credentials = {email: 'dom@example.com', password: 'p4ss'};
+    expect(() => validateCredentials(credentials)).to.throw(expectedError);
   });
 
-  it('getAccessTokenForUser rejects wrong credential with error Unauthorized', async () => {
+  it('user service verifyCredentials() succeeds', async () => {
+    const {email} = newUser;
+    const credentials = {email, password: user.password};
+
+    const returnedUser = await userService.verifyCredentials(credentials);
+
+    // create a copy of returned user without password field
+    const returnedUserWithOutPassword = Object.assign({}, returnedUser, {
+      password: user.password,
+    });
+    delete returnedUserWithOutPassword.password;
+
+    // create a copy of expected user without password field
+    const expectedUserWithoutPassword = Object.assign({}, newUser);
+    delete expectedUserWithoutPassword.password;
+
+    expect(returnedUserWithOutPassword).to.deepEqual(
+      expectedUserWithoutPassword,
+    );
+  });
+
+  it('user service verifyCredentials() fails with user not found', async () => {
+    const credentials = {email: 'idontexist@example.com', password: 'p4ssw0rd'};
+
+    const expectedError = new HttpErrors.NotFound(
+      `User with email ${credentials.email} not found.`,
+    );
+
+    await expect(userService.verifyCredentials(credentials)).to.be.rejectedWith(
+      expectedError,
+    );
+  });
+
+  it('user service verifyCredentials() fails with incorrect credentials', async () => {
+    const {email} = newUser;
+    const credentials = {email, password: 'invalidp4ssw0rd'};
     const expectedError = new HttpErrors.Unauthorized(
       'The credentials are not correct.',
     );
-    return expect(
-      jwtService.getAccessTokenForUser({
-        email: 'unittest@loopback.io',
-        password: 'fake',
-      }),
-    ).to.be.rejectedWith(expectedError);
-  });
 
-  it('decodeAccessToken decodes valid access token', async () => {
-    const token = await jwtService.getAccessTokenForUser({
-      email: 'unittest@loopback.io',
-      password: 'p4ssw0rd',
-    });
-    const expectedUser = getExpectedUser(newUser);
-    const currentUser = await jwtService.decodeAccessToken(token);
-    expect(currentUser).to.deepEqual(expectedUser);
-  });
-
-  it('decodeAccessToken throws error for invalid accesstoken', async () => {
-    const token = 'fake';
-    const error = new JsonWebTokenError('jwt malformed');
-    return expect(jwtService.decodeAccessToken(token)).to.be.rejectedWith(
-      error,
+    await expect(userService.verifyCredentials(credentials)).to.be.rejectedWith(
+      expectedError,
     );
+  });
+
+  it('user service convertToUserProfile() succeeds', () => {
+    const expectedUserProfile = {
+      id: newUser.id,
+      name: `${newUser.firstName} ${newUser.lastName}`,
+    };
+    const userProfile = userService.convertToUserProfile(newUser);
+    expect(expectedUserProfile).to.deepEqual(userProfile);
+  });
+
+  it('user service convertToUserProfile() succeeds without optional fields : firstName, lastName', () => {
+    const userWithoutFirstOrLastName = Object.assign({}, newUser);
+    delete userWithoutFirstOrLastName.firstName;
+    delete userWithoutFirstOrLastName.lastName;
+
+    const userProfile = userService.convertToUserProfile(
+      userWithoutFirstOrLastName,
+    );
+    expect(userProfile.id).to.equal(newUser.id);
+    expect(userProfile.name).to.equal('');
+  });
+
+  it('user service convertToUserProfile() succeeds without optional field : lastName', () => {
+    const userWithoutLastName = Object.assign({}, newUser);
+    delete userWithoutLastName.lastName;
+
+    const userProfile = userService.convertToUserProfile(userWithoutLastName);
+    expect(userProfile.id).to.equal(newUser.id);
+    expect(userProfile.name).to.equal(newUser.firstName);
+  });
+
+  it('user service convertToUserProfile() succeeds without optional field : firstName', () => {
+    const userWithoutFirstName = Object.assign({}, newUser);
+    delete userWithoutFirstName.firstName;
+
+    const userProfile = userService.convertToUserProfile(userWithoutFirstName);
+    expect(userProfile.id).to.equal(newUser.id);
+    expect(userProfile.name).to.equal(newUser.lastName);
+  });
+
+  it('token service generateToken() succeeds', async () => {
+    const userProfile = userService.convertToUserProfile(newUser);
+    const token = await jwtService.generateToken(userProfile);
+    expect(token).to.not.be.empty();
+  });
+
+  it('token service verifyToken() succeeds', async () => {
+    const userProfile = userService.convertToUserProfile(newUser);
+    const token = await jwtService.generateToken(userProfile);
+    const userProfileFromToken = await jwtService.verifyToken(token);
+
+    expect(userProfileFromToken).to.deepEqual(userProfile);
+  });
+
+  it('token service verifyToken() fails', async () => {
+    const expectedError = new HttpErrors.Unauthorized(
+      `Error verifying token : invalid token`,
+    );
+    const invalidToken = 'aaa.bbb.ccc';
+    await expect(jwtService.verifyToken(invalidToken)).to.be.rejectedWith(
+      expectedError,
+    );
+  });
+
+  it('password encrypter hashPassword() succeeds', async () => {
+    const encrypedPassword = await bcryptHasher.hashPassword(user.password);
+    expect(encrypedPassword).to.not.equal(user.password);
+  });
+
+  it('password encrypter compare() succeeds', async () => {
+    const encrypedPassword = await bcryptHasher.hashPassword(user.password);
+    const passwordsAreTheSame = await bcryptHasher.comparePassword(
+      user.password,
+      encrypedPassword,
+    );
+    expect(passwordsAreTheSame).to.be.True();
+  });
+
+  it('password encrypter compare() fails', async () => {
+    const encrypedPassword = await bcryptHasher.hashPassword(user.password);
+    const passwordsAreTheSame = await bcryptHasher.comparePassword(
+      'someotherpassword',
+      encrypedPassword,
+    );
+    expect(passwordsAreTheSame).to.be.False();
   });
 
   async function setupApp() {
@@ -95,28 +201,23 @@ describe('authentication services', () => {
 
   async function createUser() {
     bcryptHasher = await app.get(PasswordHasherBindings.PASSWORD_HASHER);
-    user.password = await bcryptHasher.hashPassword(user.password);
-    newUser = await userRepo.create(user);
+    const encryptedPassword = await bcryptHasher.hashPassword(user.password);
+    newUser = await userRepo.create(
+      Object.assign({}, user, {password: encryptedPassword}),
+    );
+    // MongoDB returns an id object we need to convert to string
+    newUser.id = newUser.id.toString();
   }
 
   async function clearDatabase() {
     await userRepo.deleteAll();
   }
 
-  async function createService() {
-    jwtService = await app.get(JWTAuthenticationBindings.SERVICE);
+  async function createTokenService() {
+    jwtService = await app.get(TokenServiceBindings.TOKEN_SERVICE);
+  }
+
+  async function createUserService() {
+    userService = await app.get(UserServiceBindings.USER_SERVICE);
   }
 });
-
-function getExpectedUser(originalUser: User) {
-  const userProfile: Partial<User> = _.pick(toJSON(originalUser), [
-    'id',
-    'email',
-    'firstName',
-  ]);
-  return {
-    id: userProfile.id,
-    email: userProfile.email,
-    name: userProfile.firstname,
-  };
-}

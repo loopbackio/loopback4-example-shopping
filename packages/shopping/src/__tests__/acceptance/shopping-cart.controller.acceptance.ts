@@ -18,11 +18,10 @@ describe('ShoppingCartController', () => {
   before('setupApplication', async () => {
     ({app, client} = await setupApplication());
   });
-
-  beforeEach(clearDatabase);
   after(async () => {
     await app.stop();
   });
+  beforeEach(clearDatabase);
 
   it('sets a shopping cart for a user', async () => {
     const cart = givenShoppingCart();
@@ -36,7 +35,7 @@ describe('ShoppingCartController', () => {
   it('throws error if userId does not match the cart', async () => {
     const cart = givenShoppingCart();
     await client
-      .put('/shoppingCarts/not-exist')
+      .put('/shoppingCarts/non-existant-id')
       .set('Content-Type', 'application/json')
       .send(cart)
       .expect(400);
