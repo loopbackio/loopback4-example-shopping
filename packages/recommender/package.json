@@ -34,7 +34,7 @@
   ],
   "dependencies": {
     "@loopback/http-server": "1.2.3",
-    "express": "4.16.4"
+    "express": "4.17.0"
   },
   "devDependencies": {
     "@loopback/build": "1.5.4",
