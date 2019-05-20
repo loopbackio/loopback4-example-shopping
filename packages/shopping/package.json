@@ -77,7 +77,7 @@
     "commitizen": "3.1.1",
     "concurrently": "4.1.0",
     "cz-conventional-changelog": "2.1.0",
-    "husky": "2.2.0",
+    "husky": "2.3.0",
     "loopback4-example-recommender": "^1.0.0",
     "mocha": "6.1.4",
     "source-map-support": "0.5.12",
