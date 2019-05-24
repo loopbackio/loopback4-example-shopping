@@ -9,7 +9,7 @@ import {post, param, get, requestBody} from '@loopback/rest';
 import {User, Product} from '../models';
 import {UserRepository} from '../repositories';
 import {RecommenderService} from '../services/recommender.service';
-import {inject, Setter} from '@loopback/core';
+import {inject} from '@loopback/core';
 import {
   authenticate,
   UserProfile,
@@ -36,8 +36,6 @@ export class UserController {
     @repository(UserRepository) public userRepository: UserRepository,
     @inject('services.RecommenderService')
     public recommender: RecommenderService,
-    @inject.setter(AuthenticationBindings.CURRENT_USER)
-    public setCurrentUser: Setter<UserProfile>,
     @inject(PasswordHasherBindings.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
     @inject(TokenServiceBindings.TOKEN_SERVICE)
@@ -95,7 +93,8 @@ export class UserController {
   })
   @authenticate('jwt')
   async printCurrentUser(
-    @inject('authentication.currentUser') currentUserProfile: UserProfile,
+    @inject(AuthenticationBindings.CURRENT_USER)
+    currentUserProfile: UserProfile,
   ): Promise<UserProfile> {
     return currentUserProfile;
   }

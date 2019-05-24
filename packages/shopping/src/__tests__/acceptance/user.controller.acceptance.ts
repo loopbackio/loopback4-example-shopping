@@ -275,7 +275,6 @@ describe('UserController', () => {
     const tokenService: JWTService = new JWTService(
       TokenServiceConstants.TOKEN_SECRET_VALUE,
       '-1',
-      userRepo,
     );
     const userProfile = {
       id: newUser.id,
