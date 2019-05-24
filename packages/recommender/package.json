@@ -33,11 +33,11 @@
     "src"
   ],
   "dependencies": {
-    "@loopback/http-server": "1.2.3",
+    "@loopback/http-server": "1.2.4",
     "express": "4.17.0"
   },
   "devDependencies": {
-    "@loopback/build": "1.5.4",
+    "@loopback/build": "1.5.5",
     "@loopback/tslint-config": "2.0.4",
     "@types/express": "4.16.1",
     "@types/node": "11.13.11",
