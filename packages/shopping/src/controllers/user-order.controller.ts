@@ -62,7 +62,7 @@ export class UserOrderController {
   })
   async findOrders(
     @param.path.string('userId') userId: string,
-    @param.query.string('filter') filter?: Filter,
+    @param.query.string('filter') filter?: Filter<Order>,
   ): Promise<Order[]> {
     const orders = await this.userRepo
       .orders(userId)
@@ -90,7 +90,7 @@ export class UserOrderController {
   async patchOrders(
     @param.path.string('userId') userId: string,
     @requestBody() order: Partial<Order>,
-    @param.query.string('where') where?: Where,
+    @param.query.string('where') where?: Where<Order>,
   ): Promise<Count> {
     return await this.userRepo
       .orders(userId)
@@ -116,7 +116,7 @@ export class UserOrderController {
   })
   async deleteOrders(
     @param.path.string('userId') userId: string,
-    @param.query.string('where') where?: Where,
+    @param.query.string('where') where?: Where<Order>,
   ): Promise<Count> {
     return await this.userRepo
       .orders(userId)
