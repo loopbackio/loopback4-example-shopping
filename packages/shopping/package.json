@@ -73,7 +73,7 @@
     "@types/express": "4.16.1",
     "@types/lodash": "4.14.133",
     "@types/mocha": "5.2.7",
-    "@types/node": "11.13.12",
+    "@types/node": "11.13.13",
     "commitizen": "3.1.1",
     "concurrently": "4.1.0",
     "cz-conventional-changelog": "2.1.0",
