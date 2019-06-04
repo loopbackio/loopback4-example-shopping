@@ -38,7 +38,6 @@
   },
   "devDependencies": {
     "@loopback/build": "1.7.0",
-    "@loopback/tslint-config": "2.1.0",
     "@types/express": "4.16.1",
     "@types/node": "11.13.13",
     "typescript": "3.5.1"
