@@ -66,7 +66,7 @@ export class ShoppingCartRepository extends DefaultKeyValueRepository<
     check: (current: ShoppingCart | null) => ShoppingCart | null,
   ) {
     const connector = this.kvModelClass.dataSource!.connector!;
-    // tslint:disable-next-line:no-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const execute = promisify((cmd: string, args: any[], cb: Function) => {
       return connector.execute!(cmd, args, cb);
     });

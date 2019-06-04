@@ -48,6 +48,7 @@ export async function retry<T>(
 ): Promise<T> {
   if (maxTries < 1) maxTries = 1;
   let triesLeft = maxTries;
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     debug(
       'Try %s (%d/%d)',
