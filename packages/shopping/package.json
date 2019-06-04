@@ -81,7 +81,7 @@
     "loopback4-example-recommender": "^1.0.0",
     "mocha": "6.1.4",
     "source-map-support": "0.5.12",
-    "tslint": "5.16.0",
+    "tslint": "5.17.0",
     "typescript": "3.5.1"
   },
   "copyright.owner": "IBM Corp."
