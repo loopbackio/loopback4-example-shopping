@@ -38,6 +38,7 @@ describe('UserController', () => {
   before('setupApplication', async () => {
     ({app, client} = await setupApplication());
   });
+  before(migrateSchema);
   before(createPasswordHasher);
   before(givenAnExpiredToken);
 
@@ -112,6 +113,19 @@ describe('UserController', () => {
     expect(res.body.error.message).to.equal(
       'Content-type application/x-www-form-urlencoded does not match [application/json].',
     );
+  });
+
+  it('throws error for POST /users with an existing email', async () => {
+    await client
+      .post('/users')
+      .send(user)
+      .expect(200);
+    const res = await client
+      .post('/users')
+      .send(user)
+      .expect(409);
+
+    expect(res.body.error.message).to.equal('Email value is already taken');
   });
 
   it('returns a user with given id when GET /users/{id} is invoked', async () => {
@@ -247,6 +261,10 @@ describe('UserController', () => {
 
   async function clearDatabase() {
     await userRepo.deleteAll();
+  }
+
+  async function migrateSchema() {
+    await app.migrateSchema();
   }
 
   async function createAUser() {
