@@ -5,7 +5,7 @@
 
 import {repository} from '@loopback/repository';
 import {validateCredentials} from '../services/validator';
-import {post, param, get, requestBody} from '@loopback/rest';
+import {post, param, get, requestBody, HttpErrors} from '@loopback/rest';
 import {User, Product} from '../models';
 import {UserRepository} from '../repositories';
 import {RecommenderService} from '../services/recommender.service';
@@ -52,11 +52,20 @@ export class UserController {
     // encrypt the password
     user.password = await this.passwordHasher.hashPassword(user.password);
 
-    // create the new user
-    const savedUser = await this.userRepository.create(user);
-    delete savedUser.password;
+    try {
+      // create the new user
+      const savedUser = await this.userRepository.create(user);
+      delete savedUser.password;
 
-    return savedUser;
+      return savedUser;
+    } catch (error) {
+      // MongoError 11000 duplicate key
+      if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
+        throw new HttpErrors.Conflict('Email value is already taken');
+      } else {
+        throw error;
+      }
+    }
   }
 
   @get('/users/{userId}', {

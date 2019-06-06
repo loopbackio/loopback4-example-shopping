@@ -6,7 +6,20 @@
 import {Entity, model, property, hasMany} from '@loopback/repository';
 import {Order} from './order.model';
 
-@model()
+@model({
+  settings: {
+    indexes: {
+      uniqueEmail: {
+        keys: {
+          email: 1,
+        },
+        options: {
+          unique: true,
+        },
+      },
+    },
+  },
+})
 export class User extends Entity {
   @property({
     type: 'string',
