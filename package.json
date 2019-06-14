@@ -18,6 +18,7 @@
     "commitmsg": "commitlint -E GIT_PARAMS",
     "docker:start": "./bin/start-dbs.sh",
     "docker:stop": "./bin/stop-dbs.sh",
+    "migrate": "node ./packages/shopping/dist/migrate",
     "lint": "npm run prettier:check && npm run eslint",
     "lint:fix": "npm run prettier:fix && npm run eslint:fix",
     "prettier:cli": "lb-prettier \"**/*.ts\" \"**/*.js\" \"**/*.md\"",
