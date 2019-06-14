@@ -17,6 +17,7 @@
     "clean": "lb-clean dist*",
     "docker:start": "../../bin/start-dbs.sh",
     "docker:stop": "../../bin/stop-dbs.sh",
+    "migrate": "node ./dist/migrate",
     "pretest": "npm run clean && npm run build && npm run docker:start",
     "pretest:ci": "npm run build",
     "test": "lb-mocha --allow-console-logs \"dist/__tests__/**/*.js\"",
