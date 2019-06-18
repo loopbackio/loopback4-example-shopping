@@ -49,7 +49,7 @@
     "@commitlint/config-conventional": "8.0.0",
     "@commitlint/config-lerna-scopes": "8.0.0",
     "@commitlint/travis-cli": "8.0.0",
-    "@loopback/build": "1.7.1",
+    "@loopback/build": "2.0.0",
     "@loopback/eslint-config": "1.1.1",
     "@loopback/testlab": "1.5.0",
     "@types/node": "12.0.7",

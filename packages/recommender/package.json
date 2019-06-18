@@ -11,9 +11,9 @@
     "node": ">=8.9"
   },
   "scripts": {
-    "build": "lb-tsc es2017 --outDir dist --copy-resources",
-    "build:watch": "lb-tsc es2017 --outDir dist --watch",
-    "clean": "lb-clean dist",
+    "build": "lb-tsc --copy-resources",
+    "build:watch": "lb-tsc --watch",
+    "clean": "lb-clean dist *.tsbuildinfo",
     "pretest": "npm run clean && npm run build",
     "test": "lb-mocha --allow-console-logs \"dist/__tests__/**/*.js\"",
     "test:dev": "lb-mocha --allow-console-logs dist/__tests__/**/*.js && npm run posttest",
@@ -37,7 +37,7 @@
     "express": "4.17.1"
   },
   "devDependencies": {
-    "@loopback/build": "1.7.1",
+    "@loopback/build": "2.0.0",
     "@types/express": "4.17.0",
     "@types/node": "11.13.14",
     "typescript": "3.5.1"

@@ -12,9 +12,9 @@
   },
   "scripts": {
     "build:apidocs": "lb-apidocs",
-    "build": "lb-tsc es2017 --outDir dist --copy-resources",
-    "build:watch": "lb-tsc es2017 --outDir dist --watch",
-    "clean": "lb-clean dist*",
+    "build": "lb-tsc --copy-resources",
+    "build:watch": "lb-tsc --watch",
+    "clean": "lb-clean dist* *.tsbuildinfo",
     "docker:start": "../../bin/start-dbs.sh",
     "docker:stop": "../../bin/stop-dbs.sh",
     "migrate": "node ./dist/migrate",
@@ -63,7 +63,7 @@
     "loopback-connector-rest": "3.4.1"
   },
   "devDependencies": {
-    "@loopback/build": "1.7.1",
+    "@loopback/build": "2.0.0",
     "@loopback/testlab": "1.5.0",
     "@types/bcryptjs": "2.4.2",
     "@types/debug": "4.1.4",
