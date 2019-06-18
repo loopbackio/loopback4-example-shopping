@@ -89,6 +89,32 @@ describe('UserOrderController acceptance tests', () => {
       expect(res.body).to.deepEqual(order);
     });
 
+    it('creates an order for a user without a userId in the body', async () => {
+      const newUser = await userRepo.create(user);
+      const userId = newUser.id.toString();
+
+      const token = await jwtAuthService.getAccessTokenForUser({
+        email: newUser.email,
+        password: plainPassword,
+      });
+
+      const order = givenAOrder();
+
+      const res = await client
+        .post(`/users/${userId}/orders`)
+        .send(order)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200);
+      expect(res.body.orderId).to.be.a.String();
+      expect(res.body.userId).to.equal(userId);
+
+      delete res.body.orderId;
+      delete res.body.userId;
+      delete order.userId;
+
+      expect(res.body).to.deepEqual(order);
+    });
+
     it('throws an error when a userId in path does not match body', async () => {
       const newUser = await userRepo.create(user);
       const userId = newUser.id.toString();

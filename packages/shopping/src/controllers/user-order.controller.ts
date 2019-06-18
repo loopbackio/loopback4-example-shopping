@@ -43,17 +43,23 @@ export class UserOrderController {
     @inject('authentication.currentUser') currentUser: UserProfile,
     @requestBody() order: Order,
   ): Promise<Order> {
-    if (currentUser.id !== order.userId) {
+    if (order.userId) {
+      if (currentUser.id !== order.userId) {
+        throw new HttpErrors.BadRequest(
+          `User id does not match looged in user: ${order.userId} !== ${
+            currentUser.id
+          }`,
+        );
+      }
+      delete order.userId;
+      return await this.userRepo.orders(userId).create(order);
+    }
+
+    if (currentUser.id !== userId) {
       throw new HttpErrors.BadRequest(
         `User id does not match looged in user: ${userId} !== ${
           currentUser.id
         }`,
-      );
-    }
-
-    if (userId !== order.userId) {
-      throw new HttpErrors.BadRequest(
-        `User id does not match: ${userId} !== ${order.userId}`,
       );
     }
     delete order.userId;
