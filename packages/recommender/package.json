@@ -40,7 +40,7 @@
     "@loopback/build": "2.0.0",
     "@types/express": "4.17.0",
     "@types/node": "11.13.14",
-    "typescript": "3.5.1"
+    "typescript": "3.5.2"
   },
   "copyright.owner": "IBM Corp."
 }
