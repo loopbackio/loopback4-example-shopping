@@ -3,19 +3,16 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, belongsTo} from '@loopback/repository';
 import {ShoppingCartItem} from './shopping-cart-item.model';
+import {User} from './user.model';
 
 @model()
 export class ShoppingCart extends Entity {
   /**
-   * Each user has a unique shopping cart keyed by the user id
+   * Each shopping cart belongs to a user, indentified by its id (userId)
    */
-  @property({
-    type: 'string',
-    id: true,
-    required: true,
-  })
+  @belongsTo(() => User)
   userId: string;
 
   /**

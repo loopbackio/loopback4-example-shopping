@@ -3,8 +3,9 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, belongsTo} from '@loopback/repository';
 import {ShoppingCartItem} from './shopping-cart-item.model';
+import {User} from './user.model';
 
 @model()
 export class Order extends Entity {
@@ -14,11 +15,8 @@ export class Order extends Entity {
   })
   orderId?: string;
 
-  // TODO(virkt25): This should be a belongsTo once it is available
-  @property({
-    type: 'string',
-    required: true,
-  })
+  // Each order belongs to a user, indentified by its id (userId)
+  @belongsTo(() => User)
   userId: string;
 
   @property({
