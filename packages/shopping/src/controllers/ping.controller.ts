@@ -5,7 +5,6 @@
 
 import {Request, RestBindings, get, ResponseObject} from '@loopback/rest';
 import {inject} from '@loopback/context';
-import {} from '@loopback/openapi-v3-types';
 
 /**
  * OpenAPI response for ping()
