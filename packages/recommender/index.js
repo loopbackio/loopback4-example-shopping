@@ -3,8 +3,14 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-module.exports = require('./dist');
+const application = require('./dist');
+
+module.exports = application;
 
 if (require.main === module) {
-  module.exports.main();
+  // Run the application
+  application.main().catch(err => {
+    console.error('Cannot start the application.', err);
+    process.exit(1);
+  });
 }
