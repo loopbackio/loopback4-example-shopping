@@ -50,6 +50,7 @@ export class UserController {
     validateCredentials(_.pick(user, ['email', 'password']));
 
     // encrypt the password
+    // eslint-disable-next-line require-atomic-updates
     user.password = await this.passwordHasher.hashPassword(user.password);
 
     try {
