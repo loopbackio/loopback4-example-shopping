@@ -64,9 +64,7 @@ export class UserOrderController {
     @param.path.string('userId') userId: string,
     @param.query.string('filter') filter?: Filter<Order>,
   ): Promise<Order[]> {
-    const orders = await this.userRepo
-      .orders(userId)
-      .find(filter, {strictObjectIDCoercion: true});
+    const orders = await this.userRepo.orders(userId).find(filter);
     return orders;
   }
 
@@ -92,9 +90,7 @@ export class UserOrderController {
     @requestBody() order: Partial<Order>,
     @param.query.string('where') where?: Where<Order>,
   ): Promise<Count> {
-    return await this.userRepo
-      .orders(userId)
-      .patch(order, where, {strictObjectIDCoercion: true});
+    return await this.userRepo.orders(userId).patch(order, where);
   }
 
   @del('/users/{userId}/orders', {
@@ -118,8 +114,6 @@ export class UserOrderController {
     @param.path.string('userId') userId: string,
     @param.query.string('where') where?: Where<Order>,
   ): Promise<Count> {
-    return await this.userRepo
-      .orders(userId)
-      .delete(where, {strictObjectIDCoercion: true});
+    return await this.userRepo.orders(userId).delete(where);
   }
 }
