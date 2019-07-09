@@ -59,7 +59,7 @@
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.11",
     "loopback-connector-kv-redis": "3.0.1",
-    "loopback-connector-mongodb": "4.2.0",
+    "loopback-connector-mongodb": "5.0.0",
     "loopback-connector-rest": "3.4.1"
   },
   "devDependencies": {
