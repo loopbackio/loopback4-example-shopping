@@ -32,11 +32,17 @@ export class ShoppingCartController {
    * @param userId User id
    * @param cart Shopping cart
    */
-  @put('/shoppingCarts/{userId}')
+  @put('/shoppingCarts/{userId}', {
+    responses: {
+      '204': {
+        description: 'User shopping cart is created or updated',
+      },
+    },
+  })
   async set(
     @param.path.string('userId') userId: string,
     @requestBody({description: 'shopping cart'}) cart: ShoppingCart,
-  ) {
+  ): Promise<void> {
     debug('Create shopping cart %s: %j', userId, cart);
     if (userId !== cart.userId) {
       throw new HttpErrors.BadRequest(
@@ -50,8 +56,17 @@ export class ShoppingCartController {
    * Retrieve the shopping cart by user id
    * @param userId User id
    */
-  @get('/shoppingCarts/{userId}')
-  async get(@param.path.string('userId') userId: string) {
+  @get('/shoppingCarts/{userId}', {
+    responses: {
+      '200': {
+        description: 'User shopping cart is read',
+        content: {'application/json': {schema: {'x-ts-type': ShoppingCart}}},
+      },
+    },
+  })
+  async get(
+    @param.path.string('userId') userId: string,
+  ): Promise<ShoppingCart> {
     debug('Get shopping cart %s', userId);
     const cart = await this.shoppingCartRepository.get(userId);
     debug('Shopping cart %s: %j', userId, cart);
@@ -68,8 +83,14 @@ export class ShoppingCartController {
    * Delete the shopping cart by user id
    * @param userId User id
    */
-  @del('/shoppingCarts/{userId}')
-  async remove(@param.path.string('userId') userId: string) {
+  @del('/shoppingCarts/{userId}', {
+    responses: {
+      '204': {
+        description: 'User shopping cart is deleted',
+      },
+    },
+  })
+  async remove(@param.path.string('userId') userId: string): Promise<void> {
     debug('Remove shopping cart %s', userId);
     await this.shoppingCartRepository.delete(userId);
   }
@@ -79,11 +100,20 @@ export class ShoppingCartController {
    * @param userId User id
    * @param cart Shopping cart item to be added
    */
-  @post('/shoppingCarts/{userId}/items')
+  @post('/shoppingCarts/{userId}/items', {
+    responses: {
+      '200': {
+        description: 'User shopping cart item is created',
+        content: {
+          'application/json': {schema: {'x-ts-type': ShoppingCart}},
+        },
+      },
+    },
+  })
   async addItem(
     @param.path.string('userId') userId: string,
     @requestBody({description: 'shopping cart item'}) item: ShoppingCartItem,
-  ) {
+  ): Promise<ShoppingCart> {
     debug('Add item %j to shopping cart %s', item, userId);
     return this.shoppingCartRepository.addItem(userId, item);
   }

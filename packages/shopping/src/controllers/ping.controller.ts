@@ -21,8 +21,8 @@ const PING_RESPONSE: ResponseObject = {
           url: {type: 'string'},
           headers: {
             type: 'object',
-            patternProperties: {
-              '^.*$': {type: 'string'},
+            properties: {
+              'Content-Type': {type: 'string'},
             },
             additionalProperties: false,
           },
