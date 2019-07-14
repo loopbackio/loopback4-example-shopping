@@ -44,7 +44,20 @@ export class UserController {
     public userService: UserService<User, Credentials>,
   ) {}
 
-  @post('/users')
+  @post('/users', {
+    responses: {
+      '200': {
+        description: 'User',
+        content: {
+          'application/json': {
+            schema: {
+              'x-ts-type': User,
+            },
+          },
+        },
+      },
+    },
+  })
   async create(@requestBody() user: User): Promise<User> {
     // ensure a valid email value and password value
     validateCredentials(_.pick(user, ['email', 'password']));

@@ -3,7 +3,13 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {repository, Filter, Where, Count} from '@loopback/repository';
+import {
+  repository,
+  Filter,
+  Where,
+  Count,
+  CountSchema,
+} from '@loopback/repository';
 import {UserRepository} from '../repositories';
 import {
   post,
@@ -31,7 +37,7 @@ export class UserOrderController {
     responses: {
       '200': {
         description: 'User.Order model instance',
-        content: {'application/json': {'x-ts-type': Order}},
+        content: {'application/json': {schema: {'x-ts-type': Order}}},
       },
     },
   })
@@ -72,16 +78,7 @@ export class UserOrderController {
     responses: {
       '200': {
         description: 'User.Order PATCH success count',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'object',
-              properties: {
-                count: 'number',
-              },
-            },
-          },
-        },
+        content: {'application/json': {schema: CountSchema}},
       },
     },
   })
@@ -97,16 +94,7 @@ export class UserOrderController {
     responses: {
       '200': {
         description: 'User.Order DELETE success count',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'object',
-              properties: {
-                count: 'number',
-              },
-            },
-          },
-        },
+        content: {'application/json': {schema: CountSchema}},
       },
     },
   })
