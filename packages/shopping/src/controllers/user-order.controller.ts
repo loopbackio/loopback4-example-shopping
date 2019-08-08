@@ -21,6 +21,8 @@ import {
   HttpErrors,
 } from '@loopback/rest';
 import {Order} from '../models';
+import {authorize} from '@loopback/authorization';
+import {AuthenticationBindings, authenticate} from '@loopback/authentication';
 
 /**
  * Controller for User's Orders
@@ -41,10 +43,13 @@ export class UserOrderController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({resource: 'order', scopes: ['create']})
   async createOrder(
     @param.path.string('userId') userId: string,
     @requestBody() order: Order,
   ): Promise<Order> {
+    // should be moved to an authorizor
     if (userId !== order.userId) {
       throw new HttpErrors.BadRequest(
         `User id does not match: ${userId} !== ${order.userId}`,
@@ -66,6 +71,8 @@ export class UserOrderController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({resource: 'order', scopes: ['find']})
   async findOrders(
     @param.path.string('userId') userId: string,
     @param.query.string('filter') filter?: Filter<Order>,
@@ -82,6 +89,8 @@ export class UserOrderController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({resource: 'order', scopes: ['patch']})
   async patchOrders(
     @param.path.string('userId') userId: string,
     @requestBody() order: Partial<Order>,
@@ -98,6 +107,8 @@ export class UserOrderController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({resource: 'order', scopes: ['delete']})
   async deleteOrders(
     @param.path.string('userId') userId: string,
     @param.query.string('where') where?: Where<Order>,
