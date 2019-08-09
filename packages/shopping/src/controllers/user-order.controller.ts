@@ -23,6 +23,7 @@ import {
 import {Order} from '../models';
 import {authorize} from '@loopback/authorization';
 import {AuthenticationBindings, authenticate} from '@loopback/authentication';
+import {compareId} from '../services/id.compare.authorizor';
 
 /**
  * Controller for User's Orders
@@ -43,13 +44,15 @@ export class UserOrderController {
       },
     },
   })
+
   @authenticate('jwt')
   @authorize({resource: 'order', scopes: ['create']})
   async createOrder(
     @param.path.string('userId') userId: string,
     @requestBody() order: Order,
   ): Promise<Order> {
-    // should be moved to an authorizor
+    // validate the payload value
+    // has nothing to do with authorization
     if (userId !== order.userId) {
       throw new HttpErrors.BadRequest(
         `User id does not match: ${userId} !== ${order.userId}`,
@@ -108,7 +111,7 @@ export class UserOrderController {
     },
   })
   @authenticate('jwt')
-  @authorize({resource: 'order', scopes: ['delete']})
+  @authorize({resource: 'order', scopes: ['delete'],voters: [compareId]})
   async deleteOrders(
     @param.path.string('userId') userId: string,
     @param.query.string('where') where?: Where<Order>,

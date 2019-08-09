@@ -9,6 +9,7 @@ import {
 import {inspect} from 'util';
 import * as casbin from 'casbin';
 
+// Class level authorizer
 export class CasbinAuthorizationProvider implements Provider<Authorizer> {
   constructor(@inject('casbin.enforcer') private enforcer: casbin.Enforcer) {}
 
@@ -20,22 +21,17 @@ export class CasbinAuthorizationProvider implements Provider<Authorizer> {
   }
 
   async authorize(
-    // @jannyHou: make sure it's universal for authorizors
+    // @jannyHou: make sure it's universal for authorizers
     authorizationCtx: AuthorizationContext,
-    // @jannyHou: make sure it's universal for authorizors
+    // @jannyHou: make sure it's universal for authorizers
     metadata: AuthorizationMetadata,
   ) {
-    // print out the resource as a workaround
-    // use another variable to track the events
-    console.log(`The resource from authCtx: ${authorizationCtx.resource}`);
-    // events.push(authorizationCtx.resource);
     const request: AuthorizationRequest = {
       subject: authorizationCtx.principals[0].name,
       object: metadata.resource || authorizationCtx.resource,
       action: (metadata.scopes && metadata.scopes[0]) || 'execute',
     };
 
-    console.log(`The request details: ${inspect(request)}`);
     const allow = await this.enforcer.enforce(
       request.subject,
       request.object,

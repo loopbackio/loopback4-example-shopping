@@ -1,4 +1,5 @@
 p, bob, order, create
+p, bob, order, delete
 p, alice, order, create
 p, customer_service, order, read
 p, customer_service, order, create
