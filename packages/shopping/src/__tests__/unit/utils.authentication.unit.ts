@@ -87,8 +87,8 @@ describe('authentication services', () => {
   it('user service verifyCredentials() fails with user not found', async () => {
     const credentials = {email: 'idontexist@example.com', password: 'p4ssw0rd'};
 
-    const expectedError = new HttpErrors.NotFound(
-      `User with email ${credentials.email} not found.`,
+    const expectedError = new HttpErrors.Unauthorized(
+      'Invalid email or password.',
     );
 
     await expect(userService.verifyCredentials(credentials)).to.be.rejectedWith(
@@ -100,7 +100,7 @@ describe('authentication services', () => {
     const {email} = newUser;
     const credentials = {email, password: 'invalidp4ssw0rd'};
     const expectedError = new HttpErrors.Unauthorized(
-      'The credentials are not correct.',
+      'Invalid email or password.',
     );
 
     await expect(userService.verifyCredentials(credentials)).to.be.rejectedWith(

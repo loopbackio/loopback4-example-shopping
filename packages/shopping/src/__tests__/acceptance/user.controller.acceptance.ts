@@ -155,11 +155,9 @@ describe('UserController', () => {
       const res = await client
         .post('/users/login')
         .send({email: 'idontexist@example.com', password: user.password})
-        .expect(404);
+        .expect(401);
 
-      expect(res.body.error.message).to.equal(
-        'User with email idontexist@example.com not found.',
-      );
+      expect(res.body.error.message).to.equal('Invalid email or password.');
     });
 
     it('login returns an error when invalid password is used', async () => {
@@ -170,9 +168,7 @@ describe('UserController', () => {
         .send({email: newUser.email, password: 'wrongpassword'})
         .expect(401);
 
-      expect(res.body.error.message).to.equal(
-        'The credentials are not correct.',
-      );
+      expect(res.body.error.message).to.equal('Invalid email or password.');
     });
 
     it('users/me returns the current user profile when a valid JWT token is provided', async () => {
