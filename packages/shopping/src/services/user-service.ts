@@ -19,14 +19,14 @@ export class MyUserService implements UserService<User, Credentials> {
   ) {}
 
   async verifyCredentials(credentials: Credentials): Promise<User> {
+    const invalidCredentialsError = 'Invalid email or password.';
+
     const foundUser = await this.userRepository.findOne({
       where: {email: credentials.email},
     });
 
     if (!foundUser) {
-      throw new HttpErrors.NotFound(
-        `User with email ${credentials.email} not found.`,
-      );
+      throw new HttpErrors.Unauthorized(invalidCredentialsError);
     }
     const passwordMatched = await this.passwordHasher.comparePassword(
       credentials.password,
@@ -34,7 +34,7 @@ export class MyUserService implements UserService<User, Credentials> {
     );
 
     if (!passwordMatched) {
-      throw new HttpErrors.Unauthorized('The credentials are not correct.');
+      throw new HttpErrors.Unauthorized(invalidCredentialsError);
     }
 
     return foundUser;
