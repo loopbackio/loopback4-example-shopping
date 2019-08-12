@@ -1,5 +1,5 @@
 import {AuthorizationContext, AuthorizationMetadata, AuthorizationRequest, AuthorizationDecision} from '@loopback/authorization';
-import { inspect } from 'util';
+import * as _ from 'lodash';
 import { UserProfile } from '@loopback/authentication';
 
 interface MyAuthorizationMetadata extends AuthorizationMetadata {
@@ -13,8 +13,12 @@ export async function compareId(
   authorizationCtx: AuthorizationContext,
   metadata: MyAuthorizationMetadata,
 ) {
-  const currentUser = metadata && metadata.currentUser;
-  if (!currentUser) return AuthorizationDecision.DENY;
+  let currentUser: UserProfile;
+  if (authorizationCtx.principals.length > 0) {
+    currentUser = _.pick(authorizationCtx.principals[0], ['id', 'name', 'email']);
+  } else {
+    return AuthorizationDecision.DENY;
+  }
 
   // A workaround to bypass the authorizer priority
   // class level authorizer should have higher priority than the instance level one
