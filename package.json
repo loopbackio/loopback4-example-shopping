@@ -52,7 +52,7 @@
     "@loopback/build": "2.0.7",
     "@loopback/eslint-config": "2.0.2",
     "@loopback/testlab": "1.7.3",
-    "@types/node": "12.7.1",
+    "@types/node": "12.7.2",
     "@typescript-eslint/eslint-plugin": "1.13.0",
     "@typescript-eslint/parser": "1.13.0",
     "commitizen": "4.0.3",
