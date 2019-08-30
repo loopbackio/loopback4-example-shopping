@@ -27,6 +27,6 @@ describe('recommender', () => {
     const client = createRestAppClient({
       restServer: server,
     });
-    await client.get('/user001').expect(200, data);
+    await client.get('/user002').expect(200, data['user002']);
   });
 });

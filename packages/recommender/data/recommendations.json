@@ -1,17 +1,36 @@
-[
-  {
-    "productId": "123",
-    "name": "Product 123",
-    "price": 1.23
-  },
-  {
-    "productId": "456",
-    "name": "Product 456",
-    "price": 4.56
-  },
-  {
-    "productId": "789",
-    "name": "Product 789",
-    "price": 7.89
-  }
-]
+{
+  "user001": [
+    {
+      "productId": "123",
+      "name": "Product 123",
+      "price": 1.23
+    },
+    {
+      "productId": "456",
+      "name": "Product 456",
+      "price": 4.56
+    },
+    {
+      "productId": "789",
+      "name": "Product 789",
+      "price": 7.89
+    }
+  ],
+  "user002": [
+    {
+      "productId": "321",
+      "name": "Product 321",
+      "price": 3.21
+    },
+    {
+      "productId": "654",
+      "name": "Product 654",
+      "price": 6.54
+    },
+    {
+      "productId": "987",
+      "name": "Product 987",
+      "price": 9.87
+    }
+  ]
+}

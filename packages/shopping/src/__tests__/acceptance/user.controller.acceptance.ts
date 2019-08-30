@@ -11,11 +11,14 @@ import {setupApplication} from './helper';
 import {
   createRecommendationServer,
   HttpServer,
+  createGRPCRecommendationServer,
 } from 'loopback4-example-recommender';
 import {PasswordHasher} from '../../services/hash.password.bcryptjs';
 import {PasswordHasherBindings, TokenServiceConstants} from '../../keys';
 import {JWTService} from '../../services/jwt-service';
 import {securityId} from '@loopback/security';
+import {RecommenderGrpc} from '../../services';
+import {Server} from 'grpc';
 
 const recommendations = require('loopback4-example-recommender/data/recommendations.json');
 
@@ -238,21 +241,33 @@ describe('UserController', () => {
 
   describe('user product recommendation (service) api', () => {
     let recommendationService: HttpServer;
+    let recommendationGRPCService: Server;
 
     before(async () => {
       recommendationService = createRecommendationServer();
       await recommendationService.start();
+      recommendationGRPCService = createGRPCRecommendationServer();
+      recommendationGRPCService.start();
     });
 
     after(async () => {
       await recommendationService.stop();
+      recommendationGRPCService.forceShutdown();
     });
 
     it('returns product recommendations for a user', async () => {
       const newUser = await createAUser();
       await client
         .get(`/users/${newUser.id}/recommend`)
-        .expect(200, recommendations);
+        .expect(200, recommendations['user001']);
+    });
+
+    it('returns product recommendations for a user using gRPC', async () => {
+      const recommender = await app.get<RecommenderGrpc>(
+        'services.RecommenderGrpc',
+      );
+      const products = await recommender.recommend({userId: 'user001'});
+      expect(products.products).to.eql(recommendations['user001']);
     });
   });
 

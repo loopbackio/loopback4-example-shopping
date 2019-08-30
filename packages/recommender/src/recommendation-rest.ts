@@ -6,20 +6,25 @@
 import * as express from 'express';
 const recommendations = require('../data/recommendations.json');
 import {HttpServer} from '@loopback/http-server';
+import {ParamsDictionary} from 'express-serve-static-core';
 
 export function createRecommendationServer(port = 3001, host = '127.0.0.1') {
   const app = express();
 
   app.get('/:userId', (req: express.Request, res: express.Response) => {
-    res.send(recommendations);
+    let userId = (req.params as ParamsDictionary).userId || 'user001';
+    if (!(userId in recommendations)) {
+      userId = 'user001';
+    }
+    res.send(recommendations[userId] || []);
   });
 
   return new HttpServer(app, {port, host});
 }
 
-export async function main(port = 3001) {
-  const server = createRecommendationServer(port);
+export async function restMain(port = 3001, host = '127.0.0.1') {
+  const server = createRecommendationServer(port, host);
   await server.start();
-  console.log('Recommendation server is running at ' + server.url + '.');
+  console.log('Recommendation REST server is running at ' + server.url + '.');
   return server;
 }
