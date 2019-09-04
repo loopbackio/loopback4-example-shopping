@@ -69,9 +69,9 @@ describe('retry()', () => {
       return 1;
     };
     const task = givenTask(fn);
-    return await expect(
-      retry(task, {maxTries: 5, interval: 1}),
-    ).to.be.rejectedWith(/fail/);
+    return expect(retry(task, {maxTries: 5, interval: 1})).to.be.rejectedWith(
+      /fail/,
+    );
   });
 
   it('retries fails with timeout', async () => {
@@ -81,9 +81,9 @@ describe('retry()', () => {
       return count;
     };
     const task = givenTask(fn);
-    return await expect(
-      retry(task, {maxTries: 5, interval: 1}),
-    ).to.be.rejectedWith(/Failed to count after 5 ms/);
+    return expect(retry(task, {maxTries: 5, interval: 1})).to.be.rejectedWith(
+      /Failed to count after 5 ms/,
+    );
   });
 });
 

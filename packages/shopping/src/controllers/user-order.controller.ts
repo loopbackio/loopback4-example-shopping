@@ -51,7 +51,7 @@ export class UserOrderController {
       );
     }
     delete order.userId;
-    return await this.userRepo.orders(userId).create(order);
+    return this.userRepo.orders(userId).create(order);
   }
 
   @get('/users/{userId}/orders', {
@@ -87,7 +87,7 @@ export class UserOrderController {
     @requestBody() order: Partial<Order>,
     @param.query.string('where') where?: Where<Order>,
   ): Promise<Count> {
-    return await this.userRepo.orders(userId).patch(order, where);
+    return this.userRepo.orders(userId).patch(order, where);
   }
 
   @del('/users/{userId}/orders', {
@@ -102,6 +102,6 @@ export class UserOrderController {
     @param.path.string('userId') userId: string,
     @param.query.string('where') where?: Where<Order>,
   ): Promise<Count> {
-    return await this.userRepo.orders(userId).delete(where);
+    return this.userRepo.orders(userId).delete(where);
   }
 }
