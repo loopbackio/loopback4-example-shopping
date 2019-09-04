@@ -5,8 +5,9 @@ if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
   echo "OSX => UPDATING HOMEBREW"
   brew update
   echo "OSX => INSTALLING AND STARTING MONGODB"
-  brew install mongodb
-  brew services start mongodb
+  brew tap mongodb/brew
+  brew install mongodb-community
+  brew services start mongodb-community
 
   echo "OSX => INSTALLING AND STARTING REDIS"
   brew install redis
