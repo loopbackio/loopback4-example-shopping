@@ -13,7 +13,7 @@ import {
 import {TokenServiceBindings} from '../keys';
 
 export class JWTAuthenticationStrategy implements AuthenticationStrategy {
-  name: string = 'jwt';
+  name = 'jwt';
 
   constructor(
     @inject(TokenServiceBindings.TOKEN_SERVICE)

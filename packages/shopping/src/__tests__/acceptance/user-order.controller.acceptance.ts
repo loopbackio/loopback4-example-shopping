@@ -156,6 +156,6 @@ describe('UserOrderController acceptance tests', () => {
 
   async function saveOrder(user: User, order: Partial<Order>) {
     delete order.userId;
-    return await userRepo.orders(user.id).create(order);
+    return userRepo.orders(user.id).create(order);
   }
 });

@@ -23,7 +23,7 @@ export async function hashPassword(
   rounds: number,
 ): Promise<string> {
   const salt = await genSalt(rounds);
-  return await hash(password, salt);
+  return hash(password, salt);
 }
 
 export interface PasswordHasher<T = string> {
@@ -39,7 +39,7 @@ export class BcryptHasher implements PasswordHasher<string> {
 
   async hashPassword(password: string): Promise<string> {
     const salt = await genSalt(this.rounds);
-    return await hash(password, salt);
+    return hash(password, salt);
   }
 
   async comparePassword(
