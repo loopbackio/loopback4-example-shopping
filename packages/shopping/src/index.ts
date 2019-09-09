@@ -5,12 +5,18 @@
 
 import {ShoppingApplication} from './application';
 import {ApplicationConfig} from '@loopback/core';
+import {RestBindings} from '@loopback/rest';
+import {addSecuritychema} from './utils/security-spec';
 export {ShoppingApplication, PackageInfo, PackageKey} from './application';
 
 export async function main(options?: ApplicationConfig) {
   const app = new ShoppingApplication(options);
 
   await app.boot();
+  let oaiSchema = app.getSync(RestBindings.API_SPEC);
+  addSecuritychema(oaiSchema);
+  console.log(oaiSchema.components!.securitySchemes);
+  app.bind(RestBindings.API_SPEC).to(oaiSchema);
   await app.start();
 
   const url = app.restServer.url;

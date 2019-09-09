@@ -84,12 +84,6 @@ This app has five services:
 5. `services/jwt-service` - responsible for generating and verifying JSON Web
    Token.
 
-## Authentication
-
-_Note: This app contains a `login` endpoint for the purpose of spike and demo,
-the authentication for the CRUD operations and navigational endpoints of model
-User is still in progress._
-
 ### Login
 
 The endpoint for logging in a user is a `POST` request to `/users/login`.
@@ -110,13 +104,75 @@ possible by the use of the `UserService` service provided by
 You can see the details in
 [`packages/shopping/src/controllers/user.controller.ts`](https://github.com/strongloop/loopback4-example-shopping/blob/master/packages/shopping/src/controllers/user.controller.ts).
 
-### Tutorial
+## Authentication
+
+### Enabling Auth Token with Swagger-ui
+
+`swagger-ui` module is built with authorization component, which will show up by
+adding the security schema and operation security spec in the OpenAPI spec.
+
+You can check the swagger
+[doc](https://swagger.io/docs/specification/authentication/bearer-authentication/)
+to learn how to add it, see section "Describing Bearer Authentication".
+
+As a demo, the security related specs are hardcoded and merged into the
+application's OpenAPI spec in the main file in this spike.
+
+### Setting token
+
+_Should be moved to
+https://loopback.io/doc/en/lb4/Authentication-Tutorial.html#try-it-out_
+
+After creating a user, you can login with `email`and `password`:
+
+![login](/imgs/login.png)
+
+A JWT token will be generated and returned in the response body, you can copy
+the token for setting the bearer header in the next step:
+
+![get-token.png](/imgs/get-token.png)
+
+Then set the token for every request's Bearer header. You will find a green
+button called "Authorize" on the right corner of the explorer:
+
+![authorize-button](/imgs/authorize-button.png)
+
+Click it and the token set dialog will be prompted:
+
+![set-token](/imgs/set-token.png)
+
+Paste the token you just copied in the field, then click "Authorize". The token
+will be be hidden:
+
+![after-set-token](/imgs/after-set-token.png)
+
+Now you can try endpoint like `GET/users/me` to verify that the logged in user
+is injected in the request:
+
+![me](/imgs/me.png)
+
+### Follow-up Stories
+
+As you could find in the `security-spec.ts` file, security related spec is
+hardcoded now and is manually merged into the openapi spec in the main file
+`index.ts`, to enable the token set more automatically, there are 3 things we
+could improve:
+
+- The security schema could be contributed by the authentication strategy, see
+  [story#3669](https://github.com/strongloop/loopback-next/issues/3669)
+- This spike sets a global security policy for all the endpoints, while the
+  policy spec can be set on the operation level, it's also documented in
+  [swagger/authentication/bearer-authentication](https://swagger.io/docs/specification/authentication/bearer-authentication/).
+  This can be achieved by using `@api()`(controller class level) or
+  `@authenticate()`(controller method level)
+
+## Tutorial
 
 There is a tutorial which shows how to apply the JWT strategy to secure your
 endpoint with `@loopback/authentication@2.x`. You can check more details in
 https://loopback.io/doc/en/lb4/Authentication-Tutorial.html
 
-### Trying It Out
+## Trying It Out
 
 Please check the
 [try it out](https://loopback.io/doc/en/lb4/Authentication-Tutorial.html#try-it-out)
