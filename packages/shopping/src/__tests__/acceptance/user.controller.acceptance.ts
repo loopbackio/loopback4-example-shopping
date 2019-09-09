@@ -15,6 +15,7 @@ import {
 import {PasswordHasher} from '../../services/hash.password.bcryptjs';
 import {PasswordHasherBindings, TokenServiceConstants} from '../../keys';
 import {JWTService} from '../../services/jwt-service';
+import {securityId} from '@loopback/security';
 
 const recommendations = require('loopback4-example-recommender/data/recommendations.json');
 
@@ -291,7 +292,7 @@ describe('UserController', () => {
       '-1',
     );
     const userProfile = {
-      id: newUser.id,
+      [securityId]: newUser.id,
       name: `${newUser.firstName} ${newUser.lastName}`,
     };
     expiredToken = await tokenService.generateToken(userProfile);
