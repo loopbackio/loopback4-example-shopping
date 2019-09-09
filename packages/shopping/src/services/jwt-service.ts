@@ -6,7 +6,8 @@
 import {inject} from '@loopback/context';
 import {HttpErrors} from '@loopback/rest';
 import {promisify} from 'util';
-import {TokenService, UserProfile} from '@loopback/authentication';
+import {TokenService} from '@loopback/authentication';
+import {UserProfile, securityId} from '@loopback/security';
 import {TokenServiceBindings} from '../keys';
 
 const jwt = require('jsonwebtoken');
@@ -35,15 +36,14 @@ export class JWTService implements TokenService {
       const decodedToken = await verifyAsync(token, this.jwtSecret);
       // don't copy over  token field 'iat' and 'exp', nor 'email' to user profile
       userProfile = Object.assign(
-        {id: '', name: ''},
-        {id: decodedToken.id, name: decodedToken.name},
+        {[securityId]: '', name: ''},
+        {[securityId]: decodedToken.id, name: decodedToken.name},
       );
     } catch (error) {
       throw new HttpErrors.Unauthorized(
         `Error verifying token : ${error.message}`,
       );
     }
-
     return userProfile;
   }
 
@@ -53,11 +53,15 @@ export class JWTService implements TokenService {
         'Error generating token : userProfile is null',
       );
     }
-
+    const userInfoForToken = {
+      id: userProfile[securityId],
+      name: userProfile.name,
+      email: userProfile.email,
+    };
     // Generate a JSON Web Token
     let token: string;
     try {
-      token = await signAsync(userProfile, this.jwtSecret, {
+      token = await signAsync(userInfoForToken, this.jwtSecret, {
         expiresIn: Number(this.jwtExpiresIn),
       });
     } catch (error) {

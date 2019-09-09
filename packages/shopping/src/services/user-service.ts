@@ -5,7 +5,8 @@
 import {HttpErrors} from '@loopback/rest';
 import {Credentials, UserRepository} from '../repositories/user.repository';
 import {User} from '../models/user.model';
-import {UserService, UserProfile} from '@loopback/authentication';
+import {UserService} from '@loopback/authentication';
+import {UserProfile, securityId} from '@loopback/security';
 import {repository} from '@loopback/repository';
 import {PasswordHasher} from './hash.password.bcryptjs';
 import {PasswordHasherBindings} from '../keys';
@@ -48,6 +49,6 @@ export class MyUserService implements UserService<User, Credentials> {
       userName = user.firstName
         ? `${userName} ${user.lastName}`
         : `${user.lastName}`;
-    return {id: user.id, name: userName};
+    return {[securityId]: user.id, name: userName};
   }
 }

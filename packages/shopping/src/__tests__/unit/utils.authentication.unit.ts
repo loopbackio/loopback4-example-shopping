@@ -18,6 +18,7 @@ import {
 } from '../../keys';
 import {setupApplication} from './helper';
 import {TokenService, UserService} from '@loopback/authentication';
+import {securityId} from '@loopback/security';
 
 describe('authentication services', () => {
   let app: ShoppingApplication;
@@ -110,7 +111,7 @@ describe('authentication services', () => {
 
   it('user service convertToUserProfile() succeeds', () => {
     const expectedUserProfile = {
-      id: newUser.id,
+      [securityId]: newUser.id,
       name: `${newUser.firstName} ${newUser.lastName}`,
     };
     const userProfile = userService.convertToUserProfile(newUser);
@@ -125,7 +126,7 @@ describe('authentication services', () => {
     const userProfile = userService.convertToUserProfile(
       userWithoutFirstOrLastName,
     );
-    expect(userProfile.id).to.equal(newUser.id);
+    expect(userProfile[securityId]).to.equal(newUser.id);
     expect(userProfile.name).to.equal('');
   });
 
@@ -134,7 +135,7 @@ describe('authentication services', () => {
     delete userWithoutLastName.lastName;
 
     const userProfile = userService.convertToUserProfile(userWithoutLastName);
-    expect(userProfile.id).to.equal(newUser.id);
+    expect(userProfile[securityId]).to.equal(newUser.id);
     expect(userProfile.name).to.equal(newUser.firstName);
   });
 
@@ -143,7 +144,7 @@ describe('authentication services', () => {
     delete userWithoutFirstName.firstName;
 
     const userProfile = userService.convertToUserProfile(userWithoutFirstName);
-    expect(userProfile.id).to.equal(newUser.id);
+    expect(userProfile[securityId]).to.equal(newUser.id);
     expect(userProfile.name).to.equal(newUser.lastName);
   });
 

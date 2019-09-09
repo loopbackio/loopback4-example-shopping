@@ -12,11 +12,10 @@ import {RecommenderService} from '../services/recommender.service';
 import {inject} from '@loopback/core';
 import {
   authenticate,
-  UserProfile,
-  AuthenticationBindings,
   TokenService,
   UserService,
 } from '@loopback/authentication';
+import {UserProfile, securityId, SecurityBindings} from '@loopback/security';
 import {
   CredentialsRequestBody,
   UserProfileSchema,
@@ -116,9 +115,13 @@ export class UserController {
   })
   @authenticate('jwt')
   async printCurrentUser(
-    @inject(AuthenticationBindings.CURRENT_USER)
+    @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
   ): Promise<UserProfile> {
+    // (@jannyHou)FIXME: explore a way to generate OpenAPI schema
+    // for symbol property
+    currentUserProfile.id = currentUserProfile[securityId];
+    delete currentUserProfile[securityId];
     return currentUserProfile;
   }
 
