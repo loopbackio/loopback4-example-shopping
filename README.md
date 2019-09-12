@@ -111,7 +111,7 @@ You can see the details in
 `swagger-ui` module is built with authorization component, which will show up by
 adding the security schema and operation security spec in the OpenAPI spec.
 
-You can check the swagger
+You can check the OpenAPI
 [doc](https://swagger.io/docs/specification/authentication/bearer-authentication/)
 to learn how to add it, see section "Describing Bearer Authentication".
 
@@ -142,7 +142,7 @@ Click it and the token set dialog will be prompted:
 ![set-token](/imgs/set-token.png)
 
 Paste the token you just copied in the field, then click "Authorize". The token
-will be be hidden:
+will be hidden:
 
 ![after-set-token](/imgs/after-set-token.png)
 
@@ -150,6 +150,57 @@ Now you can try endpoint like `GET/users/me` to verify that the logged in user
 is injected in the request:
 
 ![me](/imgs/me.png)
+
+### Operation Level Security Policy
+
+You can also specify security policy for a single endpoint, by adding the
+security spec in the operation decorator, like:
+
+```ts
+// Define your operation level security policy
+const SECURITY_SPEC_OPERATION = {
+  [{basicAuth: []}];
+}
+
+// Also add the corresponding security schema into `components.securitySchemas`
+const SECURITY_SCHEMA_SPEC = {
+  securitySchemes: {
+    bearerAuth: {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    },
+    basicAuth: {
+      type: 'http',
+      scheme: 'basic',
+    },
+  },
+};
+
+// Add security policy in the operation decorator
+@get('/users/{userId}', {
+    security: SECURITY_SPEC_OPERATION,
+    responses: RESPONSE_SPEC,
+  })
+  async findById(@param.path.string('userId') userId: string): Promise<User> {
+    // Print out the header, you will see the Basic auth string in the header
+    console.log(`header ${inspect(this.request.headers)}`);
+    // business logic
+  }
+```
+
+The "Authorize" dialog will show up your new added entry as:
+
+![operation-level-security](/imgs/operation-level-security.png)
+
+Provide the username and password to login:
+
+![set-basic-auth](/imgs/set-basic-auth.png)
+
+Try endpoint `GET users/{userId}`, the printed header contains the basic auth
+string:
+
+![basic-auth-header](/imgs/basic-auth-header.png)
 
 ### Follow-up Stories
 

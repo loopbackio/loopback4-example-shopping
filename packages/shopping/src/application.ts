@@ -6,7 +6,7 @@
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig, BindingKey} from '@loopback/core';
 import {RepositoryMixin} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
+import {RestApplication, RestBindings} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import {MyAuthenticationSequence} from './sequence';
 import {
@@ -29,6 +29,7 @@ import {
 import {PasswordHasherBindings} from './keys';
 import {BcryptHasher} from './services/hash.password.bcryptjs';
 import {JWTAuthenticationStrategy} from './authentication-strategies/jwt-strategy';
+import {SECURITY_SCHEMA_SPEC, SECURITY_SPEC} from './utils/security-spec';
 
 /**
  * Information from package.json
@@ -98,5 +99,18 @@ export class ShoppingApplication extends BootMixin(
     this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher);
 
     this.bind(UserServiceBindings.USER_SERVICE).toClass(MyUserService);
+  }
+
+  async start(): Promise<void> {
+    await super.start();
+    const oaiSpec = this.getSync(RestBindings.API_SPEC);
+    this.api(
+      Object.assign(oaiSpec, {
+        components: {
+          ...SECURITY_SCHEMA_SPEC,
+        },
+        security: SECURITY_SPEC,
+      }),
+    );
   }
 }

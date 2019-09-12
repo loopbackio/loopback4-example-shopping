@@ -5,11 +5,19 @@
 
 import {repository} from '@loopback/repository';
 import {validateCredentials} from '../services/validator';
-import {post, param, get, requestBody, HttpErrors} from '@loopback/rest';
+import {
+  post,
+  param,
+  get,
+  requestBody,
+  HttpErrors,
+  RestBindings,
+  Request,
+} from '@loopback/rest';
 import {User, Product} from '../models';
 import {UserRepository} from '../repositories';
 import {RecommenderService} from '../services/recommender.service';
-import {inject} from '@loopback/core';
+import {inject, Context} from '@loopback/core';
 import {
   authenticate,
   UserProfile,
@@ -23,6 +31,7 @@ import {
 } from './specs/user-controller.specs';
 import {Credentials} from '../repositories/user.repository';
 import {PasswordHasher} from '../services/hash.password.bcryptjs';
+import {inspect} from 'util';
 
 import {
   TokenServiceBindings,
@@ -30,6 +39,7 @@ import {
   UserServiceBindings,
 } from '../keys';
 import * as _ from 'lodash';
+import {SECURITY_SPEC_OPERATION} from '../utils/security-spec';
 
 export class UserController {
   constructor(
@@ -42,6 +52,8 @@ export class UserController {
     public jwtService: TokenService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
+    @inject(RestBindings.Http.CONTEXT) public ctx: Context,
+    @inject(RestBindings.Http.REQUEST) private request: Request,
   ) {}
 
   @post('/users', {
@@ -83,6 +95,7 @@ export class UserController {
   }
 
   @get('/users/{userId}', {
+    security: SECURITY_SPEC_OPERATION,
     responses: {
       '200': {
         description: 'User',
@@ -97,6 +110,7 @@ export class UserController {
     },
   })
   async findById(@param.path.string('userId') userId: string): Promise<User> {
+    console.log(`header ${inspect(this.request.headers)}`);
     return this.userRepository.findById(userId, {
       fields: {password: false},
     });
