@@ -48,6 +48,13 @@ export class ShoppingApplication extends BootMixin(
 ) {
   constructor(options?: ApplicationConfig) {
     super(options);
+    this.api({
+      openapi: '3.0.0',
+      info: {title: pkg.name, version: pkg.version},
+      paths: {},
+      components: {securitySchemas: SECURITY_SCHEMA_SPEC},
+      security: SECURITY_SPEC,
+    });
 
     this.setUpBindings();
 
@@ -103,14 +110,5 @@ export class ShoppingApplication extends BootMixin(
 
   async start(): Promise<void> {
     await super.start();
-    const oaiSpec = this.getSync(RestBindings.API_SPEC);
-    this.api(
-      Object.assign(oaiSpec, {
-        components: {
-          ...SECURITY_SCHEMA_SPEC,
-        },
-        security: SECURITY_SPEC,
-      }),
-    );
   }
 }
