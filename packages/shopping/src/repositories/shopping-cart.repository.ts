@@ -68,7 +68,8 @@ export class ShoppingCartRepository extends DefaultKeyValueRepository<
     const connector = this.kvModelClass.dataSource!.connector!;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const execute = promisify((cmd: string, args: any[], cb: Function) => {
-      return connector.execute!(cmd, args, cb);
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      connector.execute!(cmd, args, cb);
     });
     /**
      * - WATCH userId
