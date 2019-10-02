@@ -29,7 +29,7 @@ import {
 import {PasswordHasherBindings} from './keys';
 import {BcryptHasher} from './services/hash.password.bcryptjs';
 import {JWTAuthenticationStrategy} from './authentication-strategies/jwt-strategy';
-import {SECURITY_SCHEMA_SPEC, SECURITY_SPEC} from './utils/security-spec';
+import {SECURITY_SPEC, SECURITY_SCHEME_SPEC} from './utils/security-spec';
 
 /**
  * Information from package.json
@@ -52,7 +52,7 @@ export class ShoppingApplication extends BootMixin(
       openapi: '3.0.0',
       info: {title: pkg.name, version: pkg.version},
       paths: {},
-      components: {securitySchemas: SECURITY_SCHEMA_SPEC},
+      components: {securitySchemes: SECURITY_SCHEME_SPEC},
       security: SECURITY_SPEC,
     });
 

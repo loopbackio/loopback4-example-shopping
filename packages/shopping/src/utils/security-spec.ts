@@ -1,6 +1,11 @@
+import { SecuritySchemeObject, ReferenceObject } from "@loopback/openapi-v3";
+
 export const SECURITY_SPEC = [{bearerAuth: []}];
 export const SECURITY_SPEC_OPERATION = [{basicAuth: []}];
-export const SECURITY_SCHEMA_SPEC = {
+export type SecuritySchemeObjects = {
+  [securityScheme: string]: SecuritySchemeObject | ReferenceObject;
+}
+export const SECURITY_SCHEME_SPEC: SecuritySchemeObjects = {
   bearerAuth: {
     type: 'http',
     scheme: 'bearer',
