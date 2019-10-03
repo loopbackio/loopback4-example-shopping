@@ -29,6 +29,7 @@ import {
 import {PasswordHasherBindings} from './keys';
 import {BcryptHasher} from './services/hash.password.bcryptjs';
 import {JWTAuthenticationStrategy} from './authentication-strategies/jwt-strategy';
+import {SECURITY_SCHEME_SPEC} from './utils/security-spec';
 
 /**
  * Information from package.json
@@ -47,6 +48,19 @@ export class ShoppingApplication extends BootMixin(
 ) {
   constructor(options?: ApplicationConfig) {
     super(options);
+
+    /*
+       This is a workaround until an extension point is introduced
+       allowing extensions to contribute to the OpenAPI specification
+       dynamically.
+    */
+    this.api({
+      openapi: '3.0.0',
+      info: {title: pkg.name, version: pkg.version},
+      paths: {},
+      components: {securitySchemes: SECURITY_SCHEME_SPEC},
+      servers: [{url: '/'}],
+    });
 
     this.setUpBindings();
 
