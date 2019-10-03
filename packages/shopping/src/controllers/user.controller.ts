@@ -29,6 +29,7 @@ import {
   UserServiceBindings,
 } from '../keys';
 import * as _ from 'lodash';
+import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 
 export class UserController {
   constructor(
@@ -102,6 +103,7 @@ export class UserController {
   }
 
   @get('/users/me', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'The current user profile',
