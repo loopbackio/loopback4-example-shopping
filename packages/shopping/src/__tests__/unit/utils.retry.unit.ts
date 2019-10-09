@@ -11,7 +11,9 @@ describe('sleep()', () => {
     const start = Date.now();
     await sleep(10);
     const duration = Date.now() - start;
-    expect(duration).to.be.greaterThanOrEqual(10);
+    // FIXME(rfeng): The duration is 9ms in some cases of travis build. It's
+    // a sign that the time is not 100% accurate
+    expect(duration).to.be.greaterThanOrEqual(9);
   });
 
   it('defaults invalid time to 1 ms', async () => {
