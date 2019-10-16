@@ -50,8 +50,10 @@ export function createGRPCRecommendationServer(port = '0.0.0.0:50051') {
     call,
     callback,
   ) => {
-    console.log(call.request.userId);
-    const userId = call.request.userId || 'user001';
+    let userId = call.request.userId || 'user001';
+    if (!(userId in recommendations)) {
+      userId = 'user001';
+    }
     callback(null, {products: recommendations[userId] || []});
   };
 

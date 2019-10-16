@@ -17,7 +17,7 @@ import {PasswordHasher} from '../../services/hash.password.bcryptjs';
 import {PasswordHasherBindings, TokenServiceConstants} from '../../keys';
 import {JWTService} from '../../services/jwt-service';
 import {securityId} from '@loopback/security';
-import {RecommenderGrpc} from '../../services';
+import {RecommenderService} from '../../services';
 import {Server} from 'grpc';
 
 const recommendations = require('loopback4-example-recommender/data/recommendations.json');
@@ -263,11 +263,11 @@ describe('UserController', () => {
     });
 
     it('returns product recommendations for a user using gRPC', async () => {
-      const recommender = await app.get<RecommenderGrpc>(
-        'services.RecommenderGrpc',
+      const recommender = await app.get<RecommenderService>(
+        'services.RecommenderGrpcService',
       );
-      const products = await recommender.recommend({userId: 'user001'});
-      expect(products.products).to.eql(recommendations['user001']);
+      const products = await recommender.getProductRecommendations('user001');
+      expect(products).to.eql(recommendations['user001']);
     });
   });
 
