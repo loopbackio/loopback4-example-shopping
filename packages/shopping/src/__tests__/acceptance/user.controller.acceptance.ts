@@ -5,8 +5,7 @@
 
 import {Client, expect} from '@loopback/testlab';
 import {ShoppingApplication} from '../..';
-import {UserRepository, OrderRepository} from '../../repositories';
-import {MongoDataSource} from '../../datasources';
+import {UserRepository} from '../../repositories';
 import {setupApplication} from './helper';
 import {
   createRecommendationServer,
@@ -25,9 +24,8 @@ const recommendations = require('loopback4-example-recommender/data/recommendati
 describe('UserController', () => {
   let app: ShoppingApplication;
   let client: Client;
-  const mongodbDS = new MongoDataSource();
-  const orderRepo = new OrderRepository(mongodbDS);
-  const userRepo = new UserRepository(mongodbDS, orderRepo);
+
+  let userRepo: UserRepository;
 
   const user = {
     email: 'test@loopback.io',
@@ -41,6 +39,7 @@ describe('UserController', () => {
 
   before('setupApplication', async () => {
     ({app, client} = await setupApplication());
+    userRepo = await app.get('repositories.UserRepository');
   });
   before(migrateSchema);
   before(createPasswordHasher);
