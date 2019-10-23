@@ -8,15 +8,23 @@ import {ShoppingCart, ShoppingCartItem} from '../../models';
 import {expect} from '@loopback/testlab';
 import {RedisDataSource} from '../../datasources';
 
+const config = require('../../datasources/redis.datasource.json');
+
 describe('ShoppingCart KeyValue Repository', () => {
   let repo: ShoppingCartRepository;
   let cart1: ShoppingCart;
   let cart2: ShoppingCart;
+  let redis: RedisDataSource;
 
   before(() => {
     cart1 = givenShoppingCart1();
     cart2 = givenShoppingCart2();
-    repo = new ShoppingCartRepository(new RedisDataSource());
+    redis = new RedisDataSource(config);
+    repo = new ShoppingCartRepository(redis);
+  });
+
+  after(async () => {
+    await redis.stop();
   });
 
   beforeEach(async () => {
