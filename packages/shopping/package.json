@@ -11,8 +11,7 @@
     "node": ">=8"
   },
   "scripts": {
-    "build:apidocs": "lb-apidocs",
-    "build": "lb-tsc --copy-resources",
+    "build": "lb-tsc",
     "build:watch": "lb-tsc --watch",
     "clean": "lb-clean dist* *.tsbuildinfo",
     "docker:start": "../../bin/start-dbs.sh",
@@ -27,7 +26,8 @@
     "start": "concurrently --kill-others \"npm run start:app\" \"npm run start:recommender\"",
     "start:app": "node .",
     "start:recommender": "node ../recommender",
-    "prepublishOnly": "npm run test"
+    "prepublishOnly": "npm run test",
+    "docker:run": "docker run -p 3000:3000 -d shopping"
   },
   "repository": {
     "type": "git"

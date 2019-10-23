@@ -11,14 +11,15 @@
     "node": ">=8.9"
   },
   "scripts": {
-    "build": "lb-tsc --copy-resources",
+    "build": "lb-tsc",
     "build:watch": "lb-tsc --watch",
     "clean": "lb-clean dist *.tsbuildinfo",
     "pretest": "npm run clean && npm run build",
     "test": "lb-mocha --allow-console-logs \"dist/__tests__/**/*.js\"",
     "test:dev": "lb-mocha --allow-console-logs dist/__tests__/**/*.js && npm run posttest",
     "prestart": "npm run build",
-    "start": "node ."
+    "start": "node .",
+    "docker:run": "docker run -p 3001:3001 -p 50051:50051 -d recommender"
   },
   "repository": {
     "type": "git"

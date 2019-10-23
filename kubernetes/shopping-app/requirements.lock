@@ -1,0 +1,9 @@
+dependencies:
+- name: redis
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 9.1.7
+- name: mongodb
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 7.2.7
+digest: sha256:9c6d54e6a969b74ca4d8f82a6ed703ce249e3711e86f53a6c73a66efb17f0fd8
+generated: "2019-09-09T12:35:36.770173-07:00"
