@@ -1,0 +1,15 @@
+# Stage 1: build the monorepo
+# Use the full image so that binary modules can be built
+FROM node:12
+
+# Set to a non-root built-in user `node`
+USER node
+
+# Create app directory (with user `node`)
+RUN mkdir -p /home/node/app
+
+WORKDIR /home/node/app
+
+# Bundle app source code
+COPY --chown=node . ./
+RUN HUSKY_SKIP_INSTALL=1 npm ci && npm run build
