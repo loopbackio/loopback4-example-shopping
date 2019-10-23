@@ -122,6 +122,14 @@ Please check the
 [try it out](https://loopback.io/doc/en/lb4/Authentication-Tutorial.html#try-it-out)
 section in the tutorial.
 
+## Deploy to Cloud as Microservices
+
+The example application can be packaged as multiple Docker containers and
+deployed to a cloud environment as a Kubernetes cluster.
+
+Please check out
+[Deploy Shopping Application as Cloud-native Microservices](kubernetes/README.md).
+
 ## Contributing
 
 This project uses [DCO](https://developercertificate.org/). Be sure to sign off

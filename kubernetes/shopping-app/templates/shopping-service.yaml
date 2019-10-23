@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: shopping
+  name: shopping
+spec:
+  type: NodePort
+  ports:
+    - name: rest
+      port: 3000
+      protocol: TCP
+      targetPort: rest
+  selector:
+    service: shopping
+status:
+  loadBalancer: {}

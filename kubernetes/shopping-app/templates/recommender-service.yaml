@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: recommender
+  name: recommender
+spec:
+  type: NodePort
+  ports:
+    - name: rest
+      port: 3001
+      protocol: TCP
+      targetPort: rest
+    - name: grpc
+      port: 50051
+      protocol: TCP
+      targetPort: grpc
+  selector:
+    service: recommender
+status:
+  loadBalancer: {}
