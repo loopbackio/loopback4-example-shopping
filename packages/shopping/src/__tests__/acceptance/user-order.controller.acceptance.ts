@@ -6,19 +6,23 @@
 import {supertest, expect} from '@loopback/testlab';
 import {ShoppingApplication} from '../..';
 import {OrderRepository, UserRepository} from '../../repositories';
-import {MongoDataSource} from '../../datasources';
 import {User, Order} from '../../models';
 import {setupApplication} from './helper';
 
 describe('UserOrderController acceptance tests', () => {
   let app: ShoppingApplication;
   let client: supertest.SuperTest<supertest.Test>;
-  const mongodbDS = new MongoDataSource();
-  const orderRepo = new OrderRepository(mongodbDS);
-  const userRepo = new UserRepository(mongodbDS, orderRepo);
 
   before('setupApplication', async () => {
     ({app, client} = await setupApplication());
+  });
+
+  let userRepo: UserRepository;
+  let orderRepo: OrderRepository;
+
+  before(async () => {
+    orderRepo = await app.get('repositories.OrderRepository');
+    userRepo = await app.get('repositories.UserRepository');
   });
 
   beforeEach(clearDatabase);

@@ -5,10 +5,9 @@
 
 import {expect} from '@loopback/testlab';
 import {validateCredentials} from '../../services/validator';
-import {MongoDataSource} from '../../datasources';
 import {ShoppingApplication} from '../..';
 import {PasswordHasher} from '../../services/hash.password.bcryptjs';
-import {UserRepository, OrderRepository, Credentials} from '../../repositories';
+import {UserRepository, Credentials} from '../../repositories';
 import {User} from '../../models';
 import {HttpErrors} from '@loopback/rest';
 import {
@@ -23,10 +22,6 @@ import {securityId} from '@loopback/security';
 describe('authentication services', () => {
   let app: ShoppingApplication;
 
-  const mongodbDS = new MongoDataSource();
-  const orderRepo = new OrderRepository(mongodbDS);
-  const userRepo = new UserRepository(mongodbDS, orderRepo);
-
   const user = {
     email: 'unittest@loopback.io',
     password: 'p4ssw0rd',
@@ -40,6 +35,15 @@ describe('authentication services', () => {
   let bcryptHasher: PasswordHasher;
 
   before(setupApp);
+  after(async () => {
+    await app.stop();
+  });
+
+  let userRepo: UserRepository;
+  before(async () => {
+    userRepo = await app.get('repositories.UserRepository');
+  });
+
   before(clearDatabase);
   before(createUser);
   before(createTokenService);
@@ -196,7 +200,8 @@ describe('authentication services', () => {
   });
 
   async function setupApp() {
-    app = await setupApplication();
+    const appWithClient = await setupApplication();
+    app = appWithClient.app;
     app.bind(PasswordHasherBindings.ROUNDS).to(4);
   }
 
