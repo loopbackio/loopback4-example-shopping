@@ -36,7 +36,7 @@
     "@loopback/http-server": "1.4.16",
     "express": "4.17.1",
     "@grpc/proto-loader": "0.5.2",
-    "grpc": "1.23.3"
+    "grpc": "1.24.1"
   },
   "devDependencies": {
     "@loopback/build": "2.0.14",
