@@ -73,22 +73,22 @@ npm run docker:build
 
 ```sh
 export CR_NAMESPACE=<your-namespace>
-docker tag loopback4-example-shopping:1.0.0 us.icr.io/${CR_NAMESPACE}/loopback4-example-shopping:1.0.0
-docker push us.icr.io/${CR_NAMESPACE}/loopback4-example-shopping:1.0.0
+docker tag loopback4-example-shopping:1.1.0 us.icr.io/${CR_NAMESPACE}/loopback4-example-shopping:1.1.0
+docker push us.icr.io/${CR_NAMESPACE}/loopback4-example-shopping:1.1.0
 
-docker tag loopback4-example-recommender:1.0.0 us.icr.io/${CR_NAMESPACE}/loopback4-example-recommender:1.0.0
-docker push us.icr.io/${CR_NAMESPACE}/loopback4-example-recommender:1.0.0
+docker tag loopback4-example-recommender:1.1.0 us.icr.io/${CR_NAMESPACE}/loopback4-example-recommender:1.1.0
+docker push us.icr.io/${CR_NAMESPACE}/loopback4-example-recommender:1.1.0
 ```
 
 Please note that the fully qualified docker image name is in the form of
 `<registry>/<namespace>/<repository>:<tag>`. For example,
-`us.icr.io/raymondfeng/loopback4-example-shopping:1.0.0` represents the
+`us.icr.io/raymondfeng/loopback4-example-shopping:1.1.0` represents the
 following:
 
 - registry - us.icr.io
 - namespace - raymondfeng
 - repository - loopback-example-shopping
-- tag - 1.0.0
+- tag - 1.1.0
 
 ## Install the helm chart
 
@@ -96,8 +96,8 @@ following:
 
 ```yaml
 images:
-  recommender: us.icr.io/<your-namespace>/loopback4-example-recommender:1.0.0
-  shopping: us.icr.io/<your-namespace>/loopback4-example-shopping:1.0.0
+  recommender: us.icr.io/<your-namespace>/loopback4-example-recommender:1.1.0
+  shopping: us.icr.io/<your-namespace>/loopback4-example-shopping:1.1.0
 ```
 
 2. Build the helm chart with dependencies
