@@ -8,7 +8,10 @@ const recommendations = require('../data/recommendations.json');
 import {HttpServer} from '@loopback/http-server';
 import {ParamsDictionary} from 'express-serve-static-core';
 
-export function createRecommendationServer(port = 3001, host = '127.0.0.1') {
+export function createRecommendationServer(
+  port = 3001,
+  host: string | undefined = undefined,
+) {
   const app = express();
 
   app.get('/:userId', (req: express.Request, res: express.Response) => {
@@ -22,7 +25,10 @@ export function createRecommendationServer(port = 3001, host = '127.0.0.1') {
   return new HttpServer(app, {port, host});
 }
 
-export async function restMain(port = 3001, host = '127.0.0.1') {
+export async function restMain(
+  port = 3001,
+  host: string | undefined = undefined,
+) {
   const server = createRecommendationServer(port, host);
   await server.start();
   console.log('Recommendation REST server is running at ' + server.url + '.');

@@ -9,8 +9,9 @@ const config = require('./recommender.datasource.json');
 
 function updateConfig(dsConfig: AnyObject) {
   if (process.env.KUBERNETES_SERVICE_HOST) {
-    dsConfig.host = process.env.RECOMMENDER_SERVICE_HOST;
-    dsConfig.port = +process.env.RECOMMENDER_SERVICE_PORT_REST!;
+    const host = process.env.RECOMMENDER_SERVICE_HOST || 'localhost';
+    const port = +process.env.RECOMMENDER_SERVICE_PORT_REST! || 3001;
+    dsConfig.operations[0].template.url = `http://${host}:${port}/{userId}`;
   }
   return dsConfig;
 }
