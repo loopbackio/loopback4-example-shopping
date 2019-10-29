@@ -1,6 +1,6 @@
 {
   "name": "loopback4-example-shopping",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "LoopBack 4 Example: Online Shopping APIs",
   "keywords": [
     "loopback-application",
@@ -73,7 +73,7 @@
     "@types/mocha": "5.2.7",
     "@types/node": "12.12.3",
     "concurrently": "5.0.0",
-    "loopback4-example-recommender": "^1.0.0",
+    "loopback4-example-recommender": "^1.1.0",
     "mocha": "6.2.2",
     "source-map-support": "0.5.16",
     "typescript": "3.6.4"
