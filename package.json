@@ -66,7 +66,7 @@
     "husky": "3.0.9",
     "lerna": "3.18.3",
     "mocha": "6.2.2",
-    "source-map-support": "0.5.15",
+    "source-map-support": "0.5.16",
     "typescript": "3.6.4"
   },
   "copyright.owner": "IBM Corp.",
