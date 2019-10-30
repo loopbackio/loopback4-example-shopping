@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: recommender
+  name: recommender-grpc
 spec:
   replicas: 1
   strategy: {}
   selector:
     matchLabels:
-      service: recommender
+      service: recommender-grpc
   template:
     metadata:
       labels:
-        service: recommender
+        service: recommender-grpc
     spec:
       containers:
         - image: {{ .Values.images.recommender | default "recommender" }}
-          name: recommender
+          name: recommender-grpc
+          env:
+            - name: RECOMMENDER_PROTOCOL
+              value: "grpc"
           ports:
-            - name: rest
-              containerPort: 3001
-              protocol: TCP
             - name: grpc
               containerPort: 50051
               protocol: TCP

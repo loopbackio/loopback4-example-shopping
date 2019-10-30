@@ -7,10 +7,12 @@ const config = require('./recommender-grpc.datasource.json');
 function updateConfig(dsConfig: AnyObject) {
   if (
     process.env.KUBERNETES_SERVICE_HOST &&
-    process.env.RECOMMENDER_SERVICE_HOST
+    process.env.RECOMMENDER_GRPC_SERVICE_HOST
   ) {
-    dsConfig.url = `${process.env.RECOMMENDER_SERVICE_HOST}:${+process.env
-      .RECOMMENDER_SERVICE_PORT_GRPC!}`;
+    const host = process.env.RECOMMENDER_GRPC_SERVICE_HOST;
+    const port = +process.env.RECOMMENDER_GRPC_SERVICE_PORT_GRPC!;
+
+    dsConfig.url = `${host}:${port}`;
   }
   return dsConfig;
 }

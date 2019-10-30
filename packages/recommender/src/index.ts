@@ -16,10 +16,14 @@ export async function main(
     grpc?: {port?: string};
   } = {rest: {port: 3001}, grpc: {}},
 ) {
+  // Enable the protocol by env var `RECOMMENDER_PROTOCOL`
+  // If not set, both protocols are enabled
+  const protocol = process.env.RECOMMENDER_PROTOCOL;
   if (config.rest) {
-    await restMain(config.rest.port, config.rest.host);
+    if (protocol == null || protocol === 'rest')
+      await restMain(config.rest.port, config.rest.host);
   }
   if (config.grpc) {
-    grpcMain(config.grpc.port);
+    if (protocol == null || protocol === 'grpc') grpcMain(config.grpc.port);
   }
 }
