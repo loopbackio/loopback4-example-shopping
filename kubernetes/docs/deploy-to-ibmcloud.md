@@ -46,8 +46,8 @@ ibmcloud cr login
 
 2. Use an existing namespace for the container registry or create a new one:
 
-Please substitute `<your-namespace>` to container registry namespace you create
-for IBM Cloud.
+In sections below, we assume the namespace is `loopback`. Please substitute
+`loopback` to the container registry namespace you choose for IBM Cloud.
 
 Existing namespaces can be listed:
 
@@ -58,12 +58,27 @@ ibmcloud cr namespaces
 You can add a namespace as follows:
 
 ```sh
-ibmcloud cr namespace-add <your-namespace>
+ibmcloud cr namespace-add loopback
 ```
 
 3. Upload docker images
 
 - Build docker images locally
+
+Before we rebuild docker images, consider to bump the project to the next
+version:
+
+```sh
+npm run docker:version
+```
+
+To specify the exact version:
+
+```sh
+npm run docker:version -- <version>
+```
+
+Run the the following command to build docker images:
 
 ```sh
 npm run docker:build
@@ -72,21 +87,19 @@ npm run docker:build
 - Tag and push images to IBM Cloud container registry
 
 ```sh
-export CR_NAMESPACE=<your-namespace>
-docker tag loopback4-example-shopping:1.1.0 us.icr.io/${CR_NAMESPACE}/loopback4-example-shopping:1.1.0
-docker push us.icr.io/${CR_NAMESPACE}/loopback4-example-shopping:1.1.0
+docker tag loopback4-example-shopping:1.1.1 us.icr.io/loopback/loopback4-example-shopping:1.1.1
+docker push us.icr.io/loopback/loopback4-example-shopping:1.1.1
 
-docker tag loopback4-example-recommender:1.1.0 us.icr.io/${CR_NAMESPACE}/loopback4-example-recommender:1.1.0
-docker push us.icr.io/${CR_NAMESPACE}/loopback4-example-recommender:1.1.0
+docker tag loopback4-example-recommender:1.1.1 us.icr.io/loopback/loopback4-example-recommender:1.1.1
+docker push us.icr.io/loopback/loopback4-example-recommender:1.1.1
 ```
 
 Please note that the fully qualified docker image name is in the form of
 `<registry>/<namespace>/<repository>:<tag>`. For example,
-`us.icr.io/raymondfeng/loopback4-example-shopping:1.1.0` represents the
-following:
+`us.icr.io/loopback/loopback4-example-shopping:1.1.1` represents the following:
 
 - registry - us.icr.io
-- namespace - raymondfeng
+- namespace - loopback
 - repository - loopback-example-shopping
 - tag - 1.1.0
 
@@ -96,8 +109,8 @@ following:
 
 ```yaml
 images:
-  recommender: us.icr.io/<your-namespace>/loopback4-example-recommender:1.1.0
-  shopping: us.icr.io/<your-namespace>/loopback4-example-shopping:1.1.0
+  recommender: us.icr.io/loopback/loopback4-example-recommender:1.1.1
+  shopping: us.icr.io/loopback/loopback4-example-shopping:1.1.1
 ```
 
 2. Build the helm chart with dependencies

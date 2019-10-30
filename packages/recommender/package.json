@@ -1,6 +1,6 @@
 {
   "name": "loopback4-example-recommender",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Mock up product recommendation",
   "keywords": [
     "loopback-application",
@@ -34,9 +34,9 @@
     "src"
   ],
   "dependencies": {
+    "@grpc/proto-loader": "0.5.2",
     "@loopback/http-server": "1.4.17",
     "express": "4.17.1",
-    "@grpc/proto-loader": "0.5.2",
     "grpc": "1.24.1"
   },
   "devDependencies": {

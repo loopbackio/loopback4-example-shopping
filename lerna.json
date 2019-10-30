@@ -1,5 +1,5 @@
 {
-  "lerna": "3.3.0",
+  "lerna": "3.18.0",
   "packages": [
     "packages/*"
   ],
@@ -11,8 +11,7 @@
       "conventionalCommits": true,
       "message": "chore: publish release"
     },
-    "publish": {
-    },
+    "publish": {},
     "run": {
       "prefix": false,
       "loglevel": "silent",
@@ -26,5 +25,5 @@
       "yes": true
     }
   },
-  "version": "independent"
+  "version": "1.1.1"
 }
