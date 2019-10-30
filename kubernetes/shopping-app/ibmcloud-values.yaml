@@ -18,8 +18,8 @@ resources:
   #   memory: 128Mi
 
 images:
-  recommender: us.icr.io/raymondfeng/loopback4-example-recommender:1.1.0
-  shopping: us.icr.io/raymondfeng/loopback4-example-shopping:1.1.0
+  recommender: us.icr.io/loopback/loopback4-example-recommender:1.1.1
+  shopping: us.icr.io/loopback/loopback4-example-shopping:1.1.1
 mongodb:
   usePassword: false
   persistence:

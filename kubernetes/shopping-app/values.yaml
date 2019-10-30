@@ -17,8 +17,8 @@ resources: {}
   #   memory: 128Mi
 
 images:
-  recommender: loopback4-example-recommender
-  shopping: loopback4-example-shopping
+  recommender: loopback4-example-recommender:1.1.1
+  shopping: loopback4-example-shopping:1.1.1
 mongodb:
   usePassword: false
   persistence:

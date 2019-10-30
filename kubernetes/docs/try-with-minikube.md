@@ -52,9 +52,31 @@ kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admi
 helm init --service-account tiller
 ```
 
+## Build docker images
+
+Before we rebuild docker images, consider to bump the project to the next
+version:
+
+```sh
+npm run docker:version
+```
+
+To specify the exact version:
+
+```sh
+npm run docker:version -- <version>
+```
+
+Run the the following command to build docker images:
+
+```sh
+npm run docker:build
+```
+
 ## Install the shopping app
 
 ```sh
+helm dependency build kubernetes/shopping-app
 helm install --name shopping-app --debug kubernetes/shopping-app
 ```
 

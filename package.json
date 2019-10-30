@@ -1,6 +1,6 @@
 {
   "name": "loopback4-example-shopping-monorepo",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Root package to manage monorepo for LoopBack 4 Example: Online Shopping APIs",
   "keywords": [
     "loopback-application",
@@ -16,6 +16,8 @@
     "clean": "lerna run clean",
     "commit": "git-cz",
     "commitmsg": "commitlint -E GIT_PARAMS",
+    "docker:version": "lerna version --no-git-tag-version --no-push --no-changelog",
+    "version": "node ./bin/update-versions",
     "docker:build": "./bin/build-images.sh",
     "docker:start": "./bin/start-dbs.sh",
     "docker:stop": "./bin/stop-dbs.sh",
