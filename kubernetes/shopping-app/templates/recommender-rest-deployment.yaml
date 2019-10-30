@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommender-rest
+spec:
+  replicas: 1
+  strategy: {}
+  selector:
+    matchLabels:
+      service: recommender-rest
+  template:
+    metadata:
+      labels:
+        service: recommender-rest
+    spec:
+      containers:
+        - image: {{ .Values.images.recommender | default "recommender" }}
+          name: recommender-rest
+          env:
+            - name: RECOMMENDER_PROTOCOL
+              value: "rest"
+          ports:
+            - name: rest
+              containerPort: 3001
+              protocol: TCP
+            - name: grpc
+              containerPort: 50051
+              protocol: TCP
+          resources: {}
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+status: {}
