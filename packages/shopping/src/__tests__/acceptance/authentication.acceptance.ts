@@ -116,6 +116,7 @@ describe('authentication services', () => {
   it('user service convertToUserProfile() succeeds', () => {
     const expectedUserProfile = {
       [securityId]: newUser.id,
+      id: newUser.id,
       name: `${newUser.firstName} ${newUser.lastName}`,
     };
     const userProfile = userService.convertToUserProfile(newUser);

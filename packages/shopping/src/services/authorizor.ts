@@ -6,7 +6,6 @@ import {
   AuthorizationRequest,
   AuthorizationDecision,
 } from '@loopback/authorization';
-import {inspect} from 'util';
 import * as casbin from 'casbin';
 
 // Class level authorizer
@@ -21,9 +20,7 @@ export class CasbinAuthorizationProvider implements Provider<Authorizer> {
   }
 
   async authorize(
-    // @jannyHou: make sure it's universal for authorizers
     authorizationCtx: AuthorizationContext,
-    // @jannyHou: make sure it's universal for authorizers
     metadata: AuthorizationMetadata,
   ) {
     const request: AuthorizationRequest = {

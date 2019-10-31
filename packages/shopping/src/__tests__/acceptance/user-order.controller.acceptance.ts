@@ -8,10 +8,17 @@ import {ShoppingApplication} from '../..';
 import {OrderRepository, UserRepository} from '../../repositories';
 import {User, Order} from '../../models';
 import {setupApplication} from './helper';
+import {PasswordHasherBindings} from '../../keys';
 
 describe('UserOrderController acceptance tests', () => {
   let app: ShoppingApplication;
   let client: supertest.SuperTest<supertest.Test>;
+
+  const userData = {
+    email: 'testUserCtrl@loopback.io',
+    password: 'p4ssw0rd',
+    firstName: 'customer_service',
+  };
 
   before('setupApplication', async () => {
     ({app, client} = await setupApplication());
@@ -35,8 +42,11 @@ describe('UserOrderController acceptance tests', () => {
     const userId = user.id;
     const order = givenAOrder({userId: userId, orderId: '1'});
 
+    const token = await authenticateUser(user);
+
     await client
       .post(`/users/${userId}/orders`)
+      .set('Authorization', 'Bearer ' + token)
       .send(order)
       .expect(200, order);
   });
@@ -46,8 +56,11 @@ describe('UserOrderController acceptance tests', () => {
     const userId = user.id;
     const order = givenAOrder({userId: userId});
 
+    const token = await authenticateUser(user);
+
     const res = await client
       .post(`/users/${userId}/orders`)
+      .set('Authorization', 'Bearer ' + token)
       .send(order)
       .expect(200);
 
@@ -61,8 +74,11 @@ describe('UserOrderController acceptance tests', () => {
     const userId = user.id;
     const order = givenAOrder({userId: 'hello'});
 
+    const token = await authenticateUser(user);
+
     await client
       .post(`/users/${userId}/orders`)
+      .set('Authorization', 'Bearer ' + token)
       .set('Content-Type', 'application/json')
       .send(order)
       .expect(400);
@@ -86,13 +102,21 @@ describe('UserOrderController acceptance tests', () => {
       const order = givenAOrder({userId: 'randomUserId', total: 100.99});
       await orderRepo.create(order);
 
+      const token = await authenticateUser(user);
+
       const expected = [savedOrder1.toJSON(), savedOrder2.toJSON()];
-      await client.get(`/users/${userId}/orders`).expect(200, expected);
+      await client
+        .get(`/users/${userId}/orders`)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200, expected);
     });
 
     it('patches all orders for a given user', async () => {
+      const token = await authenticateUser(user);
+
       await client
         .patch(`/users/${userId}/orders`)
+        .set('Authorization', 'Bearer ' + token)
         .send({total: 9.99})
         .expect(200, {count: 2});
     });
@@ -102,7 +126,12 @@ describe('UserOrderController acceptance tests', () => {
     it.skip('patches orders matching filter for a given user');
 
     it('deletes all orders for a given user', async () => {
-      await client.del(`/users/${userId}/orders`).expect(200, {count: 2});
+      const token = await authenticateUser(user);
+
+      await client
+        .del(`/users/${userId}/orders`)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200, {count: 2});
     });
 
     // TODO(virkt25): Implement after issue below is fixed.
@@ -126,18 +155,29 @@ describe('UserOrderController acceptance tests', () => {
   }
 
   async function givenAUser() {
-    const user = {
-      email: 'loopback@example.com',
-      password: 'p4ssw0rd',
-      firstName: 'Example',
-      lastName: 'User',
-    };
+    const passwordHasher = await app.get(
+      PasswordHasherBindings.PASSWORD_HASHER,
+    );
+    const encryptedPassword = await passwordHasher.hashPassword(
+      userData.password,
+    );
 
-    const newUser = await userRepo.create(user);
+    const newUser = await userRepo.create(
+      Object.assign({}, userData, {password: encryptedPassword}),
+    );
     // MongoDB returns an id object we need to convert to string
     newUser.id = newUser.id.toString();
-
     return newUser;
+  }
+
+  async function authenticateUser(user: User) {
+    const res = await client
+      .post('/users/login')
+      .send({email: user.email, password: userData.password});
+
+    const token = res.body.token;
+
+    return token;
   }
 
   function givenAOrder(partial: Partial<Order> = {}) {
