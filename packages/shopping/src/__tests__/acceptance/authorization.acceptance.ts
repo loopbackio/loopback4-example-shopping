@@ -5,22 +5,19 @@
 
 import {Client, expect} from '@loopback/testlab';
 import {ShoppingApplication} from '../..';
-import {UserRepository, OrderRepository} from '../../repositories';
-import {MongoDataSource} from '../../datasources';
+import {UserRepository} from '../../repositories';
 import {setupApplication} from './helper';
 import {PasswordHasher} from '../../services/hash.password.bcryptjs';
 import {PasswordHasherBindings} from '../../keys';
 import {User} from '../../models';
 
-describe.only('authorization', () => {
+describe('authorization', () => {
   let app: ShoppingApplication;
   let client: Client;
-  const mongodbDS = new MongoDataSource();
-  const orderRepo = new OrderRepository(mongodbDS);
-  const userRepo = new UserRepository(mongodbDS, orderRepo);
+  let userRepo: UserRepository;
 
   let user = {
-    email: 'test@loopback.io',
+    email: 'testAuthor@loopback.io',
     password: 'p4ssw0rd',
     firstName: 'customer_service',
   };
@@ -31,11 +28,11 @@ describe.only('authorization', () => {
 
   before('setupApplication', async () => {
     ({app, client} = await setupApplication());
+    userRepo = await app.get('repositories.UserRepository');
   });
   before(migrateSchema);
   before(createPasswordHasher);
-
-  beforeEach(clearDatabase);
+  before(clearDatabase);
   after(async () => {
     await app.stop();
   });
@@ -54,36 +51,36 @@ describe.only('authorization', () => {
           },
         ],
       };
-  
+
       let res = await client
         .post('/users/login')
         .send({email: newUser.email, password: user.password})
         .expect(200);
-  
+
       token = res.body.token;
       res = await client
         .post(`/users/${newUser.id}/orders`)
         .set('Authorization', 'Bearer ' + token)
         .send(orderObj)
         .expect(200);
-  
+
       const orders = res.body;
       expect(orders).to.containDeep({
         userId: newUser.id,
         total: 123,
-        products: [ { productId: 'product1', quantity: 1, price: 123 } ]
+        products: [{productId: 'product1', quantity: 1, price: 123}],
       });
     });
-  
+
     it('allows customer_service delete orders', async () => {
       await client
         .delete(`/users/${newUser.id}/orders`)
         .set('Authorization', 'Bearer ' + token)
         .expect(200, {count: 1});
     });
-  })
+  });
 
-  describe('bob', async () => {
+  describe('bob', () => {
     it('allows bob create orders', async () => {
       user = {
         email: 'test2@loopback.io',
@@ -120,22 +117,22 @@ describe.only('authorization', () => {
       expect(orders).to.containDeep({
         userId: newUser.id,
         total: 123,
-        products: [ { productId: 'product2', quantity: 1, price: 123 } ]
-      })
+        products: [{productId: 'product2', quantity: 1, price: 123}],
+      });
     });
 
     it("allows bob deletes bob's orders", async () => {
       await client
-      .delete(`/users/${newUser.id}/orders`)
-      .set('Authorization', 'Bearer ' + token)
-      .expect(200, {count: 1});
+        .delete(`/users/${newUser.id}/orders`)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200, {count: 1});
     });
 
     it("denies bob deletes alice's orders", async () => {
       await client
-      .delete(`/users/${newUser.id + 1}/orders`)
-      .set('Authorization', 'Bearer ' + token)
-      .expect(401);
+        .delete(`/users/${newUser.id + 1}/orders`)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(401);
     });
   });
 

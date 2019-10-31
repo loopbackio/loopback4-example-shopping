@@ -44,7 +44,6 @@ export class UserOrderController {
       },
     },
   })
-
   @authenticate('jwt')
   @authorize({resource: 'order', scopes: ['create']})
   async createOrder(
@@ -75,7 +74,7 @@ export class UserOrderController {
     },
   })
   @authenticate('jwt')
-  @authorize({resource: 'order', scopes: ['find']})
+  @authorize({resource: 'order', scopes: ['find'], voters: [compareId]})
   async findOrders(
     @param.path.string('userId') userId: string,
     @param.query.string('filter') filter?: Filter<Order>,
@@ -93,7 +92,7 @@ export class UserOrderController {
     },
   })
   @authenticate('jwt')
-  @authorize({resource: 'order', scopes: ['patch']})
+  @authorize({resource: 'order', scopes: ['patch'], voters: [compareId]})
   async patchOrders(
     @param.path.string('userId') userId: string,
     @requestBody() order: Partial<Order>,
@@ -111,7 +110,7 @@ export class UserOrderController {
     },
   })
   @authenticate('jwt')
-  @authorize({resource: 'order', scopes: ['delete'],voters: [compareId]})
+  @authorize({resource: 'order', scopes: ['delete'], voters: [compareId]})
   async deleteOrders(
     @param.path.string('userId') userId: string,
     @param.query.string('where') where?: Where<Order>,

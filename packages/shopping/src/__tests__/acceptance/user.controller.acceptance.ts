@@ -46,6 +46,7 @@ describe('UserController', () => {
   before(givenAnExpiredToken);
 
   beforeEach(clearDatabase);
+
   after(async () => {
     await app.stop();
   });

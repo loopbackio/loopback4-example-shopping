@@ -37,7 +37,11 @@ export class JWTService implements TokenService {
       // don't copy over  token field 'iat' and 'exp', nor 'email' to user profile
       userProfile = Object.assign(
         {[securityId]: '', name: ''},
-        {[securityId]: decodedToken.id, name: decodedToken.name},
+        {
+          [securityId]: decodedToken.id,
+          name: decodedToken.name,
+          id: decodedToken.id,
+        },
       );
     } catch (error) {
       throw new HttpErrors.Unauthorized(
