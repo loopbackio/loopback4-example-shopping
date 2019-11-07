@@ -110,6 +110,39 @@ possible by the use of the `UserService` service provided by
 You can see the details in
 [`packages/shopping/src/controllers/user.controller.ts`](https://github.com/strongloop/loopback4-example-shopping/blob/master/packages/shopping/src/controllers/user.controller.ts).
 
+### Authorization
+
+To see authorization in action in this example, all requests to the endpoint
+`/users/{userId}/orders` (i.e, `UserOrderController`) are validated for specific
+user access.
+
+Endpoint authorization is done using `@loopback/authorization` package and the
+provisions in it are implemented using
+[Casbin](https://github.com/casbin/casbin) configurations.
+
+Below is a scenario illustrating how authorization works in this example:
+
+1. Bob logs into the shopping app using his existing user credential via
+   endpoint `/users/login`. The JWT token returned has the user name as `bob`
+   and id as `123`.
+
+2. Bob invokes endpoint GET `/users/123/orders` with the JWT token obtained in
+   the previous step. The corresponding controller operation `findOrders` is
+   configured authorization scope `['find']`.
+
+3. The authorization provider in `packages/shopping/src/services/authorizor.ts`
+   uses the casbin configuration
+   `/packages/shopping/fixtures/casbin/rbac_policy.csv` to validate that `bob`
+   has `find` scope for resource `order`.
+
+4. Bob invokes endpoint DELETE `/users/123/orders` with the JWT token. The
+   endpoint operation in the controller `deleteOrders` is configured with
+   `@authorize` decorator with scopes `['delete']`. The decorator also has a
+   voter function (`packages/shopping/src/services/id.compare.authorizor.ts`) to
+   check if the `userId` in the path matches with the `user id` in the JWT
+   token. This serves as an additional data level restriction to avoid tokens of
+   other users delete bob's orders.
+
 ### Tutorial
 
 There is a tutorial which shows how to apply the JWT strategy to secure your
