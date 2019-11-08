@@ -2,7 +2,7 @@ import {inject} from '@loopback/core';
 import {juggler, AnyObject} from '@loopback/repository';
 import * as path from 'path';
 
-const config = require('./recommender-grpc.datasource.json');
+const config = require('./recommender-grpc.datasource.config.json');
 
 function updateConfig(dsConfig: AnyObject) {
   if (

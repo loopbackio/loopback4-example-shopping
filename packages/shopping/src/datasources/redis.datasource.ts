@@ -5,7 +5,7 @@
 
 import {inject, lifeCycleObserver, ValueOrPromise} from '@loopback/core';
 import {juggler, AnyObject} from '@loopback/repository';
-const config = require('./redis.datasource.json');
+const config = require('./redis.datasource.config.json');
 
 function updateConfig(dsConfig: AnyObject) {
   if (process.env.KUBERNETES_SERVICE_HOST) {
