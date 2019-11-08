@@ -8,7 +8,7 @@ import {ShoppingCart, ShoppingCartItem} from '../../models';
 import {expect} from '@loopback/testlab';
 import {RedisDataSource} from '../../datasources';
 
-const config = require('../../datasources/redis.datasource.json');
+const config = require('../../datasources/redis.datasource.config.json');
 
 describe('ShoppingCart KeyValue Repository', () => {
   let repo: ShoppingCartRepository;
