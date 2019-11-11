@@ -1,6 +1,6 @@
 dependencies:
 - name: redis
-  version: 9.5.2
+  version: 9.5.3
   repository: https://kubernetes-charts.storage.googleapis.com
 - name: mongodb
   version: 7.4.4
