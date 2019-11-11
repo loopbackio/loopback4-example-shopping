@@ -84,9 +84,9 @@ describe('ShoppingCartController', () => {
       .post(`/shoppingCarts/${cart.userId}/items`)
       .send(newItem)
       .expect(200);
-    const newCart = (await client
-      .get(`/shoppingCarts/${cart.userId}`)
-      .expect(200)).body;
+    const newCart = (
+      await client.get(`/shoppingCarts/${cart.userId}`).expect(200)
+    ).body;
     expect(newCart.items).to.containEql(newItem.toJSON());
   });
 
