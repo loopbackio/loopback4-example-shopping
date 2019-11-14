@@ -3,9 +3,16 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {repository} from '@loopback/repository';
+import {repository, model, property} from '@loopback/repository';
 import {validateCredentials} from '../services/validator';
-import {post, param, get, requestBody, HttpErrors} from '@loopback/rest';
+import {
+  post,
+  param,
+  get,
+  requestBody,
+  HttpErrors,
+  getModelSchemaRef,
+} from '@loopback/rest';
 import {User, Product} from '../models';
 import {UserRepository} from '../repositories';
 import {RecommenderService} from '../services/recommender.service';
@@ -30,6 +37,15 @@ import {
 } from '../keys';
 import * as _ from 'lodash';
 import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
+
+@model()
+export class NewUserRequest extends User {
+  @property({
+    type: 'string',
+    required: true,
+  })
+  password: string;
+}
 
 export class UserController {
   constructor(
@@ -58,18 +74,36 @@ export class UserController {
       },
     },
   })
-  async create(@requestBody() user: User): Promise<User> {
+  async create(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(NewUserRequest, {
+            title: 'NewUser',
+          }),
+        },
+      },
+    })
+    newUserRequest: NewUserRequest,
+  ): Promise<User> {
     // ensure a valid email value and password value
-    validateCredentials(_.pick(user, ['email', 'password']));
+    validateCredentials(_.pick(newUserRequest, ['email', 'password']));
 
     // encrypt the password
-    // eslint-disable-next-line require-atomic-updates
-    user.password = await this.passwordHasher.hashPassword(user.password);
+    const password = await this.passwordHasher.hashPassword(
+      newUserRequest.password,
+    );
 
     try {
       // create the new user
-      const savedUser = await this.userRepository.create(user);
-      delete savedUser.password;
+      const savedUser = await this.userRepository.create(
+        _.omit(newUserRequest, 'password'),
+      );
+
+      // set the password
+      await this.userRepository
+        .userCredentials(savedUser.id)
+        .create({password});
 
       return savedUser;
     } catch (error) {
@@ -97,9 +131,7 @@ export class UserController {
     },
   })
   async findById(@param.path.string('userId') userId: string): Promise<User> {
-    return this.userRepository.findById(userId, {
-      fields: {password: false},
-    });
+    return this.userRepository.findById(userId);
   }
 
   @get('/users/me', {

@@ -18,16 +18,18 @@ import {
 import {setupApplication} from './helper';
 import {TokenService, UserService} from '@loopback/authentication';
 import {securityId} from '@loopback/security';
+import * as _ from 'lodash';
 
 describe('authentication services', () => {
   let app: ShoppingApplication;
 
-  const user = {
+  const userData = {
     email: 'unittest@loopback.io',
-    password: 'p4ssw0rd',
     firstName: 'unit',
     lastName: 'test',
   };
+
+  const userPassword = 'p4ssw0rd';
 
   let newUser: User;
   let jwtService: TokenService;
@@ -70,19 +72,15 @@ describe('authentication services', () => {
 
   it('user service verifyCredentials() succeeds', async () => {
     const {email} = newUser;
-    const credentials = {email, password: user.password};
+    const credentials = {email, password: userPassword};
 
     const returnedUser = await userService.verifyCredentials(credentials);
 
     // create a copy of returned user without password field
-    const returnedUserWithOutPassword = Object.assign({}, returnedUser, {
-      password: user.password,
-    });
-    delete returnedUserWithOutPassword.password;
+    const returnedUserWithOutPassword = _.omit(returnedUser, 'password');
 
     // create a copy of expected user without password field
-    const expectedUserWithoutPassword = Object.assign({}, newUser);
-    delete expectedUserWithoutPassword.password;
+    const expectedUserWithoutPassword = _.omit(newUser, 'password');
 
     expect(returnedUserWithOutPassword).to.deepEqual(
       expectedUserWithoutPassword,
@@ -178,21 +176,21 @@ describe('authentication services', () => {
   });
 
   it('password encrypter hashPassword() succeeds', async () => {
-    const encrypedPassword = await bcryptHasher.hashPassword(user.password);
-    expect(encrypedPassword).to.not.equal(user.password);
+    const encrypedPassword = await bcryptHasher.hashPassword(userPassword);
+    expect(encrypedPassword).to.not.equal(userPassword);
   });
 
   it('password encrypter compare() succeeds', async () => {
-    const encrypedPassword = await bcryptHasher.hashPassword(user.password);
+    const encrypedPassword = await bcryptHasher.hashPassword(userPassword);
     const passwordsAreTheSame = await bcryptHasher.comparePassword(
-      user.password,
+      userPassword,
       encrypedPassword,
     );
     expect(passwordsAreTheSame).to.be.True();
   });
 
   it('password encrypter compare() fails', async () => {
-    const encrypedPassword = await bcryptHasher.hashPassword(user.password);
+    const encrypedPassword = await bcryptHasher.hashPassword(userPassword);
     const passwordsAreTheSame = await bcryptHasher.comparePassword(
       'someotherpassword',
       encrypedPassword,
@@ -208,12 +206,14 @@ describe('authentication services', () => {
 
   async function createUser() {
     bcryptHasher = await app.get(PasswordHasherBindings.PASSWORD_HASHER);
-    const encryptedPassword = await bcryptHasher.hashPassword(user.password);
-    newUser = await userRepo.create(
-      Object.assign({}, user, {password: encryptedPassword}),
-    );
+    const encryptedPassword = await bcryptHasher.hashPassword(userPassword);
+    newUser = await userRepo.create(userData);
     // MongoDB returns an id object we need to convert to string
     newUser.id = newUser.id.toString();
+
+    await userRepo.userCredentials(newUser.id).create({
+      password: encryptedPassword,
+    });
   }
 
   async function clearDatabase() {

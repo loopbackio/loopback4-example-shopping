@@ -16,9 +16,10 @@ describe('UserOrderController acceptance tests', () => {
 
   const userData = {
     email: 'testUserCtrl@loopback.io',
-    password: 'p4ssw0rd',
     firstName: 'customer_service',
   };
+
+  const userPassword = 'p4ssw0rd';
 
   before('setupApplication', async () => {
     ({app, client} = await setupApplication());
@@ -158,22 +159,24 @@ describe('UserOrderController acceptance tests', () => {
     const passwordHasher = await app.get(
       PasswordHasherBindings.PASSWORD_HASHER,
     );
-    const encryptedPassword = await passwordHasher.hashPassword(
-      userData.password,
-    );
+    const encryptedPassword = await passwordHasher.hashPassword(userPassword);
 
-    const newUser = await userRepo.create(
-      Object.assign({}, userData, {password: encryptedPassword}),
-    );
+    const newUser = await userRepo.create(userData);
+
     // MongoDB returns an id object we need to convert to string
     newUser.id = newUser.id.toString();
+
+    await userRepo.userCredentials(newUser.id).create({
+      password: encryptedPassword,
+    });
+
     return newUser;
   }
 
   async function authenticateUser(user: User) {
     const res = await client
       .post('/users/login')
-      .send({email: user.email, password: userData.password});
+      .send({email: user.email, password: userPassword});
 
     const token = res.body.token;
 

@@ -8,10 +8,12 @@ import {
   juggler,
   HasManyRepositoryFactory,
   repository,
+  HasOneRepositoryFactory,
 } from '@loopback/repository';
-import {User, Order} from '../models';
-import {inject} from '@loopback/core';
+import {User, Order, UserCredentials} from '../models';
+import {inject, Getter} from '@loopback/core';
 import {OrderRepository} from './order.repository';
+import {UserCredentialsRepository} from './user-credentials.repository';
 
 export type Credentials = {
   email: string;
@@ -24,14 +26,40 @@ export class UserRepository extends DefaultCrudRepository<
 > {
   public orders: HasManyRepositoryFactory<Order, typeof User.prototype.id>;
 
+  public readonly userCredentials: HasOneRepositoryFactory<
+    UserCredentials,
+    typeof User.prototype.id
+  >;
+
   constructor(
     @inject('datasources.mongo') protected datasource: juggler.DataSource,
     @repository(OrderRepository) protected orderRepository: OrderRepository,
+    @repository.getter('UserCredentialsRepository')
+    protected userCredentialsRepositoryGetter: Getter<
+      UserCredentialsRepository
+    >,
   ) {
     super(User, datasource);
+    this.userCredentials = this.createHasOneRepositoryFactoryFor(
+      'userCredentials',
+      userCredentialsRepositoryGetter,
+    );
     this.orders = this.createHasManyRepositoryFactoryFor(
       'orders',
       async () => orderRepository,
     );
+  }
+
+  async findCredentials(
+    userId: typeof User.prototype.id,
+  ): Promise<UserCredentials | undefined> {
+    try {
+      return this.userCredentials(userId).get();
+    } catch (err) {
+      if (err.code === 'ENTITY_NOT_FOUND') {
+        return undefined;
+      }
+      throw err;
+    }
   }
 }
