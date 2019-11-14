@@ -33,15 +33,16 @@ http://[::1]:3000/explorer/.
 
 ## Models
 
-This app has five models:
+This app has the following models:
 
 1. `User` - representing the users of the system.
-2. `Product` - a model which is mapped to a remote service by
+2. `UserCredentials` - representing sensitive credentials like a password.
+3. `Product` - a model which is mapped to a remote service by
    `services/recommender.service`.
-3. `ShoppingCartItem` - a model for representing purchases.
-4. `ShoppingCart` - a model to represent a user's shopping cart, can contain
+4. `ShoppingCartItem` - a model for representing purchases.
+5. `ShoppingCart` - a model to represent a user's shopping cart, can contain
    many items (`items`) of the type `ShoppingCartItem`.
-5. `Order` - a model to represent an order by user, can have many products
+6. `Order` - a model to represent an order by user, can have many products
    (`products`) of the type `ShoppingCartItem`.
 
 `ShoppingCart` and `Order` are marked as belonging to the `User` model by the
@@ -49,6 +50,10 @@ use of the `@belongsTo` model decorator. Correspondingly, the `User` model is
 marked as having many `Order`s using the `@hasMany` model decorator. Although
 possible, a `hasMany` relation for `User` to `ShoppingCart` has not be created
 in this particular app to limit the scope of the example.
+
+`User` is also marked as having one `UserCredentials` model using the `@hasOne`
+decorator. The `belongsTo` relation for `UserCredentials` to `User` has not been
+created to keep the scope smaller.
 
 ## Controllers
 

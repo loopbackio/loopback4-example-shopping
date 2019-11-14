@@ -27,12 +27,13 @@ describe('UserController', () => {
 
   let userRepo: UserRepository;
 
-  const user = {
+  const userData = {
     email: 'test@loopback.io',
-    password: 'p4ssw0rd',
     firstName: 'Example',
     lastName: 'User',
   };
+
+  const userPassword = 'p4ssw0rd';
 
   let passwordHasher: PasswordHasher;
   let expiredToken: string;
@@ -54,7 +55,7 @@ describe('UserController', () => {
   it('creates new user when POST /users is invoked', async () => {
     const res = await client
       .post('/users')
-      .send(user)
+      .send({...userData, password: userPassword})
       .expect(200);
 
     // Assertions
@@ -63,6 +64,20 @@ describe('UserController', () => {
     expect(res.body.lastName).to.equal('User');
     expect(res.body).to.have.property('id');
     expect(res.body).to.not.have.property('password');
+  });
+
+  it('creates a new user with the given id', async () => {
+    // This test verifies the scenario described in our docs, see
+    // https://loopback.io/doc/en/lb4/Authentication-Tutorial.html
+    const res = await client.post('/users').send({
+      id: '5dd6acee242760334f6aef65',
+      ...userData,
+      password: userPassword,
+    });
+    expect(res.body).to.deepEqual({
+      id: '5dd6acee242760334f6aef65',
+      ...userData,
+    });
   });
 
   it('throws error for POST /users with a missing email', async () => {
@@ -122,11 +137,11 @@ describe('UserController', () => {
   it('throws error for POST /users with an existing email', async () => {
     await client
       .post('/users')
-      .send(user)
+      .send({...userData, password: userPassword})
       .expect(200);
     const res = await client
       .post('/users')
-      .send(user)
+      .send({...userData, password: userPassword})
       .expect(409);
 
     expect(res.body.error.message).to.equal('Email value is already taken');
@@ -134,7 +149,6 @@ describe('UserController', () => {
 
   it('returns a user with given id when GET /users/{id} is invoked', async () => {
     const newUser = await createAUser();
-    delete newUser.password;
     delete newUser.orders;
 
     await client.get(`/users/${newUser.id}`).expect(200, newUser.toJSON());
@@ -146,7 +160,7 @@ describe('UserController', () => {
 
       const res = await client
         .post('/users/login')
-        .send({email: newUser.email, password: user.password})
+        .send({email: newUser.email, password: userPassword})
         .expect(200);
 
       const token = res.body.token;
@@ -158,7 +172,7 @@ describe('UserController', () => {
 
       const res = await client
         .post('/users/login')
-        .send({email: 'idontexist@example.com', password: user.password})
+        .send({email: 'idontexist@example.com', password: userPassword})
         .expect(401);
 
       expect(res.body.error.message).to.equal('Invalid email or password.');
@@ -180,7 +194,7 @@ describe('UserController', () => {
 
       let res = await client
         .post('/users/login')
-        .send({email: newUser.email, password: user.password})
+        .send({email: newUser.email, password: userPassword})
         .expect(200);
 
       const token = res.body.token;
@@ -280,12 +294,14 @@ describe('UserController', () => {
   }
 
   async function createAUser() {
-    const encryptedPassword = await passwordHasher.hashPassword(user.password);
-    const newUser = await userRepo.create(
-      Object.assign({}, user, {password: encryptedPassword}),
-    );
+    const encryptedPassword = await passwordHasher.hashPassword(userPassword);
+    const newUser = await userRepo.create(userData);
     // MongoDB returns an id object we need to convert to string
     newUser.id = newUser.id.toString();
+
+    await userRepo.userCredentials(newUser.id).create({
+      password: encryptedPassword,
+    });
 
     return newUser;
   }

@@ -16,11 +16,12 @@ describe('authorization', () => {
   let client: Client;
   let userRepo: UserRepository;
 
-  let user = {
+  let userData = {
     email: 'testAuthor@loopback.io',
-    password: 'p4ssw0rd',
     firstName: 'customer_service',
   };
+
+  const userPassword = 'p4ssw0rd';
 
   let passwordHasher: PasswordHasher;
   let newUser: User;
@@ -54,7 +55,7 @@ describe('authorization', () => {
 
       let res = await client
         .post('/users/login')
-        .send({email: newUser.email, password: user.password})
+        .send({email: newUser.email, password: userPassword})
         .expect(200);
 
       token = res.body.token;
@@ -82,9 +83,8 @@ describe('authorization', () => {
 
   describe('bob', () => {
     it('allows bob create orders', async () => {
-      user = {
+      userData = {
         email: 'test2@loopback.io',
-        password: 'p4ssw0rd',
         firstName: 'bob',
       };
       newUser = await createAUser();
@@ -102,7 +102,7 @@ describe('authorization', () => {
 
       let res = await client
         .post('/users/login')
-        .send({email: newUser.email, password: user.password})
+        .send({email: newUser.email, password: userPassword})
         .expect(200);
 
       token = res.body.token;
@@ -145,13 +145,15 @@ describe('authorization', () => {
   }
 
   async function createAUser() {
-    const encryptedPassword = await passwordHasher.hashPassword(user.password);
-    const aUser = await userRepo.create(
-      Object.assign({}, user, {password: encryptedPassword}),
-    );
+    const encryptedPassword = await passwordHasher.hashPassword(userPassword);
+    const aUser = await userRepo.create(userData);
+
     // MongoDB returns an id object we need to convert to string
     aUser.id = aUser.id.toString();
 
+    await userRepo.userCredentials(aUser.id).create({
+      password: encryptedPassword,
+    });
     return aUser;
   }
 
