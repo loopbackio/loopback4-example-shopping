@@ -3,5 +3,5 @@ dependencies:
   version: 10.1.0
   repository: https://kubernetes-charts.storage.googleapis.com
 - name: mongodb
-  version: 7.4.6
+  version: 7.5.0
   repository: https://kubernetes-charts.storage.googleapis.com
