@@ -73,7 +73,7 @@
     "@types/lodash": "4.14.149",
     "@types/mocha": "5.2.7",
     "@types/node": "12.12.15",
-    "concurrently": "5.0.0",
+    "concurrently": "5.0.1",
     "loopback4-example-recommender": "1.1.1",
     "mocha": "6.2.2",
     "source-map-support": "0.5.16",
