@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import * as path from 'path';
+import path from 'path';
 import {
   loadPackageDefinition,
   GrpcObject,

@@ -5,7 +5,7 @@
 
 import {HttpErrors} from '@loopback/rest';
 import {promisify} from 'util';
-import * as debugFactory from 'debug';
+import debugFactory from 'debug';
 const debug = debugFactory('loopback:example:shopping');
 
 export interface TaskStatus<T> {

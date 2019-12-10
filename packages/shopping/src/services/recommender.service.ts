@@ -34,7 +34,7 @@ export function recommender(protocol: string) {
 }
 
 const recommenderFilter: BindingFilter = binding => {
-  const protocol = process.env.RECOMMENDER_PROTOCOL || 'rest';
+  const protocol = process.env.RECOMMENDER_PROTOCOL ?? 'rest';
   return (
     extensionFilter(RECOMMENDER_SERVICE)(binding) &&
     binding.tagMap.protocol === protocol

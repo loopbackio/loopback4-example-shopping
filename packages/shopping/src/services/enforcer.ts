@@ -1,5 +1,5 @@
 import * as casbin from 'casbin';
-import * as path from 'path';
+import path from 'path';
 
 export async function createEnforcer() {
   const conf = path.resolve(__dirname, '../../fixtures/casbin/rbac_model.conf');

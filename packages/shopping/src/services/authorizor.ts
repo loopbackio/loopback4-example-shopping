@@ -25,7 +25,7 @@ export class CasbinAuthorizationProvider implements Provider<Authorizer> {
   ) {
     const request: AuthorizationRequest = {
       subject: authorizationCtx.principals[0].name,
-      object: metadata.resource || authorizationCtx.resource,
+      object: metadata.resource ?? authorizationCtx.resource,
       action: (metadata.scopes && metadata.scopes[0]) || 'execute',
     };
 
