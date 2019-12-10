@@ -35,7 +35,7 @@ import {
   PasswordHasherBindings,
   UserServiceBindings,
 } from '../keys';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 
 @model()

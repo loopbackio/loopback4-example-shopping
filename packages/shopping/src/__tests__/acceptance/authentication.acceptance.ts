@@ -18,7 +18,7 @@ import {
 import {setupApplication} from './helper';
 import {TokenService, UserService} from '@loopback/authentication';
 import {securityId} from '@loopback/security';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 describe('authentication services', () => {
   let app: ShoppingApplication;

@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import * as express from 'express';
+import express from 'express';
 const recommendations = require('../data/recommendations.json');
 import {HttpServer} from '@loopback/http-server';
 import {ParamsDictionary} from 'express-serve-static-core';

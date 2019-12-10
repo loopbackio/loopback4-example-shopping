@@ -3,7 +3,7 @@ import {
   AuthorizationMetadata,
   AuthorizationDecision,
 } from '@loopback/authorization';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {UserProfile, securityId} from '@loopback/security';
 
 interface MyAuthorizationMetadata extends AuthorizationMetadata {

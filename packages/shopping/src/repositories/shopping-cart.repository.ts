@@ -31,8 +31,8 @@ export class ShoppingCartRepository extends DefaultKeyValueRepository<
     const task: Task<ShoppingCart> = {
       run: async () => {
         const addItemToCart = (cart: ShoppingCart | null) => {
-          cart = cart || new ShoppingCart({userId});
-          cart.items = cart.items || [];
+          cart = cart ?? new ShoppingCart({userId});
+          cart.items = cart.items ?? [];
           cart.items.push(item);
           return cart;
         };
