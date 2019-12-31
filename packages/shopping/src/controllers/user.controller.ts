@@ -117,6 +117,7 @@ export class UserController {
   }
 
   @get('/users/{userId}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'User',
@@ -130,6 +131,7 @@ export class UserController {
       },
     },
   })
+  @authenticate('jwt')
   async findById(@param.path.string('userId') userId: string): Promise<User> {
     return this.userRepository.findById(userId);
   }

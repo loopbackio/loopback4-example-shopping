@@ -16,6 +16,8 @@ import {repository} from '@loopback/repository';
 import {ShoppingCartRepository} from '../repositories';
 import {ShoppingCart, ShoppingCartItem} from '../models';
 import debugFactory from 'debug';
+import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
+
 const debug = debugFactory('loopback:example:shopping');
 
 /**
