@@ -75,7 +75,7 @@
     "@types/node": "12.12.24",
     "concurrently": "5.0.2",
     "loopback4-example-recommender": "1.1.1",
-    "mocha": "6.2.2",
+    "mocha": "7.0.0",
     "source-map-support": "0.5.16",
     "typescript": "3.7.4"
   },
