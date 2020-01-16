@@ -1,0 +1,17 @@
+name: Samsung Laptop
+price: 2100
+image: https://images.unsplash.com/photo-1520375300877-3500f50d069e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60
+description: Super HD laptop from Samsung.
+details: >
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent varius laoreet augue ut condimentum. Donec purus dui, aliquet eu arcu vitae, elementum viverra turpis.
+
+  - Duis luctus justo erat, sit amet gravida felis vehicula quis.
+  - Nunc posuere dui quis justo semper ullamcorper.
+  - Suspendisse eu odio quis odio bibendum sodales sed quis metus.
+  - Quisque fringilla odio ornare urna malesuada blandit.
+
+  Maecenas hendrerit, augue ac iaculis luctus, lacus nisl tincidunt ante, eu venenatis urna lectus vitae ligula. Aenean iaculis nibh nec dolor fringilla vehicula. Nunc purus tortor, lobortis et mi eu, dapibus aliquet urna. Fusce sollicitudin dapibus dapibus.
+
+  Duis nec odio id purus porttitor euismod. <script>alert(1)</script> Aenean in ex sollicitudin, condimentum orci sed, volutpat turpis. Vestibulum ac sapien sed massa auctor pretium. Proin scelerisque ultrices risus. Proin elementum arcu sodales, posuere tellus eu, molestie arcu.
+
+  Fusce nisl risus, ornare ut quam nec, gravida interdum ante.
