@@ -12,9 +12,18 @@ import {
   HttpErrors,
   post,
 } from '@loopback/rest';
+import {
+  authenticate,
+  TokenService,
+  UserService,
+} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
+import {UserProfile, securityId, SecurityBindings} from '@loopback/security';
+import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {ShoppingCartRepository} from '../repositories';
 import {ShoppingCart, ShoppingCartItem} from '../models';
+import {basicAuthorization} from '../services/basic.authorizor';
 import debugFactory from 'debug';
 const debug = debugFactory('loopback:example:shopping');
 
@@ -23,6 +32,8 @@ const debug = debugFactory('loopback:example:shopping');
  */
 export class ShoppingCartController {
   constructor(
+    @inject(SecurityBindings.USER)
+    public currentUserProfile: UserProfile,
     @repository(ShoppingCartRepository)
     public shoppingCartRepository: ShoppingCartRepository,
   ) {}
@@ -39,17 +50,18 @@ export class ShoppingCartController {
       },
     },
   })
+  @authenticate('jwt')
   async set(
     @param.path.string('userId') userId: string,
     @requestBody({description: 'shopping cart'}) cart: ShoppingCart,
   ): Promise<void> {
-    debug('Create shopping cart %s: %j', userId, cart);
-    if (userId !== cart.userId) {
-      throw new HttpErrors.BadRequest(
-        `User id does not match: ${userId} !== ${cart.userId}`,
-      );
+    const currentUserId = this.currentUserProfile[securityId];
+    if (currentUserId === cart.userId && currentUserId === userId) {
+      debug('Create shopping cart %s: %j', userId, cart);
+      await this.shoppingCartRepository.set(userId, cart);
+    } else {
+      throw HttpErrors(401);
     }
-    await this.shoppingCartRepository.set(userId, cart);
   }
 
   /**
@@ -64,9 +76,27 @@ export class ShoppingCartController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({resource: 'shoppingCarts', scopes: ['find'], voters: [basicAuthorization]})
   async get(
     @param.path.string('userId') userId: string,
   ): Promise<ShoppingCart> {
+    /*
+    if (this.currentUserProfile[securityId] === userId) {
+      debug('Get shopping cart %s', userId);
+      const cart = await this.shoppingCartRepository.get(userId);
+      debug('Shopping cart %s: %j', userId, cart);
+      if (cart == null) {
+        throw new HttpErrors.NotFound(
+          `Shopping cart not found for user: ${userId}`,
+        );
+      } else {
+        return cart;
+      }
+    } else {
+      throw HttpErrors(401);
+    }
+    */
     debug('Get shopping cart %s', userId);
     const cart = await this.shoppingCartRepository.get(userId);
     debug('Shopping cart %s: %j', userId, cart);
@@ -90,9 +120,14 @@ export class ShoppingCartController {
       },
     },
   })
+  @authenticate('jwt')
   async remove(@param.path.string('userId') userId: string): Promise<void> {
-    debug('Remove shopping cart %s', userId);
-    await this.shoppingCartRepository.delete(userId);
+    if (this.currentUserProfile[securityId] === userId) {
+      debug('Remove shopping cart %s', userId);
+      await this.shoppingCartRepository.delete(userId);
+    } else {
+      throw HttpErrors(401);
+    }
   }
 
   /**
@@ -110,11 +145,16 @@ export class ShoppingCartController {
       },
     },
   })
+  @authenticate('jwt')
   async addItem(
     @param.path.string('userId') userId: string,
     @requestBody({description: 'shopping cart item'}) item: ShoppingCartItem,
   ): Promise<ShoppingCart> {
-    debug('Add item %j to shopping cart %s', item, userId);
-    return this.shoppingCartRepository.addItem(userId, item);
+    if (this.currentUserProfile[securityId] === userId) {
+      debug('Add item %j to shopping cart %s', item, userId);
+      return this.shoppingCartRepository.addItem(userId, item);
+    } else {
+      throw HttpErrors(401);
+    }
   }
 }

@@ -93,10 +93,10 @@ export class ShoppingApplication extends BootMixin(
     this.component(AuthorizationComponent);
 
     // authorization
-    this.bind('casbin.enforcer').toDynamicValue(createEnforcer);
-    this.bind('authorizationProviders.casbin-provider')
-      .toProvider(CasbinAuthorizationProvider)
-      .tag(AuthorizationTags.AUTHORIZER);
+    // this.bind('casbin.enforcer').toDynamicValue(createEnforcer);
+    // this.bind('authorizationProviders.casbin-provider')
+    //   .toProvider(CasbinAuthorizationProvider)
+    //   .tag(AuthorizationTags.AUTHORIZER);
 
     // authentication
     registerAuthenticationStrategy(this, JWTAuthenticationStrategy);
