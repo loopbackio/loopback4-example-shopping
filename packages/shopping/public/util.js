@@ -1,4 +1,4 @@
-/*global location, localStorage, api*/
+/*global location, localStorage, DOMPurify, api*/
 'use strict';
 
 function getCurrentPageNumber() {
@@ -8,6 +8,10 @@ function getCurrentPageNumber() {
   } else {
     return 1;
   }
+}
+
+function getUserId() {
+  return new URL(location.href).searchParams.get('id');
 }
 
 function getProductId() {
@@ -38,20 +42,37 @@ function parseYml(string) {
   return parsed;
 }
 
-function isLoggedIn(cb) {
+async function isLoggedIn() {
   const token = localStorage.getItem('shoppyToken');
   if (token) {
-    api.me(
-      function(user) {
-        cb(user);
-      },
-      function(fail) {
-        cb(false);
-      },
-    );
+    try {
+      const user = await api.me();
+      return user;
+    } catch (e) {
+      return false;
+    }
   } else {
-    return cb(false);
+    return false;
   }
+}
+
+function isAdmin() {
+  const roles = localStorage.getItem('shoppyRoles');
+  if (!roles) return false;
+  return roles.split(',').includes('admin');
+}
+
+function isSupport() {
+  const roles = localStorage.getItem('shoppyRoles');
+  if (!roles) return false;
+  return roles.split(',').includes('support');
+}
+
+function fullName(user) {
+  if (!user) return '';
+  return DOMPurify.sanitize(
+    (user.firstName || '') + ' ' + (user.lastName || ''),
+  );
 }
 
 const util = {
@@ -59,4 +80,8 @@ const util = {
   getProductId,
   isLoggedIn,
   parseYml,
+  isAdmin,
+  isSupport,
+  getUserId,
+  fullName,
 };

@@ -1,3 +1,11 @@
+.hidden {
+  display: none !important;
+}
+
+.nav-item {
+  cursor: pointer;
+}
+
 #main {
   padding: 0;
 }
@@ -60,6 +68,7 @@
 #user {
   position: relative;
   right: 20px;
+  cursor: pointer;
 }
 
 #user img {
@@ -96,4 +105,76 @@
 
 .product-quantity {
   width: 52px !important;
+}
+
+#orders {
+  width: 900px;
+  margin: 0 auto;
+  font-size: 13px;
+}
+
+#orders .list-group {
+  margin-bottom: 10px;
+}
+
+#orders table {
+  margin-top: 20px;
+  font-size: 13px;
+}
+
+#orders .list-group {
+  list-style: none;
+}
+
+.order-total {
+  margin: 0 auto;
+  width: 200px;
+  font-weight: bold;
+}
+
+#profile {
+  width: 24rem;
+  margin: 18px auto;
+}
+
+#profile input {
+  padding: 1px 8px;
+}
+
+#profile-roles {
+  margin-top: 14px;
+  display: none;
+}
+
+#profile-roles label {
+  margin: 0 10px 0 2px;
+}
+
+#update-profile {
+  display: flex;
+  justify-content: center
+}
+
+#profile-firstName {
+  margin-left: 4px;
+}
+
+#profile-lastName {
+  margin-left: 5px;
+}
+
+#profile-email {
+  margin-left: 43px;
+}
+
+#profile-roles b {
+  margin-right: 20px;
+}
+
+#profile center {
+  padding: 10px;
+}
+
+.inline-block {
+  display: inline-block;
 }

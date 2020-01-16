@@ -15,6 +15,13 @@ export class ShoppingCartItem extends Entity {
    */
   @property({id: true})
   productId: string;
+
+  /**
+   * Product name
+   */
+  @property()
+  name: string;
+
   /**
    * Quantity
    */

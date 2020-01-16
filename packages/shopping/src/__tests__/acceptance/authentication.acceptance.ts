@@ -27,6 +27,7 @@ describe('authentication services', () => {
     email: 'unittest@loopback.io',
     firstName: 'unit',
     lastName: 'test',
+    roles: ['customer'],
   };
 
   const userPassword = 'p4ssw0rd';
@@ -116,6 +117,7 @@ describe('authentication services', () => {
       [securityId]: newUser.id,
       id: newUser.id,
       name: `${newUser.firstName} ${newUser.lastName}`,
+      roles: ['customer'],
     };
     const userProfile = userService.convertToUserProfile(newUser);
     expect(expectedUserProfile).to.deepEqual(userProfile);

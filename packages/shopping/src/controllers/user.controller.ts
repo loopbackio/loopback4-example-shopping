@@ -7,6 +7,7 @@ import {repository, model, property} from '@loopback/repository';
 import {validateCredentials} from '../services/validator';
 import {
   post,
+  put,
   param,
   get,
   requestBody,
@@ -22,6 +23,7 @@ import {
   TokenService,
   UserService,
 } from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {UserProfile, securityId, SecurityBindings} from '@loopback/security';
 import {
   CredentialsRequestBody,
@@ -37,6 +39,7 @@ import {
 } from '../keys';
 import _ from 'lodash';
 import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
+import {basicAuthorization} from '../services/basic.authorizor';
 
 @model()
 export class NewUserRequest extends User {
@@ -86,6 +89,8 @@ export class UserController {
     })
     newUserRequest: NewUserRequest,
   ): Promise<User> {
+    // All new users have the "customer" role by default
+    newUserRequest.roles = ['customer'];
     // ensure a valid email value and password value
     validateCredentials(_.pick(newUserRequest, ['email', 'password']));
 
@@ -116,6 +121,43 @@ export class UserController {
     }
   }
 
+  @put('/users/{userId}', {
+    responses: {
+      '200': {
+        description: 'User',
+        content: {
+          'application/json': {
+            schema: {
+              'x-ts-type': User,
+            },
+          },
+        },
+      },
+    },
+  })
+  @authenticate('jwt')
+  @authorize({
+    allowedRoles: ['admin', 'customer'],
+    voters: [basicAuthorization],
+  })
+  async set(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+    @param.path.string('userId') userId: string,
+    @requestBody({description: 'update user'}) user: User,
+  ): Promise<void> {
+    try {
+      // Only admin can assign roles
+      if (!currentUserProfile.roles.includes('admin')) {
+        delete user.roles;
+      }
+      const updatedUser = await this.userRepository.updateById(userId, user);
+      return updatedUser;
+    } catch (e) {
+      return e;
+    }
+  }
+
   @get('/users/{userId}', {
     responses: {
       '200': {
@@ -129,6 +171,11 @@ export class UserController {
         },
       },
     },
+  })
+  @authenticate('jwt')
+  @authorize({
+    allowedRoles: ['admin', 'support', 'customer'],
+    voters: [basicAuthorization],
   })
   async findById(@param.path.string('userId') userId: string): Promise<User> {
     return this.userRepository.findById(userId);
@@ -151,12 +198,12 @@ export class UserController {
   async printCurrentUser(
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
-  ): Promise<UserProfile> {
+  ): Promise<User> {
     // (@jannyHou)FIXME: explore a way to generate OpenAPI schema
     // for symbol property
-    currentUserProfile.id = currentUserProfile[securityId];
-    delete currentUserProfile[securityId];
-    return currentUserProfile;
+
+    const userId = currentUserProfile[securityId];
+    return this.userRepository.findById(userId);
   }
 
   @get('/users/{userId}/recommend', {
