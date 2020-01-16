@@ -5,4 +5,12 @@
 
 module.exports = {
   extends: ['@loopback/eslint-config'],
+  overrides: [
+    {
+      files: ['**/*.js'],
+      rules: {
+        '@typescript-eslint/no-unused-vars': 'off',
+      },
+    },
+  ],
 };
