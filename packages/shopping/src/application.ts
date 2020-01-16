@@ -35,13 +35,13 @@ import {
 import {BcryptHasher} from './services/hash.password.bcryptjs';
 import {JWTAuthenticationStrategy} from './authentication-strategies/jwt-strategy';
 import {SECURITY_SCHEME_SPEC} from './utils/security-spec';
+import {AuthorizationComponent} from '@loopback/authorization';
 import {
-  AuthorizationComponent,
-  AuthorizationTags,
-} from '@loopback/authorization';
-import {createEnforcer} from './services/enforcer';
-import {CasbinAuthorizationProvider} from './services/authorizor';
-import {ProductRepository, UserRepository} from './repositories';
+  ProductRepository,
+  UserRepository,
+  ShoppingCartRepository,
+  OrderRepository,
+} from './repositories';
 import YAML = require('yaml');
 import fs from 'fs';
 import {User} from './models';
@@ -91,12 +91,6 @@ export class ShoppingApplication extends BootMixin(
     // Bind authentication component related elements
     this.component(AuthenticationComponent);
     this.component(AuthorizationComponent);
-
-    // authorization
-    this.bind('casbin.enforcer').toDynamicValue(createEnforcer);
-    this.bind('authorizationProviders.casbin-provider')
-      .toProvider(CasbinAuthorizationProvider)
-      .tag(AuthorizationTags.AUTHORIZER);
 
     // authentication
     registerAuthenticationStrategy(this, JWTAuthenticationStrategy);
@@ -158,6 +152,7 @@ export class ShoppingApplication extends BootMixin(
   async migrateSchema(options?: SchemaMigrationOptions) {
     await super.migrateSchema(options);
 
+    // Pre-populate products
     const productRepo = await this.getRepository(ProductRepository);
     await productRepo.deleteAll();
     const productsDir = path.join(__dirname, '../fixtures/products');
@@ -172,6 +167,7 @@ export class ShoppingApplication extends BootMixin(
       }
     }
 
+    // Pre-populate users
     const passwordHasher = await this.get(
       PasswordHasherBindings.PASSWORD_HASHER,
     );
@@ -192,5 +188,13 @@ export class ShoppingApplication extends BootMixin(
         await userRepo.userCredentials(user.id).create({password});
       }
     }
+
+    // Delete existing shopping carts
+    const cartRepo = await this.getRepository(ShoppingCartRepository);
+    await cartRepo.deleteAll();
+
+    // Delete existing orders
+    const orderRepo = await this.getRepository(OrderRepository);
+    await orderRepo.deleteAll();
   }
 }

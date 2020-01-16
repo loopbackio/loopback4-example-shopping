@@ -17,8 +17,11 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {Product} from '../models';
 import {ProductRepository} from '../repositories';
+import {basicAuthorization} from '../services/basic.authorizor';
 
 export class ProductController {
   constructor(
@@ -34,6 +37,8 @@ export class ProductController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async create(
     @requestBody({
       content: {
@@ -95,6 +100,8 @@ export class ProductController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async updateAll(
     @requestBody({
       content: {
@@ -137,6 +144,8 @@ export class ProductController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -158,6 +167,8 @@ export class ProductController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() product: Product,
@@ -172,6 +183,8 @@ export class ProductController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.productRepository.deleteById(id);
   }

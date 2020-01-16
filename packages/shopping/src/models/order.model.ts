@@ -15,9 +15,19 @@ export class Order extends Entity {
   })
   orderId?: string;
 
+  @property({
+    type: 'date',
+  })
+  date?: string;
+
   // Each order belongs to a user, indentified by its id (userId)
   @belongsTo(() => User)
   userId: string;
+
+  @property({
+    type: 'string',
+  })
+  fullName: string;
 
   @property({
     type: 'number',

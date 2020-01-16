@@ -3,11 +3,59 @@
 'use strict';
 
 const api = {
-  addToCart(body, successCb, errCb) {
+  getUser(userId) {
+    const token = localStorage.getItem('shoppyToken');
+    const url = apiUrl + `/users/${userId}`;
+    return $.ajax({
+      type: 'GET',
+      url: url,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).promise();
+  },
+
+  updateUser(userId, body) {
+    const token = localStorage.getItem('shoppyToken');
+    const url = apiUrl + `/users/${userId}`;
+    return $.ajax({
+      type: 'PUT',
+      url: url,
+      data: JSON.stringify(body),
+      contentType: 'application/json',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).promise();
+  },
+
+  getOrders() {
     const userId = localStorage.getItem('shoppyUserId');
     const token = localStorage.getItem('shoppyToken');
-    const url = apiUrl + `/shoppingCarts/${userId}/items`;
-    $.ajax({
+    const roles = localStorage.getItem('shoppyRoles').split(',');
+    let url;
+    if (roles.includes('admin') || roles.includes('support')) {
+      url = apiUrl + `/orders`;
+    } else {
+      url = apiUrl + `/users/${userId}/orders`;
+    }
+    return $.ajax({
+      type: 'GET',
+      url: url,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).promise();
+  },
+
+  makeOrder(body) {
+    const userName = localStorage.getItem('shoppyUserName');
+    const userId = localStorage.getItem('shoppyUserId');
+    const token = localStorage.getItem('shoppyToken');
+    const url = apiUrl + `/users/${userId}/orders`;
+    body.userId = userId;
+    body.userName = userName;
+    return $.ajax({
       type: 'POST',
       url: url,
       data: JSON.stringify(body),
@@ -15,35 +63,61 @@ const api = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      success: successCb,
-      error: errCb,
-    });
+    }).promise();
   },
 
-  getShoppingCartItems(successCb, errCb) {
+  addToCart(body) {
+    const userId = localStorage.getItem('shoppyUserId');
+    const token = localStorage.getItem('shoppyToken');
+    const url = apiUrl + `/shoppingCarts/${userId}/items`;
+    return $.ajax({
+      type: 'POST',
+      url: url,
+      data: JSON.stringify(body),
+      contentType: 'application/json',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).promise();
+  },
+
+  deleteShoppingCart() {
     const userId = localStorage.getItem('shoppyUserId');
     const token = localStorage.getItem('shoppyToken');
     if (userId) {
       const url = apiUrl + '/shoppingCarts/' + userId;
-      $.ajax({
+      return $.ajax({
+        type: 'DELETE',
+        url: url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).promise();
+    }
+  },
+
+  getShoppingCartItems() {
+    const userId = localStorage.getItem('shoppyUserId');
+    const token = localStorage.getItem('shoppyToken');
+    if (userId) {
+      const url = apiUrl + '/shoppingCarts/' + userId;
+      return $.ajax({
         type: 'GET',
         url: url,
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        success: successCb,
-        error: errCb,
-      });
+      }).promise();
     }
   },
 
-  updateCart(items, successCb, errCb) {
+  updateCart(items) {
     const userId = localStorage.getItem('shoppyUserId');
     const token = localStorage.getItem('shoppyToken');
     const url = apiUrl + `/shoppingCarts/${userId}`;
     const body = {userId, items};
     const data = JSON.stringify(body);
-    $.ajax({
+    return $.ajax({
       type: 'PUT',
       url: url,
       data,
@@ -51,76 +125,64 @@ const api = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      success: successCb,
-      error: errCb,
-    });
+    }).promise();
   },
 
-  signUp(body, successCb, errCb) {
+  signUp(body) {
     const url = apiUrl + '/users';
-    $.ajax({
+    return $.ajax({
       type: 'POST',
       url: url,
       data: JSON.stringify(body),
       contentType: 'application/json',
-      success: successCb,
-      error: errCb,
-    });
+    }).promise();
   },
 
-  logIn(body, successCb, errCb) {
+  logIn(body) {
     const url = apiUrl + '/users/login';
-    $.ajax({
+    return $.ajax({
       type: 'POST',
       url: url,
       data: JSON.stringify(body),
       contentType: 'application/json',
-      success: successCb,
-      error: errCb,
-    });
+    }).promise();
   },
 
-  me(successCb, errCb) {
+  me() {
     const url = apiUrl + '/users/me';
     const token = localStorage.getItem('shoppyToken');
-    $.ajax({
+    return $.ajax({
       type: 'GET',
       url: url,
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      success: successCb,
-      error: errCb,
-    });
+    }).promise();
   },
 
-  getProducts(options, successCb, errCb) {
+  getProducts(options) {
     const {skip = 0, limit = 4} = options;
     const url =
       apiUrl + `/products?filter[skip]=${skip}&filter[limit]=${limit}`;
     const token = localStorage.getItem('shoppyToken');
-    $.ajax({
+    return $.ajax({
       type: 'GET',
       url: url,
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      success: successCb,
-      error: errCb,
-    });
+    }).promise();
   },
 
-  getProduct(id, successCb, errCb) {
+  getProduct(id) {
     const url = apiUrl + '/products/' + id;
     const token = localStorage.getItem('shoppyToken');
-    $.ajax({
+    return $.ajax({
       type: 'GET',
       url: url,
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      success: successCb,
-      error: errCb,
-    });
+    }).promise();
   },
 };

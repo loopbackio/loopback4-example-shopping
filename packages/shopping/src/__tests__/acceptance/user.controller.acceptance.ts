@@ -31,6 +31,7 @@ describe('UserController', () => {
     email: 'test@loopback.io',
     firstName: 'Example',
     lastName: 'User',
+    roles: ['customer'],
   };
 
   const userPassword = 'p4ssw0rd';
@@ -147,11 +148,11 @@ describe('UserController', () => {
     expect(res.body.error.message).to.equal('Email value is already taken');
   });
 
-  it('returns a user with given id when GET /users/{id} is invoked', async () => {
+  it('protects GET /users/{id} with authorization', async () => {
     const newUser = await createAUser();
     delete newUser.orders;
 
-    await client.get(`/users/${newUser.id}`).expect(200, newUser.toJSON());
+    await client.get(`/users/${newUser.id}`).expect(401);
   });
 
   describe('authentication', () => {
@@ -206,9 +207,9 @@ describe('UserController', () => {
 
       const userProfile = res.body;
       expect(userProfile.id).to.equal(newUser.id);
-      expect(userProfile.name).to.equal(
-        `${newUser.firstName} ${newUser.lastName}`,
-      );
+      expect(userProfile.firstName).to.equal(newUser.firstName);
+      expect(userProfile.lastName).to.equal(newUser.lastName);
+      expect(userProfile.roles).to.deepEqual(newUser.roles);
     });
 
     it('users/me returns an error when a JWT token is not provided', async () => {

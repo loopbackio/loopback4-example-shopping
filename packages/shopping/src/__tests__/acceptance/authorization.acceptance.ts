@@ -15,14 +15,7 @@ describe('authorization', () => {
   let app: ShoppingApplication;
   let client: Client;
   let userRepo: UserRepository;
-
-  let userData = {
-    email: 'testAuthor@loopback.io',
-    firstName: 'customer_service',
-  };
-
   const userPassword = 'p4ssw0rd';
-
   let passwordHasher: PasswordHasher;
   let newUser: User;
   let token: string;
@@ -38,9 +31,14 @@ describe('authorization', () => {
     if (app != null) await app.stop();
   });
 
-  describe('customer_service', () => {
-    it('allows customer_service create orders', async () => {
-      newUser = await createAUser();
+  describe('Customer Support', () => {
+    it('does not allow customer support to create orders', async () => {
+      newUser = await createAUser({
+        email: 'support@loopback.io',
+        firstName: 'Customer',
+        lastName: 'Support',
+        roles: ['support'],
+      });
       const orderObj = {
         userId: newUser.id,
         total: 123,
@@ -63,31 +61,18 @@ describe('authorization', () => {
         .post(`/users/${newUser.id}/orders`)
         .set('Authorization', 'Bearer ' + token)
         .send(orderObj)
-        .expect(200);
-
-      const orders = res.body;
-      expect(orders).to.containDeep({
-        userId: newUser.id,
-        total: 123,
-        products: [{productId: 'product1', quantity: 1, price: 123}],
-      });
-    });
-
-    it('allows customer_service delete orders', async () => {
-      await client
-        .delete(`/users/${newUser.id}/orders`)
-        .set('Authorization', 'Bearer ' + token)
-        .expect(200, {count: 1});
+        .expect(401);
     });
   });
 
-  describe('bob', () => {
-    it('allows bob create orders', async () => {
-      userData = {
-        email: 'test2@loopback.io',
-        firstName: 'bob',
-      };
-      newUser = await createAUser();
+  describe('Customer', () => {
+    it('allows customer to create orders', async () => {
+      newUser = await createAUser({
+        email: 'customer@loopback.io',
+        firstName: 'Tom',
+        lastName: 'DeLonge',
+        roles: ['customer'],
+      });
       const orderObj = {
         userId: newUser.id,
         total: 123,
@@ -121,14 +106,14 @@ describe('authorization', () => {
       });
     });
 
-    it("allows bob deletes bob's orders", async () => {
+    it("allows customer to deletes one's orders", async () => {
       await client
         .delete(`/users/${newUser.id}/orders`)
         .set('Authorization', 'Bearer ' + token)
         .expect(200, {count: 1});
     });
 
-    it("denies bob deletes alice's orders", async () => {
+    it("denies customer to deletes other's orders", async () => {
       await client
         .delete(`/users/${newUser.id + 1}/orders`)
         .set('Authorization', 'Bearer ' + token)
@@ -144,7 +129,7 @@ describe('authorization', () => {
     await app.migrateSchema();
   }
 
-  async function createAUser() {
+  async function createAUser(userData: object) {
     const encryptedPassword = await passwordHasher.hashPassword(userPassword);
     const aUser = await userRepo.create(userData);
 
