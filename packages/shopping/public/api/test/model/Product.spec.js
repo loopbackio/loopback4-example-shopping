@@ -72,24 +72,6 @@
       //expect(instance).to.be();
     });
 
-    it('should have the property image (base name: "image")', function() {
-      // uncomment below and update the code to test the property image
-      //var instane = new Loopback4ExampleShopping.Product();
-      //expect(instance).to.be();
-    });
-
-    it('should have the property description (base name: "description")', function() {
-      // uncomment below and update the code to test the property description
-      //var instane = new Loopback4ExampleShopping.Product();
-      //expect(instance).to.be();
-    });
-
-    it('should have the property details (base name: "details")', function() {
-      // uncomment below and update the code to test the property details
-      //var instane = new Loopback4ExampleShopping.Product();
-      //expect(instance).to.be();
-    });
-
   });
 
 }));

@@ -120,14 +120,6 @@ All URIs are relative to *http://127.0.0.1:3000*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *Loopback4ExampleShopping.PingControllerApi* | [**pingControllerPing**](docs/PingControllerApi.md#pingControllerPing) | **GET** /ping | 
-*Loopback4ExampleShopping.ProductControllerApi* | [**productControllerCount**](docs/ProductControllerApi.md#productControllerCount) | **GET** /products/count | 
-*Loopback4ExampleShopping.ProductControllerApi* | [**productControllerCreate**](docs/ProductControllerApi.md#productControllerCreate) | **POST** /products | 
-*Loopback4ExampleShopping.ProductControllerApi* | [**productControllerDeleteById**](docs/ProductControllerApi.md#productControllerDeleteById) | **DELETE** /products/{id} | 
-*Loopback4ExampleShopping.ProductControllerApi* | [**productControllerFind**](docs/ProductControllerApi.md#productControllerFind) | **GET** /products | 
-*Loopback4ExampleShopping.ProductControllerApi* | [**productControllerFindById**](docs/ProductControllerApi.md#productControllerFindById) | **GET** /products/{id} | 
-*Loopback4ExampleShopping.ProductControllerApi* | [**productControllerReplaceById**](docs/ProductControllerApi.md#productControllerReplaceById) | **PUT** /products/{id} | 
-*Loopback4ExampleShopping.ProductControllerApi* | [**productControllerUpdateAll**](docs/ProductControllerApi.md#productControllerUpdateAll) | **PATCH** /products | 
-*Loopback4ExampleShopping.ProductControllerApi* | [**productControllerUpdateById**](docs/ProductControllerApi.md#productControllerUpdateById) | **PATCH** /products/{id} | 
 *Loopback4ExampleShopping.ShoppingCartControllerApi* | [**shoppingCartControllerAddItem**](docs/ShoppingCartControllerApi.md#shoppingCartControllerAddItem) | **POST** /shoppingCarts/{userId}/items | 
 *Loopback4ExampleShopping.ShoppingCartControllerApi* | [**shoppingCartControllerGet**](docs/ShoppingCartControllerApi.md#shoppingCartControllerGet) | **GET** /shoppingCarts/{userId} | 
 *Loopback4ExampleShopping.ShoppingCartControllerApi* | [**shoppingCartControllerRemove**](docs/ShoppingCartControllerApi.md#shoppingCartControllerRemove) | **DELETE** /shoppingCarts/{userId} | 
@@ -145,22 +137,16 @@ Class | Method | HTTP request | Description
 
 ## Documentation for Models
 
- - [Loopback4ExampleShopping.Filter](docs/Filter.md)
- - [Loopback4ExampleShopping.Filter1](docs/Filter1.md)
  - [Loopback4ExampleShopping.InlineObject](docs/InlineObject.md)
  - [Loopback4ExampleShopping.InlineResponse200](docs/InlineResponse200.md)
  - [Loopback4ExampleShopping.InlineResponse2001](docs/InlineResponse2001.md)
  - [Loopback4ExampleShopping.InlineResponse2002](docs/InlineResponse2002.md)
  - [Loopback4ExampleShopping.InlineResponse200Headers](docs/InlineResponse200Headers.md)
  - [Loopback4ExampleShopping.LoopbackCount](docs/LoopbackCount.md)
- - [Loopback4ExampleShopping.NewProduct](docs/NewProduct.md)
  - [Loopback4ExampleShopping.NewUser](docs/NewUser.md)
  - [Loopback4ExampleShopping.NewUserRequest](docs/NewUserRequest.md)
  - [Loopback4ExampleShopping.Order](docs/Order.md)
  - [Loopback4ExampleShopping.Product](docs/Product.md)
- - [Loopback4ExampleShopping.ProductPartial](docs/ProductPartial.md)
- - [Loopback4ExampleShopping.ProductWithRelations](docs/ProductWithRelations.md)
- - [Loopback4ExampleShopping.ProductsIdFields](docs/ProductsIdFields.md)
  - [Loopback4ExampleShopping.ShoppingCart](docs/ShoppingCart.md)
  - [Loopback4ExampleShopping.ShoppingCartItem](docs/ShoppingCartItem.md)
  - [Loopback4ExampleShopping.User](docs/User.md)

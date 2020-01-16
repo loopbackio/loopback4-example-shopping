@@ -40,9 +40,9 @@
     "start:app": "node ./packages/shopping",
     "start:recommender": "node ./packages/recommender",
     "prepublishOnly": "npm run test",
-    "pregenerate:api": "rimraf packages/shopping/public/api",
-    "generate:api": "wait-on http://127.0.0.1:3000/openapi.json && ./bin/generate-api.sh",
-    "build:api": "concurrently --success first --kill-others \"npm run start:app\" \"npm run generate:api\""
+    "prebuild:api": "rimraf packages/shopping/public/api",
+    "build:api": "concurrently --success first --kill-others \"npm run start:app\" \"npm run generate:api\"",
+    "generate:api": "wait-on http://127.0.0.1:3000/openapi.json && ./bin/generate-api.sh"
   },
   "repository": {
     "type": "git"

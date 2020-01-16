@@ -13,27 +13,20 @@
 
 
 import ApiClient from './ApiClient';
-import Filter from './model/Filter';
-import Filter1 from './model/Filter1';
 import InlineObject from './model/InlineObject';
 import InlineResponse200 from './model/InlineResponse200';
 import InlineResponse2001 from './model/InlineResponse2001';
 import InlineResponse2002 from './model/InlineResponse2002';
 import InlineResponse200Headers from './model/InlineResponse200Headers';
 import LoopbackCount from './model/LoopbackCount';
-import NewProduct from './model/NewProduct';
 import NewUser from './model/NewUser';
 import NewUserRequest from './model/NewUserRequest';
 import Order from './model/Order';
 import Product from './model/Product';
-import ProductPartial from './model/ProductPartial';
-import ProductWithRelations from './model/ProductWithRelations';
-import ProductsIdFields from './model/ProductsIdFields';
 import ShoppingCart from './model/ShoppingCart';
 import ShoppingCartItem from './model/ShoppingCartItem';
 import User from './model/User';
 import PingControllerApi from './api/PingControllerApi';
-import ProductControllerApi from './api/ProductControllerApi';
 import ShoppingCartControllerApi from './api/ShoppingCartControllerApi';
 import UserControllerApi from './api/UserControllerApi';
 import UserOrderControllerApi from './api/UserOrderControllerApi';
@@ -78,18 +71,6 @@ export {
     ApiClient,
 
     /**
-     * The Filter model constructor.
-     * @property {module:model/Filter}
-     */
-    Filter,
-
-    /**
-     * The Filter1 model constructor.
-     * @property {module:model/Filter1}
-     */
-    Filter1,
-
-    /**
      * The InlineObject model constructor.
      * @property {module:model/InlineObject}
      */
@@ -126,12 +107,6 @@ export {
     LoopbackCount,
 
     /**
-     * The NewProduct model constructor.
-     * @property {module:model/NewProduct}
-     */
-    NewProduct,
-
-    /**
      * The NewUser model constructor.
      * @property {module:model/NewUser}
      */
@@ -156,24 +131,6 @@ export {
     Product,
 
     /**
-     * The ProductPartial model constructor.
-     * @property {module:model/ProductPartial}
-     */
-    ProductPartial,
-
-    /**
-     * The ProductWithRelations model constructor.
-     * @property {module:model/ProductWithRelations}
-     */
-    ProductWithRelations,
-
-    /**
-     * The ProductsIdFields model constructor.
-     * @property {module:model/ProductsIdFields}
-     */
-    ProductsIdFields,
-
-    /**
      * The ShoppingCart model constructor.
      * @property {module:model/ShoppingCart}
      */
@@ -196,12 +153,6 @@ export {
     * @property {module:api/PingControllerApi}
     */
     PingControllerApi,
-
-    /**
-    * The ProductControllerApi service constructor.
-    * @property {module:api/ProductControllerApi}
-    */
-    ProductControllerApi,
 
     /**
     * The ShoppingCartControllerApi service constructor.

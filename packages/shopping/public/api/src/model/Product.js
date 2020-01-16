@@ -22,12 +22,13 @@ class Product {
     /**
      * Constructs a new <code>Product</code>.
      * @alias module:model/Product
+     * @param productId {String} 
      * @param name {String} 
      * @param price {Number} 
      */
-    constructor(name, price) { 
+    constructor(productId, name, price) { 
         
-        Product.initialize(this, name, price);
+        Product.initialize(this, productId, name, price);
     }
 
     /**
@@ -35,7 +36,8 @@ class Product {
      * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
      * Only for internal use.
      */
-    static initialize(obj, name, price) { 
+    static initialize(obj, productId, name, price) { 
+        obj['productId'] = productId;
         obj['name'] = name;
         obj['price'] = price;
     }
@@ -60,15 +62,6 @@ class Product {
             if (data.hasOwnProperty('price')) {
                 obj['price'] = ApiClient.convertToType(data['price'], 'Number');
             }
-            if (data.hasOwnProperty('image')) {
-                obj['image'] = ApiClient.convertToType(data['image'], 'String');
-            }
-            if (data.hasOwnProperty('description')) {
-                obj['description'] = ApiClient.convertToType(data['description'], 'String');
-            }
-            if (data.hasOwnProperty('details')) {
-                obj['details'] = ApiClient.convertToType(data['details'], 'String');
-            }
         }
         return obj;
     }
@@ -90,21 +83,6 @@ Product.prototype['name'] = undefined;
  * @member {Number} price
  */
 Product.prototype['price'] = undefined;
-
-/**
- * @member {String} image
- */
-Product.prototype['image'] = undefined;
-
-/**
- * @member {String} description
- */
-Product.prototype['description'] = undefined;
-
-/**
- * @member {String} details
- */
-Product.prototype['details'] = undefined;
 
 
 

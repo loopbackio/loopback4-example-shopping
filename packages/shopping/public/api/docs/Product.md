@@ -4,11 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**productId** | **String** |  | [optional] 
+**productId** | **String** |  | 
 **name** | **String** |  | 
 **price** | **Number** |  | 
-**image** | **String** |  | [optional] 
-**description** | **String** |  | [optional] 
-**details** | **String** |  | [optional] 
 
 
