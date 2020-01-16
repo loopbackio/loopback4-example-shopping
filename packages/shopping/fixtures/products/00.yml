@@ -1,0 +1,13 @@
+name: iPhone 11
+price: 2200
+image: https://images.unsplash.com/photo-1571380401583-72ca84994796?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60
+description: The latest iPhone from Apple.
+details: >
+  Nullam at pretium ante, id finibus est. Aenean tincidunt feugiat dui, quis commodo nisl dapibus a.
+
+  Integer elementum consectetur felis et malesuada. Vivamus semper ipsum et ligula maximus viverra. Fusce aliquet, nunc a laoreet pellentesque, leo dui vestibulum justo, a lacinia orci magna vitae magna.
+
+  - Nullam bibendum turpis non ex semper, quis iaculis lacus elementum.
+  - Fusce ultricies diam a neque varius, nec pulvinar ante congue.
+
+  Duis id posuere nisl, sit amet accumsan nunc.

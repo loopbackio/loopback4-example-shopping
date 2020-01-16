@@ -1,0 +1,11 @@
+name: DJI Mavic Pro
+price: 2300
+image: https://images.unsplash.com/photo-1529611934128-376c7bb1c88a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60
+description: DJI Mavic Pro drone.
+details: >
+  In quis nunc dolor. Proin laoreet mauris velit, nec commodo ex pharetra eget.
+  - Curabitur dignissim dui a ex pulvinar, nec finibus eros luctus.
+  - Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  - Phasellus ac quam vulputate, condimentum magna pellentesque, mollis nisi.
+
+  In sit amet nulla enim. Aenean mi elit, mattis non rutrum vitae, consectetur sed libero.
