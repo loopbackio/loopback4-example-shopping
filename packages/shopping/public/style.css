@@ -1,0 +1,99 @@
+#main {
+  padding: 0;
+}
+
+#logo {
+  font-family: 'Pacifico', cursive;
+  font-size: 28px;
+}
+
+#content {
+  margin: 17px 0;
+}
+
+.product-img {
+  height: 300px;
+  object-fit: cover;
+}
+
+.details-img {
+  height: 400px;
+  object-fit: cover;
+}
+
+#products {
+  justify-content: center;
+}
+
+#products .card {
+  max-width: 290px;
+}
+
+.action-buttons {
+  position: relative;
+  bottom: 0;
+}
+
+.description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+#product-header {
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+#productImage {
+  border-radius: 3px;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+}
+
+#pagination {
+  margin-top: 20px;
+}
+
+#user {
+  position: relative;
+  right: 20px;
+}
+
+#user img {
+  width: 22px;
+  margin-right: 5px;
+  position: relative;
+  top: -1px;
+}
+
+#logIn, #logOut {
+  display: none;
+}
+
+#itemsInCart {
+  color: #fff;
+  background-color: #dc3545;
+  position:relative;
+  top: -16px;
+  left: -5px;
+  border-radius: 9px;
+}
+
+.item-in-cart img {
+  border-radius: 3px;
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  margin: 0 15px;
+}
+
+.item-in-cart h6 {
+  margin: 0 15px;
+}
+
+.product-quantity {
+  width: 52px !important;
+}
