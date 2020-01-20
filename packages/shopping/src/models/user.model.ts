@@ -50,6 +50,12 @@ export class User extends Entity {
   @hasOne(() => UserCredentials)
   userCredentials: UserCredentials;
 
+  @property({
+    type: 'array',
+    itemType: 'string',
+  })
+  roles?: string[];
+
   constructor(data?: Partial<User>) {
     super(data);
   }

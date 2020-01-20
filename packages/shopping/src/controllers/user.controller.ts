@@ -86,6 +86,8 @@ export class UserController {
     })
     newUserRequest: NewUserRequest,
   ): Promise<User> {
+    // All new users have the "customer" role by default
+    newUserRequest.roles = ['customer'];
     // ensure a valid email value and password value
     validateCredentials(_.pick(newUserRequest, ['email', 'password']));
 
