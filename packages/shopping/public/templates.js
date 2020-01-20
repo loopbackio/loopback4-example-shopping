@@ -14,10 +14,12 @@ const navBarTemplate = `
     <li class="nav-item" id="shoppingCartLink" style="display:none">
       <a class="nav-link" href="javascript:displayShoppingCart()">Shopping Cart<span style="display:none" id="itemsInCart" class="badge badge-notify">0</span></a>
     </li>
+    <li class="nav-item" id="ordersLink" style="display:none">
+      <a class="nav-link" href="javascript:displayOrders()">Orders</a>
+    </li>
     <li id="signUp" class="nav-item">
       <a class="nav-link" href="#" data-toggle="modal" data-target="#signUpModal" tabindex="-1">Sign Up</a>
     </li>
-
     <div class="modal" id="signUpModal" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -174,13 +176,13 @@ const shoppingCartTemplate = `
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">Shopping Cart</h5>
       </div>
-      <div class="modal-body">
+      <div class="modal-body text-center">
         <ul class="list-group">
         </ul>
       </div>
       <div class="modal-footer" style="justify-content: center">
         <button onclick="removeItems()" type="button" class="btn btn-primary">Remove from Cart</button>
-        <button onclick="checkout()" type="button" class="btn btn-primary disabled">Checkout</button>
+        <button onclick="checkOut()" type="button" class="btn btn-primary">Checkout</button>
       </div>
     </div>
   </div>

@@ -3,6 +3,37 @@
 'use strict';
 
 const api = {
+  getOrders() {
+    const userId = localStorage.getItem('shoppyUserId');
+    const token = localStorage.getItem('shoppyToken');
+    const url = apiUrl + `/users/${userId}/orders`;
+    return $.ajax({
+      type: 'GET',
+      url: url,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    }).promise();
+  },
+
+  makeOrder(body, successCb, errCb) {
+    const userId = localStorage.getItem('shoppyUserId');
+    const token = localStorage.getItem('shoppyToken');
+    const url = apiUrl + `/users/${userId}/orders`;
+    body.userId = userId;
+    return $.ajax({
+      type: 'POST',
+      url: url,
+      data: JSON.stringify(body),
+      contentType: 'application/json',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      success: successCb,
+      error: errCb,
+    }).promise();
+  },
+
   addToCart(body, successCb, errCb) {
     const userId = localStorage.getItem('shoppyUserId');
     const token = localStorage.getItem('shoppyToken');
@@ -20,12 +51,27 @@ const api = {
     });
   },
 
+  deleteShoppingCart() {
+    const userId = localStorage.getItem('shoppyUserId');
+    const token = localStorage.getItem('shoppyToken');
+    if (userId) {
+      const url = apiUrl + '/shoppingCarts/' + userId;
+      return $.ajax({
+        type: 'DELETE',
+        url: url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      }).promise();
+    }
+  },
+
   getShoppingCartItems(successCb, errCb) {
     const userId = localStorage.getItem('shoppyUserId');
     const token = localStorage.getItem('shoppyToken');
     if (userId) {
       const url = apiUrl + '/shoppingCarts/' + userId;
-      $.ajax({
+      return $.ajax({
         type: 'GET',
         url: url,
         headers: {
@@ -33,7 +79,7 @@ const api = {
         },
         success: successCb,
         error: errCb,
-      });
+      }).promise();
     }
   },
 
@@ -96,8 +142,7 @@ const api = {
 
   getProducts(options, successCb, errCb) {
     const {skip = 0, limit = 4} = options;
-    const url =
-      apiUrl + `/products?filter[skip]=${skip}&filter[limit]=${limit}`;
+    const url = apiUrl + `/products?filter[skip]=${skip}&filter[limit]=${limit}`;
     const token = localStorage.getItem('shoppyToken');
     $.ajax({
       type: 'GET',
@@ -113,7 +158,7 @@ const api = {
   getProduct(id, successCb, errCb) {
     const url = apiUrl + '/products/' + id;
     const token = localStorage.getItem('shoppyToken');
-    $.ajax({
+    return $.ajax({
       type: 'GET',
       url: url,
       headers: {
@@ -121,6 +166,6 @@ const api = {
       },
       success: successCb,
       error: errCb,
-    });
+    }).promise();
   },
 };

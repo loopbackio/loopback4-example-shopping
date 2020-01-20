@@ -23,6 +23,7 @@ import {
 import {Order} from '../models';
 import {authorize} from '@loopback/authorization';
 import {AuthenticationBindings, authenticate} from '@loopback/authentication';
+import {basicAuthorization} from '../services/basic.authorizor';
 import {compareId} from '../services/id.compare.authorizor';
 
 /**
@@ -45,19 +46,12 @@ export class UserOrderController {
     },
   })
   @authenticate('jwt')
-  @authorize({resource: 'order', scopes: ['create']})
+  @authorize({resource: 'userOrder', scopes: ['create'], voters: [basicAuthorization]})
   async createOrder(
     @param.path.string('userId') userId: string,
     @requestBody() order: Order,
   ): Promise<Order> {
-    // validate the payload value
-    // has nothing to do with authorization
-    if (userId !== order.userId) {
-      throw new HttpErrors.BadRequest(
-        `User id does not match: ${userId} !== ${order.userId}`,
-      );
-    }
-    delete order.userId;
+    order.date = (new Date()).toString();
     return this.userRepo.orders(userId).create(order);
   }
 

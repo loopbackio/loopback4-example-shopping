@@ -35,9 +35,10 @@ function refreshLogInStatus() {
   });
 }
 
-function updateCartDetails() {
-  api.getShoppingCartItems(
-    function(result) {
+async function updateCartDetails() {
+  try {
+    const result = await api.getShoppingCartItems();
+    if (result) {
       const itemsCount = result.items.length;
       if (itemsCount) {
         $('#itemsInCart')
@@ -51,11 +52,11 @@ function updateCartDetails() {
         });
         $('#shoppingCartLink').show();
       }
-    },
-    function(err) {
-      console.log(err);
-    },
-  );
+    }
+  } catch(e) {
+    $('#itemsInCart').hide();
+    $('#shoppingCartLink').hide();
+  }
 }
 
 function applyLoggedInUi(user) {
@@ -273,6 +274,41 @@ function removeItems() {
   removeFromCart(items);
 }
 
+async function checkOut() {
+  $('#shoppingCart .modal-body').text('Initiating payment ...');
+  const body = {
+    products: [],
+    total: 0,
+  };
+
+  const shoppingCart = await api.getShoppingCartItems();
+  for (const item of shoppingCart.items) {
+    const product = await api.getProduct(item.productId);
+    const price = +product.price;
+    body.total += price;
+    body.products.push({
+      productId: item.productId,
+      quantity: item.quantity,
+      price,
+    });
+  }
+  console.log(body);
+  api.makeOrder(body);
+  setTimeout(async function() {
+    $('#shoppingCart .modal-body').text('Order successful!');
+    await api.deleteShoppingCart();
+    await updateCartDetails();
+    $('#shoppingCart').modal('hide');
+  }, 1000);
+}
+
+async function showOrdersLink() {
+  const orders = await api.getOrders();
+  if (orders.length) {
+    $('#ordersLink').show();
+  }
+}
+
 const ui = {
   addPagination,
   refreshLogInStatus,
@@ -296,4 +332,5 @@ $(function() {
   $('body').append(templates.shoppingCart);
   refreshLogInStatus();
   updateCartDetails();
+  showOrdersLink();
 });
