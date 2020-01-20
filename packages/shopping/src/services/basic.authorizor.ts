@@ -2,6 +2,7 @@ import {
   AuthorizationContext,
   AuthorizationMetadata,
   AuthorizationDecision,
+  AuthorizationRequest,
 } from '@loopback/authorization';
 import _ from 'lodash';
 import {UserProfile, securityId} from '@loopback/security';
@@ -17,30 +18,40 @@ export async function basicAuthorization(
   authorizationCtx: AuthorizationContext,
   metadata: MyAuthorizationMetadata,
 ) {
-  /*
+
+  // No access if authorization details are missing
   let currentUser: UserProfile;
   if (authorizationCtx.principals.length > 0) {
     const user = _.pick(authorizationCtx.principals[0], [
       'id',
       'name',
-      'email',
+      'roles',
     ]);
-    currentUser = {[securityId]: user.id, name: user.name, email: user.email};
+    currentUser = {[securityId]: user.id, name: user.name, roles: user.roles};
   } else {
     return AuthorizationDecision.DENY;
   }
 
-  // A workaround to bypass the authorizer priority
-  // class level authorizer should have higher priority than the instance level one
-  // which means the DENY returned in this function will be ignored when the global authorizer
-  // says ALLOW
-  if (currentUser && currentUser.name === 'customer_service')
-    return AuthorizationDecision.ALLOW;
+  const request: AuthorizationRequest = {
+    subject: currentUser[securityId],
+    object: metadata.resource ?? authorizationCtx.resource,
+    action: (metadata.scopes && metadata.scopes[0]) || 'execute',
+  };
 
-  const userId = authorizationCtx.invocationContext.args[0];
-  return userId === currentUser[securityId]
-    ? AuthorizationDecision.ALLOW
-    : AuthorizationDecision.DENY;
-*/
+  // Admin can access everything
+  if (currentUser.roles.includes('admin')) {
     return AuthorizationDecision.ALLOW;
+  }
+
+  // Customer support can acces some aspects of customer's models
+  if (currentUser.roles.includes('support') && request.action === 'find') {
+    return AuthorizationDecision.ALLOW;
+  }
+
+  // Allow access only to model owners
+  if (currentUser[securityId] === authorizationCtx.invocationContext.args[0]) {
+    return AuthorizationDecision.ALLOW;
+  }
+
+  return AuthorizationDecision.DENY;
 }
