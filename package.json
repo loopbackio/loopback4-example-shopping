@@ -72,7 +72,7 @@
     "mocha": "7.0.0",
     "source-map-support": "0.5.16",
     "testcontainers": "2.2.0",
-    "typescript": "3.7.4"
+    "typescript": "3.7.5"
   },
   "copyright.owner": "IBM Corp.",
   "config": {
