@@ -35,7 +35,7 @@ describe('authorization', () => {
   before(createPasswordHasher);
   before(clearDatabase);
   after(async () => {
-    await app.stop();
+    if (app != null) await app.stop();
   });
 
   describe('customer_service', () => {

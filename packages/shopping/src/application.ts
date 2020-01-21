@@ -146,6 +146,15 @@ export class ShoppingApplication extends BootMixin(
     this.bind(UserServiceBindings.USER_SERVICE).toClass(MyUserService);
   }
 
+  async start() {
+    // Use `databaseSeeding` flag to control if products/users should be pre
+    // populated into the database. Its value is default to `true`.
+    if (this.options.databaseSeeding !== false) {
+      await this.migrateSchema();
+    }
+    return super.start();
+  }
+
   async migrateSchema(options?: SchemaMigrationOptions) {
     await super.migrateSchema(options);
 

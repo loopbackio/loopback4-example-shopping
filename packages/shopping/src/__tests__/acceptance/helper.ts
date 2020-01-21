@@ -18,6 +18,7 @@ export interface AppWithClient {
 export async function setupApplication(): Promise<AppWithClient> {
   const app = new ShoppingApplication({
     rest: givenHttpServerConfig(),
+    databaseSeeding: false,
   });
 
   await app.boot();
