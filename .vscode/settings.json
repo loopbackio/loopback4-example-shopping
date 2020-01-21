@@ -15,16 +15,15 @@
   },
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
-  "eslint.autoFixOnSave": true,
   "eslint.run": "onSave",
   "eslint.nodePath": "./node_modules",
   "eslint.validate": [
     "javascript",
-    {
-      "language": "typescript",
-      "autoFix": true
-    }
+    "typescript"
   ],
   "typescript.tsdk": "./node_modules/typescript/lib",
-  "git.alwaysSignOff": true
+  "git.alwaysSignOff": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }
