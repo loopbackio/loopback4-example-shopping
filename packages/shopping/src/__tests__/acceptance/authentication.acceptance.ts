@@ -38,7 +38,7 @@ describe('authentication services', () => {
 
   before(setupApp);
   after(async () => {
-    await app.stop();
+    if (app != null) await app.stop();
   });
 
   let userRepo: UserRepository;
@@ -201,7 +201,7 @@ describe('authentication services', () => {
   async function setupApp() {
     const appWithClient = await setupApplication();
     app = appWithClient.app;
-    app.bind(PasswordHasherBindings.ROUNDS).to(4);
+    app.bind(PasswordHasherBindings.ROUNDS).to(2);
   }
 
   async function createUser() {
