@@ -37,6 +37,7 @@ function refreshLogInStatus() {
 
 async function updateCartDetails() {
   try {
+    showOrdersLink();
     const result = await api.getShoppingCartItems();
     if (result) {
       const itemsCount = result.items.length;
@@ -182,8 +183,9 @@ function updateAddToCartUi(id, name, price, unformattedPrice, image) {
 function addToCartApi() {
   const productId = $('#productId').val();
   const quantity = +$('#itemQuantity').val();
+  const name = $('#productName').text();
   api.addToCart(
-    {productId, quantity},
+    {productId, quantity, name},
     function() {
       updateCartDetails();
       $('#addToCartModal').modal('hide');
@@ -288,11 +290,12 @@ async function checkOut() {
     body.total += price;
     body.products.push({
       productId: item.productId,
+      name: item.name,
       quantity: item.quantity,
       price,
     });
   }
-  console.log(body);
+
   api.makeOrder(body);
   setTimeout(async function() {
     $('#shoppingCart .modal-body').text('Order successful!');
@@ -303,10 +306,12 @@ async function checkOut() {
 }
 
 async function showOrdersLink() {
-  const orders = await api.getOrders();
-  if (orders.length) {
-    $('#ordersLink').show();
-  }
+  try {
+    const orders = await api.getOrders();
+    if (orders.length) {
+      $('#ordersLink').show();
+    }
+  } catch (e) {}
 }
 
 const ui = {
@@ -330,6 +335,7 @@ const ui = {
 $(function() {
   $('#navBar').append(templates.navBar);
   $('body').append(templates.shoppingCart);
+  $('body').append(templates.orders);
   refreshLogInStatus();
   updateCartDetails();
   showOrdersLink();

@@ -97,3 +97,35 @@
 .product-quantity {
   width: 52px !important;
 }
+
+#orders {
+  width: 900px;
+  margin: 0 auto;
+}
+
+#orders .list-group {
+  margin-bottom: 10px;
+}
+
+#orders table {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+#orders .modal-body {
+  font-size: 13px;
+}
+
+#orders .list-group {
+  list-style: none;
+}
+
+.order-total {
+  margin: 0 auto;
+  width: 200px;
+  font-weight: bold;
+}
+
+.order-meta {
+  color: #828282;
+}

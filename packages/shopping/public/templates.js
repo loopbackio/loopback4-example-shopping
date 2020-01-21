@@ -15,7 +15,7 @@ const navBarTemplate = `
       <a class="nav-link" href="javascript:displayShoppingCart()">Shopping Cart<span style="display:none" id="itemsInCart" class="badge badge-notify">0</span></a>
     </li>
     <li class="nav-item" id="ordersLink" style="display:none">
-      <a class="nav-link" href="javascript:displayOrders()">Orders</a>
+      <a class="nav-link" href="/orders.html">Orders</a>
     </li>
     <li id="signUp" class="nav-item">
       <a class="nav-link" href="#" data-toggle="modal" data-target="#signUpModal" tabindex="-1">Sign Up</a>
@@ -209,6 +209,29 @@ const itemInCartTemplate = `
  </li>
 `;
 
+const orderTemplate = `
+<div class="list-group">
+  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+    <div class="d-flex w-100 justify-content-between order-meta">
+      <div>Order ID: #ID#</div>
+      <div>#DATE#</div>
+    </div>
+    <table class="table table-sm table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Price</th>
+        </tr>
+      </thead>
+      <tbody>#PRODUCTS#</tbody>
+    </table>
+  <div class="order-total">Total: $#TOTAL#</div>
+  </a>
+</div>
+`;
+
 const templates = {
   navBar: navBarTemplate,
   product: productTemplate,
@@ -216,4 +239,5 @@ const templates = {
   addToCart: addToCartTemplate,
   shoppingCart: shoppingCartTemplate,
   itemInCart: itemInCartTemplate,
+  order: orderTemplate,
 };
