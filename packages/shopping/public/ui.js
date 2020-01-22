@@ -68,9 +68,12 @@ function applyLoggedInUi(user) {
 
 function applyLoggedOutUi() {
   $('#logIn, #signUp').show();
-  $('#user, #logOut, #shoppingCartLink').hide();
+  $('#user, #logOut, #shoppingCartLink, #ordersLink').hide();
   $('#itemsInCart').hide();
   $('.cart-action-button').text('Add to Cart');
+  if (document.location.href === ordersPage) {
+    document.location = homePage;
+  }
 }
 
 function logOut() {

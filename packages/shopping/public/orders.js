@@ -43,9 +43,3 @@ $(function() {
     }
   });
 });
-
-/*
-  <li>5 Apple iPod: $4,343</li>
-  <li>1 MackBook Pro: $2,500</li>
-  <li>2 Drone Controller: $2,322</li>
-*/
