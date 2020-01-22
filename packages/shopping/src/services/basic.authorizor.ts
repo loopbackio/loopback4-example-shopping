@@ -32,19 +32,31 @@ export async function basicAuthorization(
     return AuthorizationDecision.DENY;
   }
 
+  // Authorize everything that does not have a allowedRoles property
+  if (!metadata.allowedRoles) {
+    return AuthorizationDecision.ALLOW;
+  }
+
   const request: AuthorizationRequest = {
     subject: currentUser[securityId],
     object: metadata.resource ?? authorizationCtx.resource,
     action: (metadata.scopes && metadata.scopes[0]) || 'execute',
   };
 
-  // Admin can access everything
-  if (currentUser.roles.includes('admin')) {
-    return AuthorizationDecision.ALLOW;
+  let roleIsAllowed = false;
+  for (const role of currentUser.roles) {
+    if (metadata.allowedRoles!.includes(role)) {
+      roleIsAllowed = true;
+      break;
+    }
   }
 
-  // Customer support can acces some aspects of customer's models
-  if (currentUser.roles.includes('support') && request.action === 'find') {
+  if (!roleIsAllowed) {
+    return AuthorizationDecision.DENY;
+  }
+
+  // Admin and support accounts bypass id verification
+  if (currentUser.roles.includes('admin') || currentUser.roles.includes('support')) {
     return AuthorizationDecision.ALLOW;
   }
 

@@ -6,7 +6,13 @@ const api = {
   getOrders() {
     const userId = localStorage.getItem('shoppyUserId');
     const token = localStorage.getItem('shoppyToken');
-    const url = apiUrl + `/users/${userId}/orders`;
+    const roles = localStorage.getItem('shoppyRoles').split(',');
+    let url;
+    if (roles.includes('admin') || roles.includes('support')) {
+      url = apiUrl + `/orders`;
+    } else {
+      url = apiUrl + `/users/${userId}/orders`;
+    }
     return $.ajax({
       type: 'GET',
       url: url,

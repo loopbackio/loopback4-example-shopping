@@ -24,12 +24,14 @@ function refreshLogInStatus() {
     if (user) {
       localStorage.setItem('shoppyUserName', user.name);
       localStorage.setItem('shoppyUserId', user.id);
+      localStorage.setItem('shoppyRoles', user.roles);
       applyLoggedInUi(user);
       updateCartDetails();
     } else {
       localStorage.removeItem('shoppyToken');
       localStorage.removeItem('shoppyUserId');
       localStorage.removeItem('shoppyUserName');
+      localStorage.removeItem('shoppyRoles');
       applyLoggedOutUi();
     }
   });
@@ -80,6 +82,7 @@ function logOut() {
   localStorage.removeItem('shoppyToken');
   localStorage.removeItem('shoppyUserId');
   localStorage.removeItem('shoppyUserName');
+  localStorage.removeItem('shoppyRoles');
   refreshLogInStatus();
 }
 
