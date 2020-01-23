@@ -37,6 +37,7 @@ import {
 } from '../keys';
 import _ from 'lodash';
 import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
+import {basicAuthorization} from '../services/basic.authorizor';
 
 @model()
 export class NewUserRequest extends User {

@@ -24,7 +24,6 @@ import {Order} from '../models';
 import {authorize} from '@loopback/authorization';
 import {AuthenticationBindings, authenticate} from '@loopback/authentication';
 import {basicAuthorization} from '../services/basic.authorizor';
-import {compareId} from '../services/id.compare.authorizor';
 
 /**
  * Controller for User's Orders
@@ -46,7 +45,7 @@ export class UserOrderController {
     },
   })
   @authenticate('jwt')
-  @authorize({resource: 'userOrder', scopes: ['create'], voters: [basicAuthorization]})
+  @authorize({allowedRoles: ['customer'], voters: [basicAuthorization]})
   async createOrder(
     @param.path.string('userId') userId: string,
     @requestBody() order: Order,
@@ -68,7 +67,7 @@ export class UserOrderController {
     },
   })
   @authenticate('jwt')
-  @authorize({resource: 'order', scopes: ['find'], voters: [compareId]})
+  @authorize({allowedRoles: ['customer'], voters: [basicAuthorization]})
   async findOrders(
     @param.path.string('userId') userId: string,
     @param.query.string('filter') filter?: Filter<Order>,
@@ -86,7 +85,7 @@ export class UserOrderController {
     },
   })
   @authenticate('jwt')
-  @authorize({resource: 'order', scopes: ['patch'], voters: [compareId]})
+  @authorize({allowedRoles: ['customer'], voters: [basicAuthorization]})
   async patchOrders(
     @param.path.string('userId') userId: string,
     @requestBody() order: Partial<Order>,
@@ -104,7 +103,7 @@ export class UserOrderController {
     },
   })
   @authenticate('jwt')
-  @authorize({resource: 'order', scopes: ['delete'], voters: [compareId]})
+  @authorize({allowedRoles: ['customer'], voters: [basicAuthorization]})
   async deleteOrders(
     @param.path.string('userId') userId: string,
     @param.query.string('where') where?: Where<Order>,

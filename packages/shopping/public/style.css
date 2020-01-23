@@ -101,6 +101,7 @@
 #orders {
   width: 900px;
   margin: 0 auto;
+  font-size: 13px;
 }
 
 #orders .list-group {
@@ -112,10 +113,6 @@
   font-size: 13px;
 }
 
-#orders .modal-body {
-  font-size: 13px;
-}
-
 #orders .list-group {
   list-style: none;
 }
@@ -124,8 +121,4 @@
   margin: 0 auto;
   width: 200px;
   font-weight: bold;
-}
-
-.order-meta {
-  color: #828282;
 }

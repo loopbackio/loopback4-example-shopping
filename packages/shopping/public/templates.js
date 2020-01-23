@@ -213,8 +213,14 @@ const orderTemplate = `
 <div class="list-group">
   <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
     <div class="d-flex w-100 justify-content-between order-meta">
-      <div>Order ID: #ID#</div>
-      <div>#DATE#</div>
+      <div>
+      Date: #DATE#<br>
+      Order ID: #ORDER-ID#
+      </div>
+      <div>
+      User Name: #USER-NAME#<br>
+      User ID: #USER-ID#
+      </div>
     </div>
     <table class="table table-sm table-striped">
       <thead>

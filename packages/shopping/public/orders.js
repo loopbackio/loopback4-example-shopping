@@ -12,7 +12,9 @@ $(function() {
         const d = new Date(order.date);
         const date = d.toString().split(' GMT')[0];
         template = template
-                  .replace(/#ID#/gi, DOMPurify.sanitize(order.orderId))
+                  .replace(/#ORDER-ID#/gi, DOMPurify.sanitize(order.orderId))
+                  .replace(/#USER-ID#/gi, DOMPurify.sanitize(order.userId))
+                  .replace(/#USER-NAME#/gi, DOMPurify.sanitize(order.userName))
                   .replace(
                     /#TOTAL#/gi,
                     new Intl.NumberFormat('en-US', {

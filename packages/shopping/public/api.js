@@ -23,10 +23,12 @@ const api = {
   },
 
   makeOrder(body, successCb, errCb) {
+    const userName = localStorage.getItem('shoppyUserName');
     const userId = localStorage.getItem('shoppyUserId');
     const token = localStorage.getItem('shoppyToken');
     const url = apiUrl + `/users/${userId}/orders`;
     body.userId = userId;
+    body.userName = userName;
     return $.ajax({
       type: 'POST',
       url: url,

@@ -17,13 +17,17 @@ export class Order extends Entity {
 
   @property({
     type: 'date',
-    id: true,
   })
   date: string;
 
   // Each order belongs to a user, indentified by its id (userId)
   @belongsTo(() => User)
   userId: string;
+
+  @property({
+    type: 'string',
+  })
+  userName: string;
 
   @property({
     type: 'number',

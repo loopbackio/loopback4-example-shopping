@@ -12,11 +12,7 @@ import {
   HttpErrors,
   post,
 } from '@loopback/rest';
-import {
-  authenticate,
-  TokenService,
-  UserService,
-} from '@loopback/authentication';
+import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import {UserProfile, securityId, SecurityBindings} from '@loopback/security';
 import {inject} from '@loopback/core';
@@ -51,6 +47,7 @@ export class ShoppingCartController {
     },
   })
   @authenticate('jwt')
+  @authorize({allowedRoles: ['customer'], voters: [basicAuthorization]})
   async set(
     @param.path.string('userId') userId: string,
     @requestBody({description: 'shopping cart'}) cart: ShoppingCart,
@@ -77,26 +74,10 @@ export class ShoppingCartController {
     },
   })
   @authenticate('jwt')
-  @authorize({resource: 'shoppingCarts', scopes: ['find'], voters: [basicAuthorization]})
+  @authorize({allowedRoles: ['customer'], voters: [basicAuthorization]})
   async get(
     @param.path.string('userId') userId: string,
   ): Promise<ShoppingCart> {
-    /*
-    if (this.currentUserProfile[securityId] === userId) {
-      debug('Get shopping cart %s', userId);
-      const cart = await this.shoppingCartRepository.get(userId);
-      debug('Shopping cart %s: %j', userId, cart);
-      if (cart == null) {
-        throw new HttpErrors.NotFound(
-          `Shopping cart not found for user: ${userId}`,
-        );
-      } else {
-        return cart;
-      }
-    } else {
-      throw HttpErrors(401);
-    }
-    */
     debug('Get shopping cart %s', userId);
     const cart = await this.shoppingCartRepository.get(userId);
     debug('Shopping cart %s: %j', userId, cart);
@@ -121,6 +102,7 @@ export class ShoppingCartController {
     },
   })
   @authenticate('jwt')
+  @authorize({allowedRoles: ['customer'], voters: [basicAuthorization]})
   async remove(@param.path.string('userId') userId: string): Promise<void> {
     if (this.currentUserProfile[securityId] === userId) {
       debug('Remove shopping cart %s', userId);
@@ -146,6 +128,7 @@ export class ShoppingCartController {
     },
   })
   @authenticate('jwt')
+  @authorize({allowedRoles: ['customer'], voters: [basicAuthorization]})
   async addItem(
     @param.path.string('userId') userId: string,
     @requestBody({description: 'shopping cart item'}) item: ShoppingCartItem,

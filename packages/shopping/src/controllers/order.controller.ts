@@ -17,11 +17,7 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {
-  authenticate,
-  TokenService,
-  UserService,
-} from '@loopback/authentication';
+import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import {UserProfile, securityId, SecurityBindings} from '@loopback/security';
 import {basicAuthorization} from '../services/basic.authorizor';
@@ -43,6 +39,7 @@ export class OrderController {
     },
   })
   @authenticate('jwt')
+  @authorize({allowedRoles: ['admin', 'support'], voters: [basicAuthorization]})
   async count(
     @param.query.object('where', getWhereSchemaFor(Order)) where?: Where<Order>,
   ): Promise<Count> {
@@ -85,6 +82,7 @@ export class OrderController {
     },
   })
   @authenticate('jwt')
+  @authorize({allowedRoles: ['admin', 'support'], voters: [basicAuthorization]})
   async findById(
     @param.path.string('id') id: string,
     @param.query.object('filter', getFilterSchemaFor(Order)) filter?: Filter<Order>
@@ -100,6 +98,7 @@ export class OrderController {
     },
   })
   @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.orderRepository.deleteById(id);
   }
