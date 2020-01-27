@@ -43,7 +43,7 @@
     "@loopback/authentication": "3.3.0",
     "@loopback/authorization": "0.4.7",
     "@loopback/boot": "1.7.1",
-    "@loopback/context": "1.25.1",
+    "@loopback/context": "2.0.0",
     "@loopback/core": "1.12.1",
     "@loopback/openapi-v3": "1.11.0",
     "@loopback/repository": "1.17.0",
