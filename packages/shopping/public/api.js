@@ -134,7 +134,7 @@ const api = {
     });
   },
 
-  me(successCb, errCb) {
+  async me(successCb, errCb) {
     const url = apiUrl + '/users/me';
     const token = localStorage.getItem('shoppyToken');
     $.ajax({

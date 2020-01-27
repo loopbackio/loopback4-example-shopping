@@ -66,6 +66,9 @@ function applyLoggedInUi(user) {
   $('#logIn, #signUp').hide();
   $('#user strong').text(user.name);
   $('#user, #logOut').show();
+  if (isAdmin() || isSupport()) {
+    $('.add-to-cart').addClass('disabled');
+  }
 }
 
 function applyLoggedOutUi() {
@@ -73,6 +76,7 @@ function applyLoggedOutUi() {
   $('#user, #logOut, #shoppingCartLink, #ordersLink').hide();
   $('#itemsInCart').hide();
   $('.cart-action-button').text('Add to Cart');
+  $('.add-to-cart').removeClass('disabled');
   if (document.location.href === ordersPage) {
     document.location = homePage;
   }

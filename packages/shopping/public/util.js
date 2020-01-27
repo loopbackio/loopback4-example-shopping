@@ -38,20 +38,32 @@ function parseYml(string) {
   return parsed;
 }
 
-function isLoggedIn(cb) {
+async function isLoggedIn(cb) {
   const token = localStorage.getItem('shoppyToken');
   if (token) {
     api.me(
       function(user) {
-        cb(user);
+        cb && cb(user);
       },
       function(fail) {
-        cb(false);
+        cb && cb(false);
       },
     );
   } else {
-    return cb(false);
+    cb && cb(false);
   }
+}
+
+function isAdmin() {
+  const roles = localStorage.getItem('shoppyRoles');
+  if (!roles) return false;
+  return roles.split(',').includes('admin');
+}
+
+function isSupport() {
+  const roles = localStorage.getItem('shoppyRoles');
+  if (!roles) return false;
+  return roles.split(',').includes('support');
 }
 
 const util = {
@@ -59,4 +71,6 @@ const util = {
   getProductId,
   isLoggedIn,
   parseYml,
+  isAdmin,
+  isSupport,
 };

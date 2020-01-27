@@ -23,7 +23,11 @@ $(function() {
           )
           .replace(/#ID#/gi, DOMPurify.sanitize(product.productId));
         $('#product').append(productHtml);
-        $('#product').append(templates.addToCart);
+        if (isAdmin() || isSupport()) {
+          $('.add-to-cart').addClass('disabled');
+        } else {
+          $('#product').append(templates.addToCart);
+        }
       }
     });
   } else {

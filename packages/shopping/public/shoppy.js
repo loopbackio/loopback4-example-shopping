@@ -21,6 +21,9 @@ $(function() {
           .replace(/#ID#/gi, DOMPurify.sanitize(product.productId));
         $('#products').append(productHtml);
       });
+      if (isAdmin() || isSupport()) {
+        $('.add-to-cart').addClass('disabled');
+      }
       $('#products').append(templates.addToCart);
     }
   });
