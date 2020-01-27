@@ -41,7 +41,7 @@ import {
 } from '@loopback/authorization';
 import {createEnforcer} from './services/enforcer';
 import {CasbinAuthorizationProvider} from './services/authorizor';
-import {ProductRepository, UserRepository} from './repositories';
+import {ProductRepository, UserRepository, ShoppingCartRepository, OrderRepository} from './repositories';
 import YAML = require('yaml');
 import fs from 'fs';
 import {User} from './models';
@@ -158,6 +158,7 @@ export class ShoppingApplication extends BootMixin(
   async migrateSchema(options?: SchemaMigrationOptions) {
     await super.migrateSchema(options);
 
+    // Pre-populate products
     const productRepo = await this.getRepository(ProductRepository);
     await productRepo.deleteAll();
     const productsDir = path.join(__dirname, '../fixtures/products');
@@ -172,6 +173,7 @@ export class ShoppingApplication extends BootMixin(
       }
     }
 
+    // Pre-populate users
     const passwordHasher = await this.get(
       PasswordHasherBindings.PASSWORD_HASHER,
     );
@@ -192,5 +194,13 @@ export class ShoppingApplication extends BootMixin(
         await userRepo.userCredentials(user.id).create({password});
       }
     }
+
+    // Delete existing shopping carts
+    const cartRepo = await this.getRepository(ShoppingCartRepository);
+    await cartRepo.deleteAll();
+
+    // Delete existing orders
+    const oderRepo = await this.getRepository(OrderRepository);
+    await oderRepo.deleteAll();
   }
 }
