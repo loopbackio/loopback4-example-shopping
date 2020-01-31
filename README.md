@@ -8,10 +8,22 @@ https://github.com/strongloop/loopback-next/issues/1476 for more information.
 
 ![Shopping example overview diagram](example-shopping.png)
 
+## Pre-requisites
+
+Node.js >= 8.9.0 and running instances of a MongoDB and Redis server are
+required for the app to start. The Redis server is used for the shopping cart,
+while MongoDB is used for the rest of the models in the app.
+
+Docker is required for running tests, make sure it is running if you want to run
+the tests.
+
+In case you have Docker installed on your system and don't want to manually
+install MongoDB and Redis, you can run `npm run docker:start` to download their
+images and start the servers.
+
 ## Installation
 
-Make sure you have Node.js >= 8.9.0 installed. Then do the following to clone
-and start the project.
+Do the following to clone and start the project.
 
 ```
 git clone https://github.com/strongloop/loopback4-example-shopping.git
@@ -20,16 +32,22 @@ npm i
 npm start
 ```
 
-The main app will be running at `http://[::1]:3000`.
+## Usage
 
-You will also see `Recommendation server is running at http://127.0.0.1:3001.`,
+The main app will be running at http://localhost:3000. The shopping website
+(Shoppy) is at http://localhost:3000/shoppy.html, and the API Explorer at
+http://localhost:3000/explorer/.
+
+![Shoppy website](shoppy.png)
+
+You will also see `Recommendation server is running at http://localhost:3001.`,
 it is the server to which the `services/recommender.service` service will
 connect to get the recommendations for a user.
 
-## Usage
-
-This app is intended to be interacted with using the API Explorer located at
-http://[::1]:3000/explorer/.
+The app will be pre-populated with some products and users when it starts; and
+all existing products, users, shopping cart and orders will be deleted too. If
+you don't want to reset the database, set `databaseSeeding` to `false` in the
+application configuration object.
 
 ## Models
 
@@ -117,36 +135,61 @@ You can see the details in
 
 ### Authorization
 
-To see authorization in action in this example, all requests to the endpoint
-`/users/{userId}/orders` (i.e, `UserOrderController`) are validated for specific
-user access.
+Endpoint authorization is done using
+[@loopback/authorization](https://github.com/strongloop/loopback-next/tree/master/packages/authorization).
+Use the `@authorize` decorator to protect access to controller methods.
 
-Endpoint authorization is done using `@loopback/authorization` package and the
-provisions in it are implemented using
-[Casbin](https://github.com/casbin/casbin) configurations.
+All controller methods without the `@authorize` decorator will be accessible to
+everyone. To restrict access, specify the roles in the `allowedRoles` property.
+Here are two examples to illustrate the point.
 
-Below is a scenario illustrating how authorization works in this example:
+Unprotected controller method (no `@authorize` decorator), everyone can access
+it:
 
-1. Bob logs into the shopping app using his existing user credential via
-   endpoint `/users/login`. The JWT token returned has the user name as `bob`
-   and id as `123`.
+```ts
+async find(
+  @param.query.object('filter', getFilterSchemaFor(Product))
+  filter?: Filter<Product>,
+): Promise<Product[]> {
+  ...
+}
+```
 
-2. Bob invokes endpoint GET `/users/123/orders` with the JWT token obtained in
-   the previous step. The corresponding controller operation `findOrders` is
-   configured authorization scope `['find']`.
+Unprotected controller method, only `admin` and `customer` can access it:
 
-3. The authorization provider in `packages/shopping/src/services/authorizor.ts`
-   uses the casbin configuration
-   `/packages/shopping/fixtures/casbin/rbac_policy.csv` to validate that `bob`
-   has `find` scope for resource `order`.
+```ts
+@authorize({
+  allowedRoles: ['admin', 'customer'],
+  voters: [basicAuthorization],
+})
+async set(
+  @inject(SecurityBindings.USER)
+  currentUserProfile: UserProfile,
+  @param.path.string('userId') userId: string,
+  @requestBody({description: 'update user'}) user: User,
+): Promise<void> {
+  ...
+}
+```
 
-4. Bob invokes endpoint DELETE `/users/123/orders` with the JWT token. The
-   endpoint operation in the controller `deleteOrders` is configured with
-   `@authorize` decorator with scopes `['delete']`. The decorator also has a
-   voter function (`packages/shopping/src/services/id.compare.authorizor.ts`) to
-   check if the `userId` in the path matches with the `user id` in the JWT
-   token. This serves as an additional data level restriction to avoid tokens of
-   other users delete bob's orders.
+There are three roles in this app: `admin`, `support`, and `customer`. You can
+go through the controller methods in
+[user-controller.ts](/packages/shopping/src/controllers/user.controller.ts) and
+[shopping-cart.controller.ts](/master/packages/shopping/src/controllers/shopping-cart.controller.ts)
+to see which roles are given access to which methods.
+
+The authorization implementation is done via voter functions. In this app, there
+is just a single voter function - 'basicAuthorization'. It implements the
+following rules:
+
+1. No access if the user was created without a `roles` property.
+2. No access if the user's role in not in the `allowedRoles` authorization
+   metadata.
+3. User can access only model's belonging to themselves.
+4. `admin` and `support` roles bypass model ownership check.
+
+For more details about authorization in LoopBack 4, refer to
+https://loopback.io/doc/en/lb4/Loopback-component-authorization.html.
 
 ### Tutorial
 
