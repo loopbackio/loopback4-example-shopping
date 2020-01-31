@@ -52,7 +52,7 @@ describe('UserController', () => {
     await app.stop();
   });
 
-  it('creates new user when POST /users is invoked', async () => {
+  it.only('creates new user when POST /users is invoked', async () => {
     const res = await client
       .post('/users')
       .send({...userData, password: userPassword})

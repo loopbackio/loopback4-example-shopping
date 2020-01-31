@@ -29,46 +29,6 @@ export class OrderController {
     @repository(OrderRepository)
     public orderRepository : OrderRepository,
   ) {}
-
-  @get('/orders/count', {
-    responses: {
-      '200': {
-        description: 'Order model count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['admin', 'support'], voters: [basicAuthorization]})
-  async count(
-    @param.query.object('where', getWhereSchemaFor(Order)) where?: Where<Order>,
-  ): Promise<Count> {
-    return this.orderRepository.count(where);
-  }
-
-  @get('/orders', {
-    responses: {
-      '200': {
-        description: 'Array of Order model instances',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'array',
-              items: getModelSchemaRef(Order, {includeRelations: true}),
-            },
-          },
-        },
-      },
-    },
-  })
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['admin', 'support'], voters: [basicAuthorization]})
-  async find(
-    @param.query.object('filter', getFilterSchemaFor(Order)) filter?: Filter<Order>,
-  ): Promise<Order[]> {
-    return this.orderRepository.find(filter);
-  }
-
   @get('/orders/{id}', {
     responses: {
       '200': {
@@ -88,18 +48,5 @@ export class OrderController {
     @param.query.object('filter', getFilterSchemaFor(Order)) filter?: Filter<Order>
   ): Promise<Order> {
     return this.orderRepository.findById(id, filter);
-  }
-
-  @del('/orders/{id}', {
-    responses: {
-      '204': {
-        description: 'Order DELETE success',
-      },
-    },
-  })
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.orderRepository.deleteById(id);
   }
 }
