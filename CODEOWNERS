@@ -1,7 +1,20 @@
+# The list in this file serves two purposes:
+# 1. It keeps track of Functional Area Owners, allowing all participants
+#    to find which people to ping depending on the functional area involved.
+# 2. It tells GitHub which maintainers to automatically assign for code reviews
+#    of incoming pull requests.
+#
+# IMPORTANT: The "source of truth" list of Functional Area Owners is tracked in
+# https://github.com/strongloop/loopback-next/blob/master/CODEOWNERS
+#
 # Lines starting with '#' are comments.
 # Each line is a file pattern followed by one or more owners,
 # the last matching pattern has the most precedence.
 #
 # See https://help.github.com/articles/about-codeowners/
+###############################################################################
 
-* @raymondfeng @jannyHou @emonddr
+# loopback4-example-shopping
+# - Primary owner(s): @hacksparrow
+# - Standby owner(s): @jannyHou
+* @hacksparrow @jannyHou
