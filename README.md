@@ -17,19 +17,20 @@ while MongoDB is used for the rest of the models in the app.
 Docker is required for running tests, make sure it is running if you want to run
 the tests.
 
-In case you have Docker installed on your system and don't want to manually
-install MongoDB and Redis, you can run `npm run docker:start` to download their
-images and start the servers.
-
 ## Installation
 
 Do the following to clone and start the project.
 
-```
-git clone https://github.com/strongloop/loopback4-example-shopping.git
-cd loopback4-example-shopping
-npm i
-npm start
+In case you have Docker installed on your system and don't want to manually
+install MongoDB and Redis, you can run `npm run docker:start` to download their
+images and start the servers. Otherwise, you can skip this command.
+
+```sh
+$ git clone https://github.com/strongloop/loopback4-example-shopping.git
+$ cd loopback4-example-shopping
+$ npm i
+$ npm run docker:start
+$ npm start
 ```
 
 ## Usage
