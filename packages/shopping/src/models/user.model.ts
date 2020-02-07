@@ -6,6 +6,7 @@
 import {Entity, model, property, hasMany, hasOne} from '@loopback/repository';
 import {Order} from './order.model';
 import {UserCredentials} from './user-credentials.model';
+import {UserRefreshtoken} from './user-refreshtoken.model';
 import {ShoppingCart} from './shopping-cart.model';
 
 @model({
@@ -50,6 +51,9 @@ export class User extends Entity {
 
   @hasOne(() => UserCredentials)
   userCredentials: UserCredentials;
+
+  @hasMany(() => UserRefreshtoken)
+  userRefreshtokens: UserRefreshtoken[];
 
   @hasOne(() => ShoppingCart)
   shoppingCart: ShoppingCart;

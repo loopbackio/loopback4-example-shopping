@@ -28,6 +28,7 @@ import {UserProfile, securityId, SecurityBindings} from '@loopback/security';
 import {
   CredentialsRequestBody,
   UserProfileSchema,
+  RefreshTokenRequestBody,
 } from './specs/user-controller.specs';
 import {Credentials} from '../repositories/user.repository';
 import {PasswordHasher} from '../services/hash.password.bcryptjs';
@@ -36,10 +37,12 @@ import {
   TokenServiceBindings,
   PasswordHasherBindings,
   UserServiceBindings,
+  RefreshtokenServiceBindings,
 } from '../keys';
 import _ from 'lodash';
 import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 import {basicAuthorization} from '../services/basic.authorizor';
+import {RefreshtokenService} from '../services/refreshtoken.service';
 
 @model()
 export class NewUserRequest extends User {
@@ -59,6 +62,8 @@ export class UserController {
     public passwordHasher: PasswordHasher,
     @inject(TokenServiceBindings.TOKEN_SERVICE)
     public jwtService: TokenService,
+    @inject(RefreshtokenServiceBindings.REFRESHTOKEN_SERVICE)
+    public refreshtokenService: RefreshtokenService<User>,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
   ) {}
@@ -250,7 +255,7 @@ export class UserController {
   })
   async login(
     @requestBody(CredentialsRequestBody) credentials: Credentials,
-  ): Promise<{token: string}> {
+  ): Promise<{token: string; refreshtoken: string}> {
     // ensure the user exists, and the password is correct
     const user = await this.userService.verifyCredentials(credentials);
 
@@ -259,6 +264,52 @@ export class UserController {
 
     // create a JSON Web Token based on the user profile
     const token = await this.jwtService.generateToken(userProfile);
+
+    // create a refreshtoken
+    const refreshtoken = await this.refreshtokenService.generateRefreshtoken(
+      user,
+    );
+
+    return {
+      token,
+      refreshtoken,
+    };
+  }
+
+  @post('/users/newtoken', {
+    security: OPERATION_SECURITY_SPEC,
+    responses: {
+      '200': {
+        description: 'Refreshing the token',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                token: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  @authenticate('jwt')
+  // TODO(derdeka) find out why @authorize.allowAuthenticated() is not working
+  async refresh(
+    @inject(SecurityBindings.USER) currentUserProfile: UserProfile,
+    @requestBody(RefreshTokenRequestBody) body: {refreshtoken: string},
+  ): Promise<{token: string}> {
+    // check if the provided refreshtoken is valid, throws error if invalid
+    await this.refreshtokenService.verifyRefreshtoken(
+      body.refreshtoken,
+      currentUserProfile,
+    );
+
+    // create a new JSON Web Token based on the user profile
+    const token = await this.jwtService.generateToken(currentUserProfile);
 
     return {token};
   }

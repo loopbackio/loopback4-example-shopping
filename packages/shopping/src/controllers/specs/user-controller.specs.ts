@@ -41,3 +41,22 @@ export const CredentialsRequestBody = {
     'application/json': {schema: CredentialsSchema},
   },
 };
+
+const RefreshTokenSchema = {
+  type: 'object',
+  required: ['refreshToken'],
+  properties: {
+    refreshtoken: {
+      type: 'string',
+      minLength: 8,
+    },
+  },
+};
+
+export const RefreshTokenRequestBody = {
+  description: 'The input of refresh function',
+  required: true,
+  content: {
+    'application/json': {schema: RefreshTokenSchema},
+  },
+};

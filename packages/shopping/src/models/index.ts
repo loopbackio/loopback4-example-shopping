@@ -8,4 +8,5 @@ export * from './shopping-cart-item.model';
 export * from './shopping-cart.model';
 export * from './order.model';
 export * from './user-credentials.model';
+export * from './user-refreshtoken.model';
 export * from './product.model';

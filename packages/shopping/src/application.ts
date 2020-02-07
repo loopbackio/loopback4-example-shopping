@@ -23,8 +23,10 @@ import {
   UserServiceBindings,
   TokenServiceConstants,
   PasswordHasherBindings,
+  RefreshtokenServiceBindings,
 } from './keys';
 import {JWTService} from './services/jwt-service';
+import {MyRefreshtokenService} from './services/refreshtoken.service';
 import {MyUserService} from './services/user-service';
 import _ from 'lodash';
 import path from 'path';
@@ -132,6 +134,9 @@ export class ShoppingApplication extends BootMixin(
     );
 
     this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
+    this.bind(RefreshtokenServiceBindings.REFRESHTOKEN_SERVICE).toClass(
+      MyRefreshtokenService,
+    );
 
     // // Bind bcrypt hash services
     this.bind(PasswordHasherBindings.ROUNDS).to(10);

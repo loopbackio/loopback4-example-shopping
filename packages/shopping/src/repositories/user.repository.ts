@@ -10,10 +10,11 @@ import {
   repository,
   HasOneRepositoryFactory,
 } from '@loopback/repository';
-import {User, Order, UserCredentials} from '../models';
+import {User, Order, UserCredentials, UserRefreshtoken} from '../models';
 import {inject, Getter} from '@loopback/core';
 import {OrderRepository} from './order.repository';
 import {UserCredentialsRepository} from './user-credentials.repository';
+import {UserRefreshtokenRepository} from './user-refreshtoken.repository';
 
 export type Credentials = {
   email: string;
@@ -31,6 +32,11 @@ export class UserRepository extends DefaultCrudRepository<
     typeof User.prototype.id
   >;
 
+  public readonly userRefreshtokens: HasManyRepositoryFactory<
+    UserRefreshtoken,
+    typeof User.prototype.id
+  >;
+
   constructor(
     @inject('datasources.mongo') protected datasource: juggler.DataSource,
     @repository(OrderRepository) protected orderRepository: OrderRepository,
@@ -38,11 +44,19 @@ export class UserRepository extends DefaultCrudRepository<
     protected userCredentialsRepositoryGetter: Getter<
       UserCredentialsRepository
     >,
+    @repository.getter('UserRefreshtokenRepository')
+    protected userRefreshtokenRepositoryGetter: Getter<
+      UserRefreshtokenRepository
+    >,
   ) {
     super(User, datasource);
     this.userCredentials = this.createHasOneRepositoryFactoryFor(
       'userCredentials',
       userCredentialsRepositoryGetter,
+    );
+    this.userRefreshtokens = this.createHasManyRepositoryFactoryFor(
+      'userRefreshtokens',
+      userRefreshtokenRepositoryGetter,
     );
     this.orders = this.createHasManyRepositoryFactoryFor(
       'orders',
