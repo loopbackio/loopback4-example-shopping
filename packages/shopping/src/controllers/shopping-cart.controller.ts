@@ -21,6 +21,7 @@ import {ShoppingCartRepository} from '../repositories';
 import {ShoppingCart, ShoppingCartItem} from '../models';
 import {basicAuthorization} from '../services/basic.authorizor';
 import debugFactory from 'debug';
+import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 const debug = debugFactory('loopback:example:shopping');
 
 /**
@@ -40,6 +41,7 @@ export class ShoppingCartController {
    * @param cart Shopping cart
    */
   @post('/shoppingCarts/{userId}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'User shopping cart is created or updated',
@@ -62,6 +64,7 @@ export class ShoppingCartController {
    * @param cart Shopping cart
    */
   @put('/shoppingCarts/{userId}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'User shopping cart is created or updated',
@@ -83,6 +86,7 @@ export class ShoppingCartController {
    * @param userId User id
    */
   @get('/shoppingCarts/{userId}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'User shopping cart is read',
@@ -112,6 +116,7 @@ export class ShoppingCartController {
    * @param userId User id
    */
   @del('/shoppingCarts/{userId}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'User shopping cart is deleted',
@@ -131,6 +136,7 @@ export class ShoppingCartController {
    * @param cart Shopping cart item to be added
    */
   @post('/shoppingCarts/{userId}/items', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'User shopping cart item is created',
