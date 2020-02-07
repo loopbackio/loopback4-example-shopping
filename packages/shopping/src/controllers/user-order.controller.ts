@@ -24,6 +24,7 @@ import {Order} from '../models';
 import {authorize} from '@loopback/authorization';
 import {AuthenticationBindings, authenticate} from '@loopback/authentication';
 import {basicAuthorization} from '../services/basic.authorizor';
+import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 
 /**
  * Controller for User's Orders
@@ -37,6 +38,7 @@ export class UserOrderController {
    * @param cart Shopping cart
    */
   @post('/users/{userId}/orders', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'User.Order model instance',
@@ -60,6 +62,7 @@ export class UserOrderController {
   }
 
   @get('/users/{userId}/orders', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: "Array of User's Orders",
@@ -82,6 +85,7 @@ export class UserOrderController {
   }
 
   @patch('/users/{userId}/orders', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'User.Order PATCH success count',
@@ -100,6 +104,7 @@ export class UserOrderController {
   }
 
   @del('/users/{userId}/orders', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'User.Order DELETE success count',

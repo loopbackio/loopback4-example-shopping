@@ -122,6 +122,7 @@ export class UserController {
   }
 
   @put('/users/{userId}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'User',
@@ -159,6 +160,7 @@ export class UserController {
   }
 
   @get('/users/{userId}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'User',

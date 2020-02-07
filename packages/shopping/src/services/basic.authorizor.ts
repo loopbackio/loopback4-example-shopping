@@ -11,17 +11,12 @@ import {
 import _ from 'lodash';
 import {UserProfile, securityId} from '@loopback/security';
 
-interface MyAuthorizationMetadata extends AuthorizationMetadata {
-  currentUser?: UserProfile;
-  decision?: AuthorizationDecision;
-}
-
 // Instance level authorizer
 // Can be also registered as an authorizer, depends on users' need.
 export async function basicAuthorization(
   authorizationCtx: AuthorizationContext,
-  metadata: MyAuthorizationMetadata,
-) {
+  metadata: AuthorizationMetadata,
+): Promise<AuthorizationDecision> {
   // No access if authorization details are missing
   let currentUser: UserProfile;
   if (authorizationCtx.principals.length > 0) {
