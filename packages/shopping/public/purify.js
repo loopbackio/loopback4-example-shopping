@@ -1,3 +1,8 @@
+// Copyright IBM Corp. 2020. All Rights Reserved.
+// Node module: loopback4-example-shopping
+// This file is licensed under the MIT License.
+// License text available at https://opensource.org/licenses/MIT
+
 /*
 Library: https://github.com/cure53/DOMPurify
 File: Latest version available at https://github.com/cure53/DOMPurify/blob/master/dist/purify.min.js
