@@ -63,7 +63,7 @@ export class UserController {
     @inject(TokenServiceBindings.TOKEN_SERVICE)
     public jwtService: TokenService,
     @inject(RefreshtokenServiceBindings.REFRESHTOKEN_SERVICE)
-    public refreshtokenService: RefreshtokenService<User>,
+    public refreshtokenService: RefreshtokenService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
   ) {}
@@ -266,8 +266,8 @@ export class UserController {
     const token = await this.jwtService.generateToken(userProfile);
 
     // create a refreshtoken
-    const refreshtoken = await this.refreshtokenService.generateRefreshtoken(
-      user,
+    const refreshtoken = await this.refreshtokenService.generateToken(
+      userProfile,
     );
 
     return {
@@ -303,7 +303,7 @@ export class UserController {
     @requestBody(RefreshTokenRequestBody) body: {refreshtoken: string},
   ): Promise<{token: string}> {
     // check if the provided refreshtoken is valid, throws error if invalid
-    await this.refreshtokenService.verifyRefreshtoken(
+    await this.refreshtokenService.verifyToken(
       body.refreshtoken,
       currentUserProfile,
     );

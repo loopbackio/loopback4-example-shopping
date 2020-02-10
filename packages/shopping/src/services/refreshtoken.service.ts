@@ -2,57 +2,82 @@
 // Node module: @loopback/authentication
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
-import {UserRefreshtokenRepository} from '../repositories/user-refreshtoken.repository';
-import {User} from '../models/user.model';
+import {TokenService} from '@loopback/authentication';
+import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
 import {UserProfile, securityId} from '@loopback/security';
+import {UserRefreshtokenRepository} from '../repositories/user-refreshtoken.repository';
+import {RefreshtokenServiceBindings} from '../keys';
 
-export interface RefreshtokenService<U> {
-  generateRefreshtoken(user: User): Promise<string>;
-  verifyRefreshtoken(
-    refreshtoken: string,
-    userProfile: UserProfile,
-  ): Promise<void>;
-  revokeRefreshtoken(
-    refreshtoken: string,
-    userProfile: UserProfile,
-  ): Promise<void>;
+export interface RefreshtokenService extends TokenService {
+  /**
+   * Verifies the validity of a token string and returns a user profile
+   *
+   * TODO(derdeka) move optional parameter userProfile to TokenService?
+   */
+  verifyToken(token: string, userProfile?: UserProfile): Promise<UserProfile>;
+  /**
+   * Revokes a given token (if supported by token system)
+   */
+  revokeToken(token: string, userProfile?: UserProfile): Promise<void>;
 }
 
-export class MyRefreshtokenService implements RefreshtokenService<User> {
+export class MyRefreshtokenService implements RefreshtokenService {
   constructor(
     @repository(UserRefreshtokenRepository)
     public userRefreshtokenRepository: UserRefreshtokenRepository,
+    @inject(RefreshtokenServiceBindings.REFRESHTOKEN_ETERNAL_ALLOWED, {
+      optional: true,
+    })
+    private refreshtokenEternalAllowed: boolean = false,
+    @inject(RefreshtokenServiceBindings.REFRESHTOKEN_EXPIRES_IN, {
+      optional: true,
+    })
+    private refreshtokenExpiresIn: number = 60 * 60 * 24,
   ) {}
 
-  async generateRefreshtoken(user: User): Promise<string> {
+  async generateToken(userProfile: UserProfile): Promise<string> {
+    // TODO(derdeka) objectId as refreshtoken is a bad idea
     const userRefreshtoken = await this.userRefreshtokenRepository.create({
       creation: new Date(),
-      // TODO(derdeka) inject ttl setting
-      ttl: 60 * 60 * 6,
-      userId: user.id,
+      ttl: this.refreshtokenExpiresIn,
+      userId: userProfile[securityId],
     });
     return userRefreshtoken.id;
   }
 
-  async verifyRefreshtoken(
+  async verifyToken(
     refreshtoken: string,
-    userProfile: UserProfile,
-  ): Promise<void> {
+    userProfile?: UserProfile,
+  ): Promise<UserProfile> {
     try {
-      // TODO(derdeka) check ttl and creation date
-      await this.userRefreshtokenRepository.findById(refreshtoken, {
-        where: {
-          userId: userProfile[securityId],
+      if (!userProfile || !userProfile[securityId]) {
+        throw new HttpErrors.Unauthorized('Invalid refreshToken');
+      }
+      const {creation, ttl} = await this.userRefreshtokenRepository.findById(
+        refreshtoken,
+        {
+          where: {
+            userId: userProfile[securityId],
+          },
         },
-      });
+      );
+      const isEternalToken = ttl === -1;
+      const elapsedSeconds = (Date.now() - creation.getTime()) / 1000;
+      const isValid = isEternalToken
+        ? this.refreshtokenEternalAllowed
+        : elapsedSeconds < ttl;
+      if (!isValid) {
+        throw new HttpErrors.Unauthorized('Invalid refreshToken');
+      }
+      return userProfile;
     } catch (e) {
-      throw new HttpErrors.Unauthorized('Invalid accessToken');
+      throw new HttpErrors.Unauthorized('Invalid refreshToken');
     }
   }
 
-  async revokeRefreshtoken(
+  async revokeToken(
     refreshtoken: string,
     userProfile: UserProfile,
   ): Promise<void> {

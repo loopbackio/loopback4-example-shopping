@@ -41,7 +41,13 @@ export namespace UserServiceBindings {
 }
 
 export namespace RefreshtokenServiceBindings {
-  export const REFRESHTOKEN_SERVICE = BindingKey.create<
-    RefreshtokenService<User>
-  >('services.refreshtoken.service');
+  export const REFRESHTOKEN_ETERNAL_ALLOWED = BindingKey.create<boolean>(
+    'services.refreshtoken.eternal_allowed',
+  );
+  export const REFRESHTOKEN_EXPIRES_IN = BindingKey.create<number>(
+    'services.refreshtoken.expires_in',
+  );
+  export const REFRESHTOKEN_SERVICE = BindingKey.create<RefreshtokenService>(
+    'services.refreshtoken.service',
+  );
 }
