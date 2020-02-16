@@ -18,7 +18,7 @@ import {JWTService} from '../../services/jwt-service';
 import {securityId} from '@loopback/security';
 import {RecommenderService} from '../../services';
 import {Server} from 'grpc';
-import {HTTPError} from 'superagent';
+import {ResponseError} from 'superagent';
 
 const recommendations = require('loopback4-example-recommender/data/recommendations.json');
 
@@ -93,7 +93,7 @@ describe('UserController', () => {
       .expect(422);
 
     expect(res.error).to.not.eql(false);
-    const resError = res.error as HTTPError;
+    const resError = res.error as ResponseError;
     const errorText = JSON.parse(resError.text);
     expect(errorText.error.details[0].info.missingProperty).to.equal('email');
   });
@@ -123,7 +123,7 @@ describe('UserController', () => {
       .expect(422);
 
     expect(res.error).to.not.eql(false);
-    const resError = res.error as HTTPError;
+    const resError = res.error as ResponseError;
     const errorText = JSON.parse(resError.text);
     expect(errorText.error.details[0].info.missingProperty).to.equal(
       'password',
