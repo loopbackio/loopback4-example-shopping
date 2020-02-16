@@ -114,7 +114,9 @@ export class UserController {
     } catch (error) {
       // MongoError 11000 duplicate key
       if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
-        throw new HttpErrors.Conflict('Email value is already taken');
+        throw new HttpErrors.UnprocessableEntity(
+          'Email value is already taken',
+        );
       } else {
         throw error;
       }

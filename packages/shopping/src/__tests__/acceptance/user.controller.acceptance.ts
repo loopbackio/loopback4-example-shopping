@@ -148,7 +148,7 @@ describe('UserController', () => {
     const res = await client
       .post('/users')
       .send({...userData, password: userPassword})
-      .expect(409);
+      .expect(422);
 
     expect(res.body.error.message).to.equal('Email value is already taken');
   });
