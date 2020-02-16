@@ -4,7 +4,10 @@
   "editor.tabSize": 2,
   "editor.trimAutoWhitespace": true,
   "editor.formatOnSave": true,
-
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true,
+    "source.fixAll.eslint": true
+  },
   "files.exclude": {
     "**/.DS_Store": true,
     "**/.git": true,
@@ -17,13 +20,8 @@
   "files.trimTrailingWhitespace": true,
   "eslint.run": "onSave",
   "eslint.nodePath": "./node_modules",
-  "eslint.validate": [
-    "javascript",
-    "typescript"
-  ],
+  "eslint.validate": ["javascript", "typescript"],
   "typescript.tsdk": "./node_modules/typescript/lib",
-  "git.alwaysSignOff": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  }
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+  "git.alwaysSignOff": true
 }
