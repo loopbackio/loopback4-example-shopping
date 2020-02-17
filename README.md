@@ -156,7 +156,7 @@ async find(
 }
 ```
 
-Unprotected controller method, only `admin` and `customer` can access it:
+Protected controller method, only `admin` and `customer` can access it:
 
 ```ts
 @authorize({
