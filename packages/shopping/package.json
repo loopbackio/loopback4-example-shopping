@@ -79,7 +79,7 @@
     "loopback4-example-recommender": "1.1.1",
     "mocha": "7.0.1",
     "source-map-support": "0.5.16",
-    "typescript": "3.7.5"
+    "typescript": "3.8.2"
   },
   "copyright.owner": "IBM Corp."
 }
