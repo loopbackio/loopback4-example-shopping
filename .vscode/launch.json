@@ -7,12 +7,24 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Run Mocha tests",
+      "program": "${workspaceRoot}/packages/shopping/node_modules/mocha/bin/_mocha",
+      "cwd": "${workspaceRoot}",
+      "args": [
+        "--config",
+        "${workspaceRoot}/packages/shopping/node_modules/@loopback/build/config/.mocharc.json",
+        "packages/*/dist/__tests__/**/*.js",
+        "-t",
+        "0"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Server",
       "preLaunchTask": "Build Server",
       "program": "${workspaceFolder}/packages/shopping/index.js",
-      "outFiles": [
-        "${workspaceFolder}/packages/shopping/**/*.js"
-      ]
+      "outFiles": ["${workspaceFolder}/packages/shopping/**/*.js"]
     }
   ]
 }
