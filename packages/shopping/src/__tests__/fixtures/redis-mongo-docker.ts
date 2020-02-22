@@ -7,7 +7,7 @@ import {GenericContainer, StartedTestContainer} from 'testcontainers';
 
 async function startRedis() {
   const container = await new GenericContainer('redis')
-    .withName('redis_lb4_shopping')
+    .withName('redis_lb4_shopping_test')
     .withExposedPorts(6379)
     .start();
   process.env.SHOPPING_APP_REDIS_MASTER_SERVICE_HOST = container.getContainerIpAddress();
@@ -19,7 +19,7 @@ async function startRedis() {
 
 async function startMongoDB() {
   const container = await new GenericContainer('mongo')
-    .withName('mongodb_lb4_shopping')
+    .withName('mongodb_lb4_shopping_test')
     .withExposedPorts(27017)
     .start();
   process.env.SHOPPING_APP_MONGODB_SERVICE_HOST = container.getContainerIpAddress();
