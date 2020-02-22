@@ -1,12 +1,11 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
   "extends": "@loopback/build/config/tsconfig.common.json",
-  "include": [
-    "packages"
-  ],
+  "include": ["packages"],
   "exclude": [
     "node_modules/**",
     "packages/*/node_modules/**",
+    "packages/*/dist/**",
     "**/*.d.ts"
   ],
   "compilerOptions": {
