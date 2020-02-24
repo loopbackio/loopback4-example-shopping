@@ -2,12 +2,7 @@
   "$schema": "http://json.schemastore.org/tsconfig",
   "extends": "@loopback/build/config/tsconfig.common.json",
   "include": ["packages"],
-  "exclude": [
-    "node_modules/**",
-    "packages/*/node_modules/**",
-    "packages/*/dist/**",
-    "**/*.d.ts"
-  ],
+  "exclude": ["**/node_modules/**", "packages/*/dist/**", "**/*.d.ts"],
   "compilerOptions": {
     "lib": ["es2018", "dom", "esnext.asynciterable"]
   }
