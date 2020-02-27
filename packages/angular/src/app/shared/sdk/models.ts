@@ -1,0 +1,9 @@
+export { Product } from './models/product';
+export { NewProduct } from './models/new-product';
+export { ProductWithRelations } from './models/product-with-relations';
+export { ProductPartial } from './models/product-partial';
+export { ShoppingCartItem } from './models/shopping-cart-item';
+export { ShoppingCart } from './models/shopping-cart';
+export { Order } from './models/order';
+export { User } from './models/user';
+export { NewUser } from './models/new-user';

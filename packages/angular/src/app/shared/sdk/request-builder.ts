@@ -1,0 +1,206 @@
+/* tslint:disable */
+import { HttpRequest, HttpParameterCodec, HttpParams, HttpHeaders } from '@angular/common/http';
+
+/**
+ * Custom parameter codec to correctly handle the plus sign in parameter
+ * values. See https://github.com/angular/angular/issues/18261
+ */
+class ParameterCodec implements HttpParameterCodec {
+  encodeKey(key: string): string {
+    return encodeURIComponent(key);
+  }
+
+  encodeValue(value: string): string {
+    return encodeURIComponent(value);
+  }
+
+  decodeKey(key: string): string {
+    return decodeURIComponent(key);
+  }
+
+  decodeValue(value: string): string {
+    return decodeURIComponent(value);
+  }
+}
+const ParameterCodecInstance = new ParameterCodec();
+
+/**
+ * Helper to build http requests from parameters
+ */
+export class RequestBuilder {
+
+  private _path = new Map<string, any>();
+  private _query = new Map<string, any>();
+  private _header = new Map<string, any>();
+  _bodyContent: any | null;
+  _bodyContentType?: string;
+
+  constructor(
+    public rootUrl: string,
+    public operationPath: string,
+    public method: string) {
+  }
+
+  /**
+   * Sets a path parameter
+   */
+  path(name: string, value: any): void {
+    if (value !== null && value !== undefined) {
+      this._path.set(name, value);
+    }
+  }
+
+  /**
+   * Sets a query parameter
+   */
+  query(name: string, value: any): void {
+    if (value !== null && value !== undefined) {
+      this._query.set(name, value);
+    }
+  }
+
+  /**
+   * Sets a header parameter
+   */
+  header(name: string, value: any): void {
+    if (value !== null && value !== undefined) {
+      this._header.set(name, value);
+    }
+  }
+
+  /**
+   * Sets the body content, along with the content type
+   */
+  body(value: any, contentType = 'application/json'): void {
+    if (value instanceof Blob) {
+      this._bodyContentType = value.type;
+    } else {
+      this._bodyContentType = contentType;
+    }
+    if (this._bodyContentType === 'application/x-www-form-urlencoded' && typeof value === 'object') {
+      // Handle URL-encoded data
+      const pairs: string[][] = [];
+      for (const key of Object.keys(value)) {
+        let val = value[key];
+        if (!(val instanceof Array)) {
+          val = [val];
+        }
+        for (const v of val) {
+          const formValue = this.formDataValue(v);
+          if (formValue !== null) {
+            pairs.push([key, formValue]);
+          }
+        }
+      }
+      this._bodyContent = pairs.map(p => `${encodeURIComponent(p[0])}=${encodeURIComponent(p[1])}`).join('&');
+    } else if (this._bodyContentType === 'multipart/form-data') {
+      // Handle multipart form data
+      const formData = new FormData();
+      if (value != null) {
+        for (const key of Object.keys(value)) {
+          const val = value[key];
+          if (val instanceof Array) {
+            for (const v of val) {
+              const toAppend = this.formDataValue(v);
+              if (toAppend !== null) {
+                formData.append(key, toAppend);
+              }
+            }
+          } else {
+            const toAppend = this.formDataValue(val);
+            if (toAppend !== null) {
+              formData.set(key, toAppend);
+            }
+          }
+        }
+      }
+      this._bodyContent = formData;
+    } else {
+      // The body is the plain content
+      this._bodyContent = value;
+    }
+  }
+
+  private formDataValue(value: any): any {
+    if (value === null || value === undefined) {
+      return null;
+    }
+    if (value instanceof Blob) {
+      return value;
+    }
+    if (typeof value === 'object') {
+      return JSON.stringify(value);
+    }
+    return String(value);
+  }
+
+  /**
+   * Builds the request with the current set parameters
+   */
+  build<T=any>(options?: {
+    /** Which content types to accept */
+    accept?: string;
+
+    /** The expected response type */
+    responseType?: 'json' | 'text' | 'blob' | 'arraybuffer';
+
+    /** Whether to report progress on uploads / downloads */
+    reportProgress?: boolean;
+  }): HttpRequest<T> {
+
+    options = options || {};
+
+    // Path parameters
+    let path = this.operationPath;
+    for (const param of Array.from(this._path.keys())) {
+      const item = this._path.get(param);
+      path = path.replace(`{${param}}`, (item !== undefined && item !== null ? item : '').toString());
+    }
+    const url = this.rootUrl + path;
+
+    // Query parameters
+    let httpParams = new HttpParams({
+      encoder: ParameterCodecInstance
+    });
+    for (const param of Array.from(this._query.keys())) {
+      const value = this._query.get(param);
+      if (value instanceof Array) {
+        for (const item of value) {
+          httpParams = httpParams.append(param, (item !== undefined && item !== null ? item : '').toString());
+        }
+      } else {
+        httpParams = httpParams.set(param, (value !== undefined && value !== null ? value : '').toString());
+      }
+    }
+
+    // Header parameters
+    let httpHeaders = new HttpHeaders();
+    if (options.accept) {
+      httpHeaders = httpHeaders.append('Accept', options.accept);
+    }
+    for (const param of Array.from(this._header.keys())) {
+      const value = this._header.get(param);
+      if (value instanceof Array) {
+        for (const item of value) {
+          httpHeaders = httpHeaders.append(param, (item !== undefined && item !== null ? item : '').toString());
+        }
+      } else {
+        httpHeaders = httpHeaders.set(param, (value !== undefined && value !== null ? value : '').toString());
+      }
+    }
+
+    // Request content headers
+    if (this._bodyContentType && !(this._bodyContent instanceof FormData)) {
+      httpHeaders = httpHeaders.set('Content-Type', this._bodyContentType);
+    }
+
+    // Perform the request
+    return new HttpRequest<T>(this.method.toUpperCase(), url, this._bodyContent, {
+      params: httpParams,
+      headers: httpHeaders,
+      responseType: options.responseType,
+      reportProgress: options.reportProgress
+    });
+  }
+}
+
