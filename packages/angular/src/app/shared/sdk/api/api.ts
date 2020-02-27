@@ -1,0 +1,11 @@
+export * from './ping-controller.service';
+import { PingControllerService } from './ping-controller.service';
+export * from './product-controller.service';
+import { ProductControllerService } from './product-controller.service';
+export * from './shopping-cart-controller.service';
+import { ShoppingCartControllerService } from './shopping-cart-controller.service';
+export * from './user-controller.service';
+import { UserControllerService } from './user-controller.service';
+export * from './user-order-controller.service';
+import { UserOrderControllerService } from './user-order-controller.service';
+export const APIS = [PingControllerService, ProductControllerService, ShoppingCartControllerService, UserControllerService, UserOrderControllerService];
