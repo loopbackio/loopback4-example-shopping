@@ -15,6 +15,7 @@ const PING_RESPONSE: ResponseObject = {
     'application/json': {
       schema: {
         type: 'object',
+        title: 'loopback.PingResponse',
         properties: {
           greeting: {type: 'string'},
           date: {type: 'string'},

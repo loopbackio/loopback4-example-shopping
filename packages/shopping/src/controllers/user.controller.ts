@@ -239,6 +239,7 @@ export class UserController {
           'application/json': {
             schema: {
               type: 'object',
+              title: 'LoginResponse',
               properties: {
                 token: {
                   type: 'string',
