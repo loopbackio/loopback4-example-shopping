@@ -9,11 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { LoopbackPingResponseHeaders } from './loopback-ping-response-headers';
 
 
-export interface InlineResponse200 { 
-    id: string;
-    email?: string;
-    name?: string;
+export interface LoopbackPingResponse { 
+    greeting?: string;
+    date?: string;
+    url?: string;
+    headers?: LoopbackPingResponseHeaders;
 }
 

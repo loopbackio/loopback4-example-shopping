@@ -18,8 +18,8 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { InlineObject } from '../model/models';
-import { InlineResponse2001 } from '../model/models';
-import { InlineResponse2002 } from '../model/models';
+import { InlineResponse200 } from '../model/models';
+import { LoginResponse } from '../model/models';
 import { NewUser } from '../model/models';
 import { Product } from '../model/models';
 import { User } from '../model/models';
@@ -193,9 +193,9 @@ export class UserControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public userControllerLogin(InlineObject: InlineObject, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<InlineResponse2001>;
-    public userControllerLogin(InlineObject: InlineObject, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<InlineResponse2001>>;
-    public userControllerLogin(InlineObject: InlineObject, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<InlineResponse2001>>;
+    public userControllerLogin(InlineObject: InlineObject, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoginResponse>;
+    public userControllerLogin(InlineObject: InlineObject, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoginResponse>>;
+    public userControllerLogin(InlineObject: InlineObject, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoginResponse>>;
     public userControllerLogin(InlineObject: InlineObject, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (InlineObject === null || InlineObject === undefined) {
             throw new Error('Required parameter InlineObject was null or undefined when calling userControllerLogin.');
@@ -230,7 +230,7 @@ export class UserControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<InlineResponse2001>(`${this.configuration.basePath}/users/login`,
+        return this.httpClient.post<LoginResponse>(`${this.configuration.basePath}/users/login`,
             InlineObject,
             {
                 responseType: <any>responseType,
@@ -246,9 +246,9 @@ export class UserControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public userControllerPrintCurrentUser(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<InlineResponse2002>;
-    public userControllerPrintCurrentUser(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<InlineResponse2002>>;
-    public userControllerPrintCurrentUser(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<InlineResponse2002>>;
+    public userControllerPrintCurrentUser(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<InlineResponse200>;
+    public userControllerPrintCurrentUser(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<InlineResponse200>>;
+    public userControllerPrintCurrentUser(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<InlineResponse200>>;
     public userControllerPrintCurrentUser(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
@@ -278,7 +278,7 @@ export class UserControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<InlineResponse2002>(`${this.configuration.basePath}/users/me`,
+        return this.httpClient.get<InlineResponse200>(`${this.configuration.basePath}/users/me`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

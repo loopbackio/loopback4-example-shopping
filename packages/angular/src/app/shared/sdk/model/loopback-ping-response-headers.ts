@@ -11,9 +11,7 @@
  */
 
 
-export interface InlineResponse200 { 
-    id: string;
-    email?: string;
-    name?: string;
+export interface LoopbackPingResponseHeaders { 
+    Content_Type?: string;
 }
 

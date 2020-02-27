@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { InlineResponse200 } from '../model/models';
+import { LoopbackPingResponse } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -85,9 +85,9 @@ export class PingControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public pingControllerPing(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<InlineResponse200>;
-    public pingControllerPing(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<InlineResponse200>>;
-    public pingControllerPing(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<InlineResponse200>>;
+    public pingControllerPing(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoopbackPingResponse>;
+    public pingControllerPing(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoopbackPingResponse>>;
+    public pingControllerPing(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoopbackPingResponse>>;
     public pingControllerPing(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
@@ -110,7 +110,7 @@ export class PingControllerService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<InlineResponse200>(`${this.configuration.basePath}/ping`,
+        return this.httpClient.get<LoopbackPingResponse>(`${this.configuration.basePath}/ping`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
