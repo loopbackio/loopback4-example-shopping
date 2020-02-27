@@ -84,25 +84,5 @@
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
-  },
-  "greenkeeper": {
-    "commitMessages": {
-      "initialBadge": "docs: add Greenkeeper badge",
-      "initialDependencies": "chore: update dependencies",
-      "initialBranches": "chore: whitelist greenkeeper branches",
-      "dependencyUpdate": "chore: update ${dependency} to version ${version}",
-      "devDependencyUpdate": "chore: update ${dependency} to version ${version}",
-      "dependencyPin": "chore: pin ${dependency} to ${oldVersion}",
-      "devDependencyPin": "chore: pin ${dependency} to ${oldVersion}",
-      "lockfileUpdate": "chore: update lockfile ${lockfilePath}"
-    },
-    "prTitles": {
-      "initialPR": "[greenkeeper] update dependencies to enable Greenkeeper",
-      "initialPrBadge": "[greenkeeper] add badge to enable Greenkeeper",
-      "initialPrBadgeOnly": "[greenkeeper] add Greenkeeper badge",
-      "initialSubgroupPR": "[greenkeeper] update dependencies for ${group}",
-      "basicPR": "[greenkeeper] update ${dependency} to the latest",
-      "groupPR": "[greenkeeper] update ${dependency} in group ${group} to the latest"
-    }
   }
 }
