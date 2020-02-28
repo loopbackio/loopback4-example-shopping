@@ -51,7 +51,7 @@
     "@loopback/rest-explorer": "1.4.10",
     "@loopback/security": "0.1.13",
     "@loopback/service-proxy": "1.3.17",
-    "@types/jsonwebtoken": "8.3.7",
+    "@types/jsonwebtoken": "8.3.8",
     "@types/yaml": "1.2.0",
     "bcryptjs": "2.4.3",
     "casbin": "4.1.1",
