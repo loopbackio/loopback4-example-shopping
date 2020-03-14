@@ -5,13 +5,15 @@
 
 import {Client, expect} from '@loopback/testlab';
 import {ShoppingApplication} from '../..';
-import {UserRepository} from '../../repositories';
-import {setupApplication} from './helper';
-import {PasswordHasher} from '../../services/hash.password.bcryptjs';
 import {PasswordHasherBindings} from '../../keys';
 import {User} from '../../models';
+import {UserRepository} from '../../repositories';
+import {PasswordHasher} from '../../services/hash.password.bcryptjs';
+import {setupApplication} from './helper';
 
-describe('authorization', () => {
+describe('authorization', function() {
+  // eslint-disable-next-line no-invalid-this
+  this.timeout(5000);
   let app: ShoppingApplication;
   let client: Client;
   let userRepo: UserRepository;
