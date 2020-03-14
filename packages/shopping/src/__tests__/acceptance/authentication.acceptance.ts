@@ -3,24 +3,26 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {expect} from '@loopback/testlab';
-import {validateCredentials} from '../../services/validator';
-import {ShoppingApplication} from '../..';
-import {PasswordHasher} from '../../services/hash.password.bcryptjs';
-import {UserRepository, Credentials} from '../../repositories';
-import {User} from '../../models';
+import {TokenService, UserService} from '@loopback/authentication';
 import {HttpErrors} from '@loopback/rest';
+import {securityId} from '@loopback/security';
+import {expect} from '@loopback/testlab';
+import _ from 'lodash';
+import {ShoppingApplication} from '../..';
 import {
   PasswordHasherBindings,
-  UserServiceBindings,
   TokenServiceBindings,
+  UserServiceBindings,
 } from '../../keys';
+import {User} from '../../models';
+import {Credentials, UserRepository} from '../../repositories';
+import {PasswordHasher} from '../../services/hash.password.bcryptjs';
+import {validateCredentials} from '../../services/validator';
 import {setupApplication} from './helper';
-import {TokenService, UserService} from '@loopback/authentication';
-import {securityId} from '@loopback/security';
-import _ from 'lodash';
 
-describe('authentication services', () => {
+describe('authentication services', function() {
+  // eslint-disable-next-line no-invalid-this
+  this.timeout(5000);
   let app: ShoppingApplication;
 
   const userData = {
