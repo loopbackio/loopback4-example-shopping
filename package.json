@@ -69,7 +69,7 @@
     "fs-extra": "8.1.0",
     "husky": "4.2.3",
     "lerna": "3.20.2",
-    "mocha": "7.1.0",
+    "mocha": "7.1.1",
     "source-map-support": "0.5.16",
     "testcontainers": "2.6.0",
     "typescript": "3.8.3"
