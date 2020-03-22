@@ -3,48 +3,52 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig, BindingKey} from '@loopback/core';
-import {
-  RepositoryMixin,
-  SchemaMigrationOptions,
-  model,
-  property,
-} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
-import {ServiceMixin} from '@loopback/service-proxy';
-import {MyAuthenticationSequence} from './sequence';
-import {
-  RestExplorerBindings,
-  RestExplorerComponent,
-} from '@loopback/rest-explorer';
-import {
-  TokenServiceBindings,
-  UserServiceBindings,
-  TokenServiceConstants,
-  PasswordHasherBindings,
-} from './keys';
-import {JWTService} from './services/jwt-service';
-import {MyUserService} from './services/user-service';
-import _ from 'lodash';
-import path from 'path';
 import {
   AuthenticationComponent,
   registerAuthenticationStrategy,
 } from '@loopback/authentication';
-import {BcryptHasher} from './services/hash.password.bcryptjs';
-import {JWTAuthenticationStrategy} from './authentication-strategies/jwt-strategy';
-import {SECURITY_SCHEME_SPEC} from './utils/security-spec';
 import {AuthorizationComponent} from '@loopback/authorization';
+import {BootMixin} from '@loopback/boot';
 import {
-  ProductRepository,
-  UserRepository,
-  ShoppingCartRepository,
-  OrderRepository,
-} from './repositories';
-import YAML = require('yaml');
+  ApplicationConfig,
+  BindingKey,
+  createBindingFromClass,
+} from '@loopback/core';
+import {
+  model,
+  property,
+  RepositoryMixin,
+  SchemaMigrationOptions,
+} from '@loopback/repository';
+import {RestApplication} from '@loopback/rest';
+import {
+  RestExplorerBindings,
+  RestExplorerComponent,
+} from '@loopback/rest-explorer';
+import {ServiceMixin} from '@loopback/service-proxy';
 import fs from 'fs';
+import _ from 'lodash';
+import path from 'path';
+import {JWTAuthenticationStrategy} from './authentication-strategies/jwt-strategy';
+import {
+  PasswordHasherBindings,
+  TokenServiceBindings,
+  TokenServiceConstants,
+  UserServiceBindings,
+} from './keys';
 import {User} from './models';
+import {
+  OrderRepository,
+  ProductRepository,
+  ShoppingCartRepository,
+  UserRepository,
+} from './repositories';
+import {MyAuthenticationSequence} from './sequence';
+import {BcryptHasher} from './services/hash.password.bcryptjs';
+import {JWTService} from './services/jwt-service';
+import {MyUserService} from './services/user-service';
+import {InfoSpecEnhancer} from './spec-enhancers/info-spec.extension';
+import YAML = require('yaml');
 
 /**
  * Information from package.json
@@ -73,20 +77,10 @@ export class ShoppingApplication extends BootMixin(
   constructor(options?: ApplicationConfig) {
     super(options);
 
-    /*
-       This is a workaround until an extension point is introduced
-       allowing extensions to contribute to the OpenAPI specification
-       dynamically.
-    */
-    this.api({
-      openapi: '3.0.0',
-      info: {title: pkg.name, version: pkg.version},
-      paths: {},
-      components: {securitySchemes: SECURITY_SCHEME_SPEC},
-      servers: [{url: '/'}],
-    });
-
     this.setUpBindings();
+
+    // info spec
+    this.add(createBindingFromClass(InfoSpecEnhancer));
 
     // Bind authentication component related elements
     this.component(AuthenticationComponent);
