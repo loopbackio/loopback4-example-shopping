@@ -3,13 +3,25 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {inject} from '@loopback/context';
+import {
+  asAuthStrategy,
+  AuthenticationStrategy,
+  TokenService,
+} from '@loopback/authentication';
+import {bind, inject} from '@loopback/context';
+import {
+  asSpecEnhancer,
+  mergeSecuritySchemeToSpec,
+  OASEnhancer,
+  OpenApiSpec,
+} from '@loopback/openapi-v3';
 import {HttpErrors, Request} from '@loopback/rest';
-import {AuthenticationStrategy, TokenService} from '@loopback/authentication';
 import {UserProfile} from '@loopback/security';
 import {TokenServiceBindings} from '../keys';
 
-export class JWTAuthenticationStrategy implements AuthenticationStrategy {
+@bind(asAuthStrategy, asSpecEnhancer)
+export class JWTAuthenticationStrategy
+  implements AuthenticationStrategy, OASEnhancer {
   name = 'jwt';
 
   constructor(
@@ -46,5 +58,13 @@ export class JWTAuthenticationStrategy implements AuthenticationStrategy {
     const token = parts[1];
 
     return token;
+  }
+
+  modifySpec(spec: OpenApiSpec): OpenApiSpec {
+    return mergeSecuritySchemeToSpec(spec, this.name, {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    });
   }
 }
