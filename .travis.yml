@@ -1,7 +1,6 @@
 sudo: false
 language: node_js
 node_js:
-  - '8'
   - '10'
   - '12'
 
@@ -22,11 +21,11 @@ matrix:
       os: osx
       # using the default script to build & run the tests
 
-    - node_js: '8'
+    - node_js: '12'
       os: linux
       env: TASK=code-lint
       script: npm run lint
-    - node_js: '8'
+    - node_js: '12'
       os: linux
       env: TASK=commit-lint
       script: commitlint-travis
