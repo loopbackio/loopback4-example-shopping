@@ -67,7 +67,7 @@
     "yaml": "1.8.3"
   },
   "devDependencies": {
-    "@loopback/build": "4.0.1",
+    "@loopback/build": "5.0.0",
     "@loopback/testlab": "2.0.2",
     "@types/bcryptjs": "2.4.2",
     "@types/debug": "4.1.5",
