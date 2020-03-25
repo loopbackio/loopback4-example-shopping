@@ -43,7 +43,7 @@
     "@loopback/build": "4.0.1",
     "@loopback/testlab": "2.0.2",
     "@types/express": "4.17.3",
-    "@types/node": "12.12.30",
+    "@types/node": "12.12.31",
     "typescript": "3.8.3"
   },
   "copyright.owner": "IBM Corp."
