@@ -6,7 +6,7 @@
 /*global templates, util, alert, api, DOMPurify, $*/
 'use strict';
 
-$(async function() {
+$(async function () {
   const id = util.getProductId();
   if (id) {
     const product = await api.getProduct(id);

@@ -6,7 +6,7 @@
 /*global templates, ui, util, api, config, DOMPurify, $*/
 'use strict';
 
-$(async function() {
+$(async function () {
   const skip = (util.getCurrentPageNumber() - 1) * 4;
   const products = await api.getProducts({skip, limit: config.itemsPerPage});
   products.forEach(product => {

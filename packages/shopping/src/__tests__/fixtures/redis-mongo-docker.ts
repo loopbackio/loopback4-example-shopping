@@ -35,7 +35,7 @@ let mongo: StartedTestContainer;
 /**
  * Root-level before hook to start Redis/Mongo containers
  */
-before(async function() {
+before(async function () {
   // Skip it for CI as there are services for redis/mongodb
   if (process.env.CI) return;
   process.env.KUBERNETES_SERVICE_HOST = 'localhost';
@@ -48,7 +48,7 @@ before(async function() {
 /**
  * Root-level before hook to stop Redis/Mongo containers
  */
-after(async function() {
+after(async function () {
   if (process.env.CI) return;
   // eslint-disable-next-line no-invalid-this
   this.timeout(30 * 1000);
