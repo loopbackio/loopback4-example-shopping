@@ -131,10 +131,7 @@ describe('UserController', () => {
   });
 
   it('throws error for POST /users with a string', async () => {
-    const res = await client
-      .post('/users')
-      .send('hello')
-      .expect(415);
+    const res = await client.post('/users').send('hello').expect(415);
     expect(res.body.error.message).to.equal(
       'Content-type application/x-www-form-urlencoded does not match [application/json].',
     );

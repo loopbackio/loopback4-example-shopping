@@ -63,8 +63,9 @@ export async function retry<T>(
       await sleep(interval);
     } else {
       // No more retries, timeout
-      const msg = `Failed to ${task.description} after ${maxTries *
-        interval} ms`;
+      const msg = `Failed to ${task.description} after ${
+        maxTries * interval
+      } ms`;
       debug('%s', msg);
       throw new HttpErrors.RequestTimeout(msg);
     }

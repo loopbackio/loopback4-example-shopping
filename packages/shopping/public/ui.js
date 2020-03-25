@@ -7,7 +7,7 @@
 'use strict';
 
 function addPagination() {
-  $.get(apiUrl + '/products/count', function(result) {
+  $.get(apiUrl + '/products/count', function (result) {
     const totalPages = Math.ceil(result.count / config.itemsPerPage);
     const currentPageNumber = util.getCurrentPageNumber();
 
@@ -47,9 +47,7 @@ async function updateCartDetails() {
     if (result) {
       const itemsCount = result.items.length;
       if (itemsCount) {
-        $('#itemsInCart')
-          .text(itemsCount)
-          .show();
+        $('#itemsInCart').text(itemsCount).show();
         result.items.forEach(item => {
           $('#card-' + item.productId + ' .cart-action-button').text(
             'Update Cart',
@@ -271,7 +269,7 @@ async function checkOut() {
   $('#checkOutButton span').removeClass('hidden');
   await api.deleteShoppingCart();
   await updateCartDetails();
-  setTimeout(async function() {
+  setTimeout(async function () {
     $('.cart-action-button').text('Add to Cart');
     $('#shoppingCart').modal('hide');
     $('#checkOutButton span').addClass('hidden');
@@ -329,29 +327,29 @@ const ui = {
   removeItems,
 };
 
-$(async function() {
+$(async function () {
   // Event handlers
-  $('body').on('click', '#logInButton', async function() {
+  $('body').on('click', '#logInButton', async function () {
     await logIn();
   });
 
-  $('body').on('click', '#logOut', async function() {
+  $('body').on('click', '#logOut', async function () {
     await logOut();
   });
 
-  $('body').on('click', '#signUpButton', async function() {
+  $('body').on('click', '#signUpButton', async function () {
     await signUp();
   });
 
-  $('body').on('click', '#removeItemsButton', async function() {
+  $('body').on('click', '#removeItemsButton', async function () {
     await removeItems();
   });
 
-  $('body').on('click', '#checkOutButton', async function() {
+  $('body').on('click', '#checkOutButton', async function () {
     await checkOut();
   });
 
-  $('body').on('click', '.addToCartButton', async function(e) {
+  $('body').on('click', '.addToCartButton', async function (e) {
     const el = e.target;
     const id = el.dataset.id;
     const name = el.dataset.name;
@@ -361,26 +359,26 @@ $(async function() {
     await addToCart({id, name, price, unformattedPrice, image});
   });
 
-  $('body').on('click', '#removeFromCartButton', async function() {
+  $('body').on('click', '#removeFromCartButton', async function () {
     const el = document.querySelector('#removeFromCartButton');
     const productId = el.dataset.id;
     await removeFromCart(productId);
   });
 
-  $('body').on('click', '#confirmAddToCartButton', async function() {
+  $('body').on('click', '#confirmAddToCartButton', async function () {
     await addToCartApi();
   });
 
-  $('body').on('change', '#itemQuantity', async function() {
+  $('body').on('change', '#itemQuantity', async function () {
     const el = document.querySelector('#itemQuantity');
     await updateCount({productId: el.dataset.id, quantity: el.value});
   });
 
-  $('body').on('click', '#shoppingCartLink', async function() {
+  $('body').on('click', '#shoppingCartLink', async function () {
     await displayShoppingCart();
   });
 
-  $('body').on('click', '#shoppingCart', function() {
+  $('body').on('click', '#shoppingCart', function () {
     if ($('#shoppingCart').find('input:checked').length) {
       $('#removeItemsButton').removeClass('disabled');
     } else {

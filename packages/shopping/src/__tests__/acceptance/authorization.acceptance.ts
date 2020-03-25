@@ -11,7 +11,7 @@ import {UserRepository} from '../../repositories';
 import {PasswordHasher} from '../../services/hash.password.bcryptjs';
 import {setupApplication} from './helper';
 
-describe('authorization', function() {
+describe('authorization', function () {
   // eslint-disable-next-line no-invalid-this
   this.timeout(5000);
   let app: ShoppingApplication;

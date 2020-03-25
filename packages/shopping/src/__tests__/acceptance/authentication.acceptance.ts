@@ -20,7 +20,7 @@ import {PasswordHasher} from '../../services/hash.password.bcryptjs';
 import {validateCredentials} from '../../services/validator';
 import {setupApplication} from './helper';
 
-describe('authentication services', function() {
+describe('authentication services', function () {
   // eslint-disable-next-line no-invalid-this
   this.timeout(5000);
   let app: ShoppingApplication;
