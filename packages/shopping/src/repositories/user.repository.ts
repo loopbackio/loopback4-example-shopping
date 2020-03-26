@@ -3,15 +3,15 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+import {Getter, inject} from '@loopback/core';
 import {
   DefaultCrudRepository,
-  juggler,
   HasManyRepositoryFactory,
-  repository,
   HasOneRepositoryFactory,
+  juggler,
+  repository,
 } from '@loopback/repository';
-import {User, Order, UserCredentials} from '../models';
-import {inject, Getter} from '@loopback/core';
+import {Order, User, UserCredentials} from '../models';
 import {OrderRepository} from './order.repository';
 import {UserCredentialsRepository} from './user-credentials.repository';
 
@@ -32,14 +32,14 @@ export class UserRepository extends DefaultCrudRepository<
   >;
 
   constructor(
-    @inject('datasources.mongo') protected datasource: juggler.DataSource,
+    @inject('datasources.mongo') dataSource: juggler.DataSource,
     @repository(OrderRepository) protected orderRepository: OrderRepository,
     @repository.getter('UserCredentialsRepository')
     protected userCredentialsRepositoryGetter: Getter<
       UserCredentialsRepository
     >,
   ) {
-    super(User, datasource);
+    super(User, dataSource);
     this.userCredentials = this.createHasOneRepositoryFactoryFor(
       'userCredentials',
       userCredentialsRepositoryGetter,
