@@ -30,6 +30,11 @@
   "repository": {
     "type": "git"
   },
+  "author": {
+    "name": "LoopBack contributors",
+    "email": "dev@loopback.io",
+    "url": "https://loopback.io"
+  },
   "license": "MIT",
   "files": [
     "README.md",

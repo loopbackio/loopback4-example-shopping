@@ -73,18 +73,6 @@ export class ShoppingApplication extends BootMixin(
   constructor(options?: ApplicationConfig) {
     super(options);
 
-    /*
-       This is a workaround until an extension point is introduced
-       allowing extensions to contribute to the OpenAPI specification
-       dynamically.
-    */
-    this.api({
-      openapi: '3.0.0',
-      info: {title: pkg.name, version: pkg.version},
-      paths: {},
-      servers: [{url: '/'}],
-    });
-
     this.setUpBindings();
 
     // Bind authentication component related elements
