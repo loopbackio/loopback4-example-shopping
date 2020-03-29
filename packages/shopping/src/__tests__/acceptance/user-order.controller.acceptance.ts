@@ -3,12 +3,12 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {supertest, expect} from '@loopback/testlab';
+import {expect, supertest} from '@loopback/testlab';
 import {ShoppingApplication} from '../..';
-import {OrderRepository, UserRepository} from '../../repositories';
-import {User, Order} from '../../models';
-import {setupApplication} from './helper';
 import {PasswordHasherBindings} from '../../keys';
+import {Order, User} from '../../models';
+import {OrderRepository, UserRepository} from '../../repositories';
+import {setupApplication} from './helper';
 
 describe('UserOrderController acceptance tests', () => {
   let app: ShoppingApplication;
@@ -147,9 +147,16 @@ describe('UserOrderController acceptance tests', () => {
         .expect(200, {count: 2});
     });
 
-    // TODO(virkt25): Implement after issue below is fixed.
-    // https://github.com/strongloop/loopback-next/issues/100
-    it.skip('patches orders matching filter for a given user');
+    it('patches orders matching filter for a given user', async () => {
+      const token = await authenticateUser(user);
+
+      await client
+        .patch(`/users/${userId}/orders`)
+        .query({where: {total: 999.99}})
+        .set('Authorization', 'Bearer ' + token)
+        .send({total: 949.99})
+        .expect(200, {count: 1});
+    });
 
     it('deletes all orders for a given user', async () => {
       const token = await authenticateUser(user);
@@ -160,9 +167,15 @@ describe('UserOrderController acceptance tests', () => {
         .expect(200, {count: 2});
     });
 
-    // TODO(virkt25): Implement after issue below is fixed.
-    // https://github.com/strongloop/loopback-next/issues/100
-    it.skip('deletes orders matching filter for a given user');
+    it('deletes orders matching filter for a given user', async () => {
+      const token = await authenticateUser(user);
+
+      await client
+        .del(`/users/${userId}/orders`)
+        .query({where: {total: 999.99}})
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200, {count: 1});
+    });
 
     async function givenUserAndOrders() {
       user = await givenAUser();
