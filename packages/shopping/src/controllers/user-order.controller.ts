@@ -3,26 +3,28 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {
-  repository,
-  Filter,
-  Where,
   Count,
   CountSchema,
+  Filter,
+  repository,
+  Where,
 } from '@loopback/repository';
-import {UserRepository} from '../repositories';
 import {
-  post,
-  get,
-  patch,
   del,
-  param,
-  requestBody,
+  get,
+  getFilterSchemaFor,
+  getWhereSchemaFor,
   HttpErrors,
+  param,
+  patch,
+  post,
+  requestBody,
 } from '@loopback/rest';
 import {Order} from '../models';
-import {authorize} from '@loopback/authorization';
-import {AuthenticationBindings, authenticate} from '@loopback/authentication';
+import {UserRepository} from '../repositories';
 import {basicAuthorization} from '../services/basic.authorizor';
 import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 
@@ -78,7 +80,8 @@ export class UserOrderController {
   @authorize({allowedRoles: ['customer'], voters: [basicAuthorization]})
   async findOrders(
     @param.path.string('userId') userId: string,
-    @param.query.string('filter') filter?: Filter<Order>,
+    @param.query.object('filter', getFilterSchemaFor(Order))
+    filter?: Filter<Order>,
   ): Promise<Order[]> {
     const orders = await this.userRepo.orders(userId).find(filter);
     return orders;
@@ -98,7 +101,7 @@ export class UserOrderController {
   async patchOrders(
     @param.path.string('userId') userId: string,
     @requestBody() order: Partial<Order>,
-    @param.query.string('where') where?: Where<Order>,
+    @param.query.object('where', getWhereSchemaFor(Order)) where?: Where<Order>,
   ): Promise<Count> {
     return this.userRepo.orders(userId).patch(order, where);
   }
@@ -116,7 +119,7 @@ export class UserOrderController {
   @authorize({allowedRoles: ['customer'], voters: [basicAuthorization]})
   async deleteOrders(
     @param.path.string('userId') userId: string,
-    @param.query.string('where') where?: Where<Order>,
+    @param.query.object('where', getWhereSchemaFor(Order)) where?: Where<Order>,
   ): Promise<Count> {
     return this.userRepo.orders(userId).delete(where);
   }
