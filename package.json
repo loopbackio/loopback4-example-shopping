@@ -25,7 +25,7 @@
     "lint": "npm run prettier:check && npm run eslint",
     "lint:fix": "npm run prettier:fix && npm run eslint:fix",
     "prettier:cli": "lb-prettier \"**/*.ts\" \"**/*.js\" \"**/*.md\"",
-    "prettier:check": "npm run prettier:cli -- -l",
+    "prettier:check": "npm run prettier:cli -- --check",
     "prettier:fix": "npm run prettier:cli -- --write",
     "eslint": "lb-eslint --cache --report-unused-disable-directives .",
     "eslint:fix": "npm run eslint -- --fix",
