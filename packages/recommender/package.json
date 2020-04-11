@@ -42,7 +42,7 @@
   "devDependencies": {
     "@loopback/build": "5.0.1",
     "@loopback/testlab": "3.0.1",
-    "@types/express": "4.17.4",
+    "@types/express": "4.17.6",
     "@types/node": "12.12.35",
     "typescript": "3.8.3"
   },
