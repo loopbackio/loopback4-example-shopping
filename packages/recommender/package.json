@@ -35,13 +35,13 @@
   ],
   "dependencies": {
     "@grpc/proto-loader": "0.5.4",
-    "@loopback/http-server": "2.1.0",
+    "@loopback/http-server": "2.1.1",
     "express": "4.17.1",
     "grpc": "1.24.2"
   },
   "devDependencies": {
-    "@loopback/build": "5.1.0",
-    "@loopback/testlab": "3.1.0",
+    "@loopback/build": "5.2.0",
+    "@loopback/testlab": "3.1.1",
     "@types/express": "4.17.6",
     "@types/node": "12.12.36",
     "typescript": "3.8.3"
