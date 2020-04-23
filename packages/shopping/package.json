@@ -57,7 +57,7 @@
     "@loopback/security": "0.2.6",
     "@loopback/service-proxy": "2.1.1",
     "@types/jsonwebtoken": "8.3.9",
-    "@types/yaml": "1.2.0",
+    "@types/yaml": "1.9.6",
     "bcryptjs": "2.4.3",
     "casbin": "4.3.1",
     "debug": "4.1.1",
