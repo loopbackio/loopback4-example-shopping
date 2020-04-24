@@ -83,7 +83,7 @@
     "concurrently": "5.1.0",
     "loopback4-example-recommender": "1.1.1",
     "mocha": "7.1.1",
-    "source-map-support": "0.5.18",
+    "source-map-support": "0.5.19",
     "typescript": "3.8.3"
   },
   "copyright.owner": "IBM Corp."
