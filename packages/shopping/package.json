@@ -80,7 +80,7 @@
     "@types/lodash": "4.14.150",
     "@types/mocha": "7.0.2",
     "@types/node": "12.12.37",
-    "concurrently": "5.1.0",
+    "concurrently": "5.2.0",
     "loopback4-example-recommender": "1.1.1",
     "mocha": "7.1.1",
     "source-map-support": "0.5.19",
