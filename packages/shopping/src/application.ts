@@ -3,6 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+import {ApiConnectComponent, ApiConnectBindings, ApiConnectSpecOptions} from '@loopback/apiconnect';
 import {AuthenticationComponent} from '@loopback/authentication';
 import {AuthorizationComponent} from '@loopback/authorization';
 import {BootMixin} from '@loopback/boot';
@@ -75,9 +76,17 @@ export class ShoppingApplication extends BootMixin(
 
     this.setUpBindings();
 
+    const apiConnectOptions: ApiConnectSpecOptions = {
+      targetUrl: 'http://localhost:3000/apic$(request.path)',
+    };
+    this
+      .configure(ApiConnectBindings.API_CONNECT_SPEC_ENHANCER)
+      .to(apiConnectOptions);
+
     // Bind authentication component related elements
     this.component(AuthenticationComponent);
     this.component(AuthorizationComponent);
+    this.component(ApiConnectComponent);
 
     // authentication
     this.add(createBindingFromClass(JWTAuthenticationStrategy));
