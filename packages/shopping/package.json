@@ -52,7 +52,7 @@
     "@loopback/core": "2.5.0",
     "@loopback/openapi-v3": "3.3.1",
     "@loopback/repository": "2.4.0",
-    "@loopback/rest": "3.3.2",
+    "@loopback/rest": "4.0.0",
     "@loopback/rest-explorer": "2.2.0",
     "@loopback/security": "0.2.8",
     "@loopback/service-proxy": "2.2.0",
