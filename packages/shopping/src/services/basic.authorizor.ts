@@ -5,11 +5,11 @@
 
 import {
   AuthorizationContext,
-  AuthorizationMetadata,
   AuthorizationDecision,
+  AuthorizationMetadata,
 } from '@loopback/authorization';
+import {securityId, UserProfile} from '@loopback/security';
 import _ from 'lodash';
-import {UserProfile, securityId} from '@loopback/security';
 
 // Instance level authorizer
 // Can be also registered as an authorizer, depends on users' need.
@@ -59,7 +59,11 @@ export async function basicAuthorization(
     return AuthorizationDecision.ALLOW;
   }
 
-  // Allow access only to model owners
+  /**
+   * Allow access only to model owners, using route as source of truth
+   *
+   * eg. @post('/users/{userId}/orders', ...) returns `userId` as args[0]
+   */
   if (currentUser[securityId] === authorizationCtx.invocationContext.args[0]) {
     return AuthorizationDecision.ALLOW;
   }
