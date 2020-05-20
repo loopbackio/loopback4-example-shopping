@@ -3,6 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+import {Context} from 'mocha';
 import {GenericContainer, StartedTestContainer} from 'testcontainers';
 
 async function startRedis() {
@@ -35,11 +36,10 @@ let mongo: StartedTestContainer;
 /**
  * Root-level before hook to start Redis/Mongo containers
  */
-before(async function () {
+before(async function (this: Context) {
   // Skip it for CI as there are services for redis/mongodb
   if (process.env.CI) return;
   process.env.KUBERNETES_SERVICE_HOST = 'localhost';
-  // eslint-disable-next-line no-invalid-this
   this.timeout(30 * 1000);
   redis = await startRedis();
   mongo = await startMongoDB();
@@ -48,9 +48,8 @@ before(async function () {
 /**
  * Root-level before hook to stop Redis/Mongo containers
  */
-after(async function () {
+after(async function (this: Context) {
   if (process.env.CI) return;
-  // eslint-disable-next-line no-invalid-this
   this.timeout(30 * 1000);
   if (mongo) await mongo.stop();
   if (redis) await redis.stop();
