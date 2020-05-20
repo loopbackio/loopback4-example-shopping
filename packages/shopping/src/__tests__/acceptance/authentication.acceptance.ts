@@ -8,6 +8,7 @@ import {HttpErrors} from '@loopback/rest';
 import {securityId} from '@loopback/security';
 import {expect} from '@loopback/testlab';
 import _ from 'lodash';
+import {Suite} from 'mocha';
 import {ShoppingApplication} from '../..';
 import {
   PasswordHasherBindings,
@@ -20,8 +21,7 @@ import {PasswordHasher} from '../../services/hash.password.bcryptjs';
 import {validateCredentials} from '../../services/validator';
 import {setupApplication} from './helper';
 
-describe('authentication services', function () {
-  // eslint-disable-next-line no-invalid-this
+describe('authentication services', function (this: Suite) {
   this.timeout(5000);
   let app: ShoppingApplication;
 

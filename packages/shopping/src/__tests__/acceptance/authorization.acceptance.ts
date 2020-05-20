@@ -4,6 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {Client, expect} from '@loopback/testlab';
+import {Suite} from 'mocha';
 import {ShoppingApplication} from '../..';
 import {PasswordHasherBindings} from '../../keys';
 import {User} from '../../models';
@@ -11,8 +12,7 @@ import {UserRepository} from '../../repositories';
 import {PasswordHasher} from '../../services/hash.password.bcryptjs';
 import {setupApplication} from './helper';
 
-describe('authorization', function () {
-  // eslint-disable-next-line no-invalid-this
+describe('authorization', function (this: Suite) {
   this.timeout(5000);
   let app: ShoppingApplication;
   let client: Client;

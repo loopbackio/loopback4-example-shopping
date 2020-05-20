@@ -127,6 +127,10 @@ export class ShoppingApplication extends BootMixin(
     this.bind(UserServiceBindings.USER_SERVICE).toClass(MyUserService);
   }
 
+  // Unfortunately, TypeScript does not allow overriding methods inherited
+  // from mapped types. https://github.com/microsoft/TypeScript/issues/38496
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
   async start() {
     // Use `databaseSeeding` flag to control if products/users should be pre
     // populated into the database. Its value is default to `true`.
