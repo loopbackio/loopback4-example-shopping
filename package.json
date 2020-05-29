@@ -53,7 +53,7 @@
     "@commitlint/config-lerna-scopes": "8.3.4",
     "@commitlint/travis-cli": "8.3.5",
     "@loopback/build": "5.4.2",
-    "@loopback/eslint-config": "7.0.1",
+    "@loopback/eslint-config": "8.0.0",
     "@loopback/testlab": "3.1.6",
     "@types/fs-extra": "9.0.1",
     "@types/node": "12.12.42",
