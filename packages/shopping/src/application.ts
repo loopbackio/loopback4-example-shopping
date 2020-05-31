@@ -129,9 +129,9 @@ export class ShoppingApplication extends BootMixin(
 
   // Unfortunately, TypeScript does not allow overriding methods inherited
   // from mapped types. https://github.com/microsoft/TypeScript/issues/38496
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  async start() {
+  async start(): Promise<void> {
     // Use `databaseSeeding` flag to control if products/users should be pre
     // populated into the database. Its value is default to `true`.
     if (this.options.databaseSeeding !== false) {
@@ -140,7 +140,7 @@ export class ShoppingApplication extends BootMixin(
     return super.start();
   }
 
-  async migrateSchema(options?: SchemaMigrationOptions) {
+  async migrateSchema(options?: SchemaMigrationOptions): Promise<void> {
     await super.migrateSchema(options);
 
     // Pre-populate products
