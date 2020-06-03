@@ -3,10 +3,17 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+import {
+  AuthenticateFn,
+  AuthenticationBindings,
+  AUTHENTICATION_STRATEGY_NOT_FOUND,
+  USER_PROFILE_NOT_FOUND,
+} from '@loopback/authentication';
 import {inject} from '@loopback/context';
 import {
   FindRoute,
   InvokeMethod,
+  InvokeMiddleware,
   ParseParams,
   Reject,
   RequestContext,
@@ -14,16 +21,17 @@ import {
   Send,
   SequenceHandler,
 } from '@loopback/rest';
-import {
-  AuthenticationBindings,
-  AuthenticateFn,
-  AUTHENTICATION_STRATEGY_NOT_FOUND,
-  USER_PROFILE_NOT_FOUND,
-} from '@loopback/authentication';
 
 const SequenceActions = RestBindings.SequenceActions;
 
 export class MyAuthenticationSequence implements SequenceHandler {
+  /**
+   * Optional invoker for registered middleware in a chain.
+   * To be injected via SequenceActions.INVOKE_MIDDLEWARE.
+   */
+  @inject(SequenceActions.INVOKE_MIDDLEWARE, {optional: true})
+  protected invokeMiddleware: InvokeMiddleware = () => false;
+
   constructor(
     @inject(SequenceActions.FIND_ROUTE) protected findRoute: FindRoute,
     @inject(SequenceActions.PARSE_PARAMS)
@@ -38,6 +46,8 @@ export class MyAuthenticationSequence implements SequenceHandler {
   async handle(context: RequestContext) {
     try {
       const {request, response} = context;
+      const finished = await this.invokeMiddleware(context);
+      if (finished) return;
       const route = this.findRoute(request);
 
       //call authentication action

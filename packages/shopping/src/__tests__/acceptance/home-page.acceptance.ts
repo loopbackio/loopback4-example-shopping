@@ -26,4 +26,14 @@ describe('HomePageController', () => {
       .expect('Content-Type', /text\/html/);
     expect(res.body).to.match(/@loopback\/example\-shopping/);
   });
+
+  it('exposes /openapi.json', async () => {
+    const res = await client
+      .get('/openapi.json')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+    expect(res.body).to.containEql({
+      openapi: '3.0.0',
+    });
+  });
 });
