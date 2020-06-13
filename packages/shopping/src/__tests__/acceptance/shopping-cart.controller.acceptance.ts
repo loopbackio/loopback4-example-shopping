@@ -41,7 +41,7 @@ describe('ShoppingCartController', () => {
       .post(`/shoppingCarts/${cart.userId}`)
       .set('Content-Type', 'application/json')
       .send(cart)
-      .expect(401);
+      .expect(403);
   });
 
   it('sets a shopping cart for a user', async () => {

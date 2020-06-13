@@ -63,7 +63,7 @@ describe('authorization', function (this: Suite) {
         .post(`/users/${newUser.id}/orders`)
         .set('Authorization', 'Bearer ' + token)
         .send(orderObj)
-        .expect(401);
+        .expect(403);
     });
   });
 
@@ -119,7 +119,7 @@ describe('authorization', function (this: Suite) {
       await client
         .delete(`/users/${newUser.id + 1}/orders`)
         .set('Authorization', 'Bearer ' + token)
-        .expect(401);
+        .expect(403);
     });
   });
 
