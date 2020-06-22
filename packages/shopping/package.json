@@ -68,7 +68,7 @@
     "loopback-connector-grpc": "1.3.0",
     "loopback-connector-kv-redis": "4.0.0",
     "loopback-connector-mongodb": "5.2.3",
-    "loopback-connector-rest": "3.6.0",
+    "loopback-connector-rest": "3.7.0",
     "yaml": "1.10.0"
   },
   "devDependencies": {
