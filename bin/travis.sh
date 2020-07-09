@@ -1,5 +1,9 @@
 #!/bin/bash
-set -e
+
+# `brew` may report errors for some packages such as python3 but such failures
+# do not impact the build. We'll ignore non-zero return code for now so that CI
+# builds on MacOS can pass.
+# set -e
 
 if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
   echo "OSX => UPDATING HOMEBREW"
@@ -14,7 +18,7 @@ if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
   brew services start redis
 fi
 
-if [ $TASK = "test" ]; then
+if [ "${TASK}" = "test" ]; then
   echo "TASK => MONGODB/REDIS STARTUP DELAY"
   sleep 10
 fi
