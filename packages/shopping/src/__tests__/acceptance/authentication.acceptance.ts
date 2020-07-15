@@ -4,17 +4,14 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {TokenService, UserService} from '@loopback/authentication';
+import {TokenServiceBindings} from '@loopback/authentication-jwt';
 import {HttpErrors} from '@loopback/rest';
 import {securityId} from '@loopback/security';
 import {expect} from '@loopback/testlab';
 import _ from 'lodash';
 import {Suite} from 'mocha';
 import {ShoppingApplication} from '../..';
-import {
-  PasswordHasherBindings,
-  TokenServiceBindings,
-  UserServiceBindings,
-} from '../../keys';
+import {PasswordHasherBindings, UserServiceBindings} from '../../keys';
 import {User} from '../../models';
 import {Credentials, UserRepository} from '../../repositories';
 import {PasswordHasher} from '../../services/hash.password.bcryptjs';
@@ -122,7 +119,7 @@ describe('authentication services', function (this: Suite) {
       roles: ['customer'],
     };
     const userProfile = userService.convertToUserProfile(newUser);
-    expect(expectedUserProfile).to.deepEqual(userProfile);
+    expect(userProfile).to.deepEqual(expectedUserProfile);
   });
 
   it('user service convertToUserProfile() succeeds without optional fields : firstName, lastName', () => {

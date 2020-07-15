@@ -3,43 +3,39 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {repository, model, property} from '@loopback/repository';
-import {validateCredentials} from '../services/validator';
-import {
-  post,
-  put,
-  param,
-  get,
-  requestBody,
-  HttpErrors,
-  getModelSchemaRef,
-} from '@loopback/rest';
-import {User, Product} from '../models';
-import {UserRepository} from '../repositories';
-import {RecommenderService} from '../services/recommender.service';
-import {inject} from '@loopback/core';
 import {
   authenticate,
   TokenService,
   UserService,
 } from '@loopback/authentication';
+import {TokenServiceBindings} from '@loopback/authentication-jwt';
 import {authorize} from '@loopback/authorization';
-import {UserProfile, securityId, SecurityBindings} from '@loopback/security';
+import {inject} from '@loopback/core';
+import {model, property, repository} from '@loopback/repository';
+import {
+  get,
+  getModelSchemaRef,
+  HttpErrors,
+  param,
+  post,
+  put,
+  requestBody,
+} from '@loopback/rest';
+import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
+import _ from 'lodash';
+import {PasswordHasherBindings, UserServiceBindings} from '../keys';
+import {Product, User} from '../models';
+import {UserRepository} from '../repositories';
+import {Credentials} from '../repositories/user.repository';
+import {basicAuthorization} from '../services/basic.authorizor';
+import {PasswordHasher} from '../services/hash.password.bcryptjs';
+import {RecommenderService} from '../services/recommender.service';
+import {validateCredentials} from '../services/validator';
+import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 import {
   CredentialsRequestBody,
   UserProfileSchema,
 } from './specs/user-controller.specs';
-import {Credentials} from '../repositories/user.repository';
-import {PasswordHasher} from '../services/hash.password.bcryptjs';
-
-import {
-  TokenServiceBindings,
-  PasswordHasherBindings,
-  UserServiceBindings,
-} from '../keys';
-import _ from 'lodash';
-import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
-import {basicAuthorization} from '../services/basic.authorizor';
 
 @model()
 export class NewUserRequest extends User {
