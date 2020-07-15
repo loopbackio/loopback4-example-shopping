@@ -3,22 +3,23 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+import {TokenServiceConstants} from '@loopback/authentication-jwt';
+import {securityId} from '@loopback/security';
 import {Client, expect} from '@loopback/testlab';
-import {ShoppingApplication} from '../..';
-import {UserRepository} from '../../repositories';
-import {setupApplication} from './helper';
+import {Server} from 'grpc';
 import {
+  createGRPCRecommendationServer,
   createRecommendationServer,
   HttpServer,
-  createGRPCRecommendationServer,
 } from 'loopback4-example-recommender';
-import {PasswordHasher} from '../../services/hash.password.bcryptjs';
-import {PasswordHasherBindings, TokenServiceConstants} from '../../keys';
-import {JWTService} from '../../services/jwt-service';
-import {securityId} from '@loopback/security';
-import {RecommenderService} from '../../services';
-import {Server} from 'grpc';
 import {HTTPError} from 'superagent';
+import {ShoppingApplication} from '../..';
+import {PasswordHasherBindings} from '../../keys';
+import {UserRepository} from '../../repositories';
+import {RecommenderService} from '../../services';
+import {PasswordHasher} from '../../services/hash.password.bcryptjs';
+import {JWTService} from '../../services/jwt-service';
+import {setupApplication} from './helper';
 
 const recommendations = require('loopback4-example-recommender/data/recommendations.json');
 
