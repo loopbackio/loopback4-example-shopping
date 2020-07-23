@@ -80,7 +80,7 @@
     "@types/express": "4.17.7",
     "@types/lodash": "4.14.158",
     "@types/mocha": "8.0.0",
-    "@types/node": "12.12.50",
+    "@types/node": "12.12.52",
     "concurrently": "5.2.0",
     "loopback4-example-recommender": "1.1.1",
     "mocha": "8.0.1",
