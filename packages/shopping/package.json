@@ -79,11 +79,11 @@
     "@types/debug": "4.1.5",
     "@types/express": "4.17.7",
     "@types/lodash": "4.14.158",
-    "@types/mocha": "8.0.0",
+    "@types/mocha": "8.0.1",
     "@types/node": "12.12.53",
     "concurrently": "5.2.0",
     "loopback4-example-recommender": "1.1.1",
-    "mocha": "8.0.1",
+    "mocha": "8.1.0",
     "source-map-support": "0.5.19",
     "typescript": "3.9.7"
   },
