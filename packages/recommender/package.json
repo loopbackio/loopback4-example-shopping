@@ -7,8 +7,9 @@
     "loopback"
   ],
   "main": "index.js",
+  "types": "dist/index.d.ts",
   "engines": {
-    "node": ">=8.9"
+    "node": ">=10.16"
   },
   "scripts": {
     "build": "lb-tsc",
@@ -22,7 +23,9 @@
     "docker:run": "docker run -p 3001:3001 -p 50051:50051 -d recommender"
   },
   "repository": {
-    "type": "git"
+    "type": "git",
+    "url": "https://github.com/strongloop/loopback4-example-shopping.git",
+    "directory": "packages/recommender"
   },
   "license": "MIT",
   "files": [
