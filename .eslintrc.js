@@ -14,4 +14,7 @@ module.exports = {
       },
     },
   ],
+  parserOptions: {
+    createDefaultProgram: true,
+  },
 };
