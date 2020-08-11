@@ -82,7 +82,7 @@
     "@types/debug": "4.1.5",
     "@types/express": "4.17.7",
     "@types/lodash": "4.14.159",
-    "@types/mocha": "8.0.1",
+    "@types/mocha": "8.0.2",
     "@types/node": "12.12.54",
     "concurrently": "5.3.0",
     "loopback4-example-recommender": "1.1.1",
