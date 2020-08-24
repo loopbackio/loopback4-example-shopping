@@ -48,7 +48,7 @@
     "src"
   ],
   "dependencies": {
-    "@loopback/authentication": "5.0.0",
+    "@loopback/authentication": "6.0.0",
     "@loopback/authentication-jwt": "0.5.1",
     "@loopback/authorization": "0.6.5",
     "@loopback/boot": "2.5.0",
