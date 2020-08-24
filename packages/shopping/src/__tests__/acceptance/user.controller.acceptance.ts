@@ -153,8 +153,6 @@ describe('UserController', () => {
 
   it('protects GET /users/{id} with authorization', async () => {
     const newUser = await createAUser();
-    delete newUser.orders;
-
     await client.get(`/users/${newUser.id}`).expect(401);
   });
 
