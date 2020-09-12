@@ -63,7 +63,7 @@
     "commitizen": "4.2.1",
     "concurrently": "5.3.0",
     "cz-conventional-changelog": "3.3.0",
-    "eslint": "7.8.1",
+    "eslint": "7.9.0",
     "eslint-config-prettier": "6.11.0",
     "eslint-plugin-eslint-plugin": "2.3.0",
     "eslint-plugin-mocha": "8.0.0",
