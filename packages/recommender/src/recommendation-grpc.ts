@@ -3,17 +3,16 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import path from 'path';
 import {
-  loadPackageDefinition,
   GrpcObject,
   handleUnaryCall,
+  loadPackageDefinition,
   Server,
-  ServiceDefinition,
   ServerCredentials,
-} from 'grpc';
-
+  ServiceDefinition,
+} from '@grpc/grpc-js';
 import {loadSync} from '@grpc/proto-loader';
+import path from 'path';
 
 const recommendations = require('../data/recommendations.json');
 
@@ -42,7 +41,7 @@ export function loadRecommendationService() {
  * it serves.
  * @return The new server object
  */
-export function createGRPCRecommendationServer(port = '0.0.0.0:50051') {
+export function createGRPCRecommendationServer(port = '0.0.0.0:0') {
   const server = new Server();
   const recommendation = loadRecommendationService();
 
@@ -50,7 +49,7 @@ export function createGRPCRecommendationServer(port = '0.0.0.0:50051') {
     call,
     callback,
   ) => {
-    let userId = call.request.userId || 'user001';
+    let userId = call.request?.userId ?? 'user001';
     if (!(userId in recommendations)) {
       userId = 'user001';
     }
@@ -61,17 +60,24 @@ export function createGRPCRecommendationServer(port = '0.0.0.0:50051') {
     recommend,
   });
 
-  server.bind(port, ServerCredentials.createInsecure());
-  return server;
+  return new Promise<{server: Server; port: number}>((resolve, reject) => {
+    server.bindAsync(port, ServerCredentials.createInsecure(), (err, p) => {
+      if (err) reject(err);
+      else return resolve({server, port: p});
+    });
+  });
 }
 
-export function grpcMain(port = '0.0.0.0:50051') {
-  const recommendationServer = createGRPCRecommendationServer(port);
-  recommendationServer.start();
+export async function grpcMain(port = '0.0.0.0:0') {
+  const recommendationServer = await createGRPCRecommendationServer(port);
+  recommendationServer.server.start();
   console.log(`Recommendation gRPC server is running at ${port}.`);
   return recommendationServer;
 }
 
 if (require.main === module) {
-  grpcMain();
+  grpcMain().catch(err => {
+    console.error(err);
+    process.exit(1);
+  });
 }
