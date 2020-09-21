@@ -14,6 +14,9 @@ module.exports = {
       },
     },
   ],
+  rules: {
+    'mocha/handle-done-callback': 'off',
+  },
   parserOptions: {
     createDefaultProgram: true,
   },

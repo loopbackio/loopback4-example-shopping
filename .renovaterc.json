@@ -32,7 +32,7 @@
   "semanticCommitType": "chore",
   "semanticCommitScope": null,
 
-  "separateMajorMinor": true,
+  "separateMajorMinor": false,
   "separateMinorPatch": false,
 
   "packageRules": [{
