@@ -3,10 +3,10 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+import {Server} from '@grpc/grpc-js';
 import {TokenServiceConstants} from '@loopback/authentication-jwt';
 import {securityId} from '@loopback/security';
 import {Client, expect} from '@loopback/testlab';
-import {Server} from 'grpc';
 import {
   createGRPCRecommendationServer,
   createRecommendationServer,
@@ -262,13 +262,17 @@ describe('UserController', () => {
     before(async () => {
       recommendationService = createRecommendationServer();
       await recommendationService.start();
-      recommendationGRPCService = createGRPCRecommendationServer();
+      recommendationGRPCService = (
+        await createGRPCRecommendationServer('0.0.0.0:50000')
+      ).server;
       recommendationGRPCService.start();
     });
 
     after(async () => {
       await recommendationService.stop();
-      recommendationGRPCService.forceShutdown();
+      if (recommendationGRPCService) {
+        recommendationGRPCService.forceShutdown();
+      }
     });
 
     it('returns product recommendations for a user', async () => {

@@ -3,17 +3,21 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {createGRPCRecommendationServer} from '../..';
-import {Server, credentials, Client} from 'grpc';
-import {loadRecommendationService} from '../../recommendation-grpc';
+import {Client, credentials, Server} from '@grpc/grpc-js';
 import {expect} from '@loopback/testlab';
+import {createGRPCRecommendationServer} from '../..';
+import {loadRecommendationService} from '../../recommendation-grpc';
 
 const data = require('../../../data/recommendations.json');
 
 describe('recommender', () => {
   let server: Server;
+  let port: number;
+
   before('starting server', async () => {
-    server = createGRPCRecommendationServer();
+    const result = await createGRPCRecommendationServer();
+    server = result.server;
+    port = result.port;
     server.start();
   });
 
@@ -28,7 +32,7 @@ describe('recommender', () => {
   before(() => {
     const RecommendationService = (loadRecommendationService() as unknown) as typeof Client;
     client = new RecommendationService(
-      'localhost:50051',
+      `localhost:${port}`,
       credentials.createInsecure(),
     );
   });

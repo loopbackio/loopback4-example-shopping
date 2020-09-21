@@ -3,12 +3,12 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-export * from './recommendation-rest';
-export * from './recommendation-grpc';
 export * from '@loopback/http-server';
+export * from './recommendation-grpc';
+export * from './recommendation-rest';
 
-import {restMain} from './recommendation-rest';
 import {grpcMain} from './recommendation-grpc';
+import {restMain} from './recommendation-rest';
 
 export async function main(
   config: {
@@ -24,6 +24,11 @@ export async function main(
       await restMain(config.rest.port, config.rest.host);
   }
   if (config.grpc) {
-    if (protocol == null || protocol === 'grpc') grpcMain(config.grpc.port);
+    if (protocol == null || protocol === 'grpc') {
+      grpcMain(config.grpc.port).catch(err => {
+        console.error(err);
+        process.exit(1);
+      });
+    }
   }
 }
