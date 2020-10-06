@@ -50,6 +50,30 @@ all existing products, users, shopping cart and orders will be deleted too. If
 you don't want to reset the database, set `databaseSeeding` to `false` in the
 application configuration object.
 
+### Tests
+
+This repository comes with integration, unit, acceptance and end-to-end (e2e)
+tests. To execute these, see instructions below.
+
+`Note`: prior to running the e2e tests the application must be running. On a
+different terminal do:
+
+```sh
+$ npm start
+```
+
+then on another terminal do the following to execute e2e tests:
+
+```sh
+$ npm run test:ui
+```
+
+For other tests:
+
+```sh
+$ npm test
+```
+
 ## Models
 
 This app has the following models:
