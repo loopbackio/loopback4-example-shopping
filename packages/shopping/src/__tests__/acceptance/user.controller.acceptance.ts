@@ -156,6 +156,48 @@ describe('UserController', () => {
     await client.get(`/users/${newUser.id}`).expect(401);
   });
 
+  describe('password-reset', () => {
+    it('throws error for PUT /users/password-reset when resetting password for non logged in account', async () => {
+      const token = await authenticateUser();
+      const res = await client
+        .put('/users/password-reset')
+        .set('Authorization', 'Bearer ' + token)
+        .send({
+          email: 'john@example.io',
+          password: 'p4ssw0rd',
+        })
+        .expect(403);
+
+      expect(res.body.error.message).to.equal('Invalid email address');
+    });
+
+    it('password reset returns an error when invalid password is used', async () => {
+      const token = await authenticateUser();
+
+      const res = await client
+        .put('/users/password-reset')
+        .set('Authorization', 'Bearer ' + token)
+        .send({email: 'test@example.com', password: '12345'})
+        .expect(422);
+
+      expect(res.body.error.details[0].message).to.equal(
+        'should NOT be shorter than 8 characters',
+      );
+    });
+
+    it('returns token for a successful password reset', async () => {
+      const token = await authenticateUser();
+
+      const res = await client
+        .put('/users/password-reset')
+        .set('Authorization', 'Bearer ' + token)
+        .send({email: userData.email, password: 'password@12345678'})
+        .expect(200);
+
+      expect(res.body.token).to.not.be.empty();
+    });
+  });
+
   describe('authentication', () => {
     it('login returns a JWT token', async () => {
       const newUser = await createAUser();
@@ -333,5 +375,16 @@ describe('UserController', () => {
       name: `${newUser.firstName} ${newUser.lastName}`,
     };
     expiredToken = await tokenService.generateToken(userProfile);
+  }
+
+  async function authenticateUser() {
+    const user = await createAUser();
+
+    const res = await client
+      .post('/users/login')
+      .send({email: user.email, password: userPassword})
+      .expect(200);
+
+    return res.body.token;
   }
 });

@@ -26,14 +26,15 @@ import _ from 'lodash';
 import {PasswordHasherBindings, UserServiceBindings} from '../keys';
 import {Product, User} from '../models';
 import {UserRepository} from '../repositories';
-import {Credentials} from '../repositories/user.repository';
+import {Credentials} from '../repositories';
 import {basicAuthorization} from '../services/basic.authorizor';
 import {PasswordHasher} from '../services/hash.password.bcryptjs';
-import {RecommenderService} from '../services/recommender.service';
+import {RecommenderService} from '../services';
 import {validateCredentials} from '../services/validator';
 import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 import {
   CredentialsRequestBody,
+  PasswordResetRequestBody,
   UserProfileSchema,
 } from './specs/user-controller.specs';
 
@@ -256,6 +257,53 @@ export class UserController {
     const userProfile = this.userService.convertToUserProfile(user);
 
     // create a JSON Web Token based on the user profile
+    const token = await this.jwtService.generateToken(userProfile);
+
+    return {token};
+  }
+
+  @put('/users/password-reset', {
+    security: OPERATION_SECURITY_SPEC,
+    responses: {
+      '200': {
+        description: 'The updated user profile',
+        content: {
+          'application/json': {
+            schema: UserProfileSchema,
+          },
+        },
+      },
+    },
+  })
+  @authenticate('jwt')
+  async passwordReset(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+    @requestBody(PasswordResetRequestBody) credentials: Credentials,
+  ): Promise<{token: string}> {
+    const {email, password} = credentials;
+    const {id} = currentUserProfile;
+
+    const user = await this.userRepository.findById(id);
+
+    if (!user) {
+      throw new HttpErrors.NotFound('User account not found');
+    }
+
+    if (email !== user?.email) {
+      throw new HttpErrors.Forbidden('Invalid email address');
+    }
+
+    validateCredentials(_.pick(credentials, ['email', 'password']));
+
+    const passwordHash = await this.passwordHasher.hashPassword(password);
+
+    await this.userRepository
+      .userCredentials(user.id)
+      .patch({password: passwordHash});
+
+    const userProfile = this.userService.convertToUserProfile(user);
+
     const token = await this.jwtService.generateToken(userProfile);
 
     return {token};

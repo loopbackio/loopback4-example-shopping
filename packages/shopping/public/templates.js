@@ -65,6 +65,55 @@ const navBarTemplate = `
       <div class="nav-link" data-toggle="modal" data-target="#logInModal" tabindex="-1">Log In</div>
     </li>
   </ul>
+  
+  <div class="modal" id="passwordResetModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="passwordResetTitle">Password Reset</h5>
+        </div>
+        <div class="modal-body">
+          <form id="passwordResetForm">
+             <div class="alert alert-danger" id="passwordResetMismatch" role="alert">
+              Confirm password and password do not match
+            </div>
+            <div class="alert alert-danger" id="passwordResetFailed" role="alert">
+              Password reset failed
+            </div>
+            <div class="alert alert-danger" id="passwordResetNoPassword" role="alert">
+              Please enter your password
+            </div>
+            <div class="alert alert-danger" id="passwordResetNoCorrectPassword" role="alert">
+              Please enter a valid password
+            </div>
+            <div class="alert alert-danger" id="passwordResetNoConfirmPassword" role="alert">
+              Please confirm your password
+            </div>
+            <div class="alert alert-success" id="passwordResetChanged" role="alert">
+              Password successfully changed
+            </div>
+            <div class="form-group">
+              <label for="passwordResetEmail">Email address</label>
+              <input type="email" class="form-control" id="passwordResetEmail" value="john@example.com">
+            </div>
+            <div class="form-group">
+              <label for="passwordResetPassword">Password</label>
+              <input type="password" class="form-control" id="passwordResetPassword">
+            </div>
+            <div class="form-group">
+              <label for="passwordResetPassword">Confirm Password</label>
+              <input type="password" class="form-control" id="passwordResetConfirmPassword">
+              <small class="form-text text-muted">Password should be minimum eight characters</small>
+            </div>
+            <div class="text-center">
+              <div id="passwordResetButton" class="btn btn-primary">Reset</div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <div class="modal" id="logInModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -267,6 +316,9 @@ const profileTemplate = `
   </p>
   <div id="update-profile">
     <div class="btn btn-primary" onclick="updateUser()">Update</div>
+  </div>
+  <div class="text-center mt-3 mb-3">
+     <a href="javascript:void(0)" onclick="displayPasswordReset()">Reset your password</a>
   </div>
 </div>
 `;

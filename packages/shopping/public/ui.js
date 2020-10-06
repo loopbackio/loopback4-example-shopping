@@ -109,9 +109,80 @@ async function logIn(email, password) {
     await refreshLogInStatus();
     $('#logInModal').modal('hide');
     $('#signUpModal').modal('hide');
+    $('#passwordResetModal').modal('hide');
   } else {
     $('#logInTitle').text('Invalid credentials');
   }
+}
+
+async function resetPassword(email, password, confirmPassword) {
+  email = email || $('#passwordResetEmail').val();
+  password = password || $('#passwordResetPassword').val();
+  confirmPassword = confirmPassword || $('#passwordResetConfirmPassword').val();
+
+  if (typeof password === 'undefined' || password.length === 0) {
+    $('#passwordResetNoPassword').show();
+    setTimeout(() => {
+      $('#passwordResetNoPassword').hide();
+    }, 3000);
+    return;
+  }
+
+  if (password.length < 8) {
+    $('#passwordResetNoCorrectPassword').show();
+    setTimeout(() => {
+      $('#passwordResetNoCorrectPassword').hide();
+    }, 3000);
+    return;
+  }
+
+  if (typeof confirmPassword === 'undefined' || confirmPassword.length === 0) {
+    $('#passwordResetNoConfirmPassword').show();
+    setTimeout(() => {
+      $('#passwordResetNoConfirmPassword').hide();
+    }, 3000);
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    $('#passwordResetMismatch').show();
+
+    setTimeout(() => {
+      $('#passwordResetMismatch').hide();
+    }, 3000);
+    return;
+  }
+
+  const res = await api.passwordReset({email, password}).catch(() => {
+    $('#passwordResetFailed').show();
+    setTimeout(() => {
+      $('#passwordResetFailed').hide();
+    }, 3000);
+  });
+
+  if (res) {
+    localStorage.setItem('shoppyToken', res.token);
+    $('#passwordResetChanged').show();
+    setTimeout(() => {
+      $('#passwordResetChanged').hide();
+    }, 3000);
+
+    $('#passwordResetEmail').val('');
+    $('#passwordResetPassword').val('');
+    $('#passwordResetConfirmPassword').val('');
+  }
+}
+
+function displayPasswordReset() {
+  $('#logInModal').modal('hide');
+  $('#passwordResetModal').modal('show');
+  $('#passwordResetNoAccount').hide();
+  $('#passwordResetMismatch').hide();
+  $('#passwordResetNoPassword').hide();
+  $('#passwordResetNoConfirmPassword').hide();
+  $('#passwordResetNoCorrectPassword').hide();
+  $('#passwordResetChanged').hide();
+  $('#passwordResetFailed').hide();
 }
 
 async function signUp() {
@@ -331,6 +402,10 @@ $(async function () {
   // Event handlers
   $('body').on('click', '#logInButton', async function () {
     await logIn();
+  });
+
+  $('body').on('click', '#passwordResetButton', async function () {
+    await resetPassword();
   });
 
   $('body').on('click', '#logOut', async function () {
