@@ -1,6 +1,0 @@
-{
-  "name": "recommender_grpc",
-  "connector": "loopback-connector-grpc",
-  "url": "127.0.0.1:50000",
-  "spec": "protos/recommendation.proto"
-}

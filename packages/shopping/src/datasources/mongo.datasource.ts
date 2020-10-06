@@ -5,7 +5,19 @@
 
 import {inject, lifeCycleObserver, ValueOrPromise} from '@loopback/core';
 import {juggler, AnyObject} from '@loopback/repository';
-const config = require('./mongo.datasource.config.json');
+
+const config = {
+  name: 'mongo',
+  connector: 'mongodb',
+  url: '',
+  host: '127.0.0.1',
+  port: 27017,
+  user: '',
+  password: '',
+  database: '',
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
 
 function updateConfig(dsConfig: AnyObject) {
   if (process.env.KUBERNETES_SERVICE_HOST) {
@@ -17,7 +29,8 @@ function updateConfig(dsConfig: AnyObject) {
 
 @lifeCycleObserver('datasource')
 export class MongoDataSource extends juggler.DataSource {
-  static dataSourceName = 'mongo';
+  static readonly dataSourceName = config.name;
+  static readonly defaultConfig = config;
 
   constructor(
     @inject('datasources.config.mongo', {optional: true})

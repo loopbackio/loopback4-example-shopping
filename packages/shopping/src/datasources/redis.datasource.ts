@@ -5,7 +5,15 @@
 
 import {inject, lifeCycleObserver, ValueOrPromise} from '@loopback/core';
 import {juggler, AnyObject} from '@loopback/repository';
-const config = require('./redis.datasource.config.json');
+
+const config = {
+  name: 'redis',
+  connector: 'kv-redis',
+  host: '127.0.0.1',
+  port: 6379,
+  password: '',
+  db: 0,
+};
 
 function updateConfig(dsConfig: AnyObject) {
   if (process.env.KUBERNETES_SERVICE_HOST) {
@@ -17,7 +25,8 @@ function updateConfig(dsConfig: AnyObject) {
 
 @lifeCycleObserver('datasource')
 export class RedisDataSource extends juggler.DataSource {
-  static dataSourceName = 'redis';
+  static readonly dataSourceName = config.name;
+  static readonly defaultConfig = config;
 
   constructor(
     @inject('datasources.config.redis', {optional: true})
