@@ -43,3 +43,11 @@ export const CredentialsRequestBody = {
     'application/json': {schema: CredentialsSchema},
   },
 };
+
+export const PasswordResetRequestBody = {
+  description: 'The input of password reset function',
+  required: true,
+  content: {
+    'application/json': {schema: CredentialsSchema},
+  },
+};

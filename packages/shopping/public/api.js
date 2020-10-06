@@ -153,6 +153,20 @@ const api = {
     }).promise();
   },
 
+  passwordReset(body) {
+    const url = apiUrl + '/users/password-reset';
+    const token = localStorage.getItem('shoppyToken');
+    return $.ajax({
+      type: 'PUT',
+      url: url,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: JSON.stringify(body),
+      contentType: 'application/json',
+    }).promise();
+  },
+
   me() {
     const url = apiUrl + '/users/me';
     const token = localStorage.getItem('shoppyToken');
