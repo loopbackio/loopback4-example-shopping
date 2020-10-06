@@ -7,7 +7,12 @@ import {inject} from '@loopback/core';
 import {juggler, AnyObject} from '@loopback/repository';
 import path from 'path';
 
-const config = require('./recommender-grpc.datasource.config.json');
+const config = {
+  name: 'recommender_grpc',
+  connector: 'loopback-connector-grpc',
+  url: '127.0.0.1:50000',
+  spec: 'protos/recommendation.proto',
+};
 
 function updateConfig(dsConfig: AnyObject) {
   if (
@@ -23,7 +28,8 @@ function updateConfig(dsConfig: AnyObject) {
 }
 
 export class RecommenderGrpcDataSource extends juggler.DataSource {
-  static dataSourceName = 'recommender_grpc';
+  static readonly dataSourceName = config.name;
+  static readonly defaultConfig = config;
 
   constructor(
     @inject('datasources.config.recommender_grpc', {optional: true})

@@ -5,7 +5,29 @@
 
 import {inject} from '@loopback/core';
 import {juggler, AnyObject} from '@loopback/repository';
-const config = require('./recommender.datasource.config.json');
+
+const config = {
+  name: 'recommender',
+  connector: 'rest',
+  crud: false,
+  options: {
+    headers: {
+      accept: 'application/json',
+      contentType: 'application/json',
+    },
+  },
+  operations: [
+    {
+      template: {
+        method: 'GET',
+        url: 'http://localhost:3001/{userId}',
+      },
+      functions: {
+        getProductRecommendations: ['userId'],
+      },
+    },
+  ],
+};
 
 function updateConfig(dsConfig: AnyObject) {
   if (process.env.KUBERNETES_SERVICE_HOST) {
@@ -17,7 +39,8 @@ function updateConfig(dsConfig: AnyObject) {
 }
 
 export class RecommenderDataSource extends juggler.DataSource {
-  static dataSourceName = 'recommender';
+  static readonly dataSourceName = config.name;
+  static readonly defaultConfig = config;
 
   constructor(
     @inject('datasources.config.recommender', {optional: true})
