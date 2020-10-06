@@ -7,6 +7,7 @@
 'use strict';
 
 function addPagination() {
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   $.get(apiUrl + '/products/count', function (result) {
     const totalPages = Math.ceil(result.count / config.itemsPerPage);
     const currentPageNumber = util.getCurrentPageNumber();
@@ -15,9 +16,9 @@ function addPagination() {
     for (let i = 0; i < totalPages; i++) {
       const pageNumber = i + 1;
       if (currentPageNumber === pageNumber) {
-        pages += `<li class="page-item"><a class="page-link">${pageNumber}</a></li>`;
+        pages += `<li data-cy="page-item" class="page-item"><a class="page-link">${pageNumber}</a></li>`;
       } else {
-        pages += `<li class="page-item"><a class="page-link" href="${config.homePage}?page=${pageNumber}">${pageNumber}</a></li>`;
+        pages += `<li data-cy="page-item" class="page-item"><a class="page-link" href="${config.homePage}?page=${pageNumber}">${pageNumber}</a></li>`;
       }
     }
     $('#pagination').append(pages);

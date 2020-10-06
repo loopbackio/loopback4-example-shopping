@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 module.exports = {
-  extends: ['@loopback/eslint-config'],
+  extends: ['@loopback/eslint-config', 'plugin:cypress/recommended'],
   overrides: [
     {
       files: ['**/*.js'],
