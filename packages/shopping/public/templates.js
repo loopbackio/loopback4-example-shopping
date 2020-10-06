@@ -34,20 +34,20 @@ const navBarTemplate = `
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="firstName">First name</label>
-          <input type="text" class="form-control" id="firstName">
+          <input type="text" class="form-control" id="firstName" name="firstName">
         </div>
         <div class="form-group col-md-6">
           <label for="lastName">Last name</label>
-          <input type="text" class="form-control" id="lastName">
+          <input type="text" class="form-control" id="lastName" name="lastName">
         </div>
       </div>
       <div class="form-group">
         <label for="signUpEmail">Email address</label>
-        <input type="email" class="form-control" id="signUpEmail" autocomplete="new-email">
+        <input type="email" class="form-control" id="signUpEmail" name="signUpEmail" autocomplete="new-email">
       </div>
       <div class="form-group">
         <label for="signUpPassword">Password</label>
-        <input type="password" class="form-control" id="signUpPassword" autocomplete="new-password">
+        <input type="password" class="form-control" id="signUpPassword" name="signUpPassword" autocomplete="new-password">
         <small class="form-text text-muted">Password should be minimum eight characters</small>
       </div>
       <div class="text-center">
@@ -75,11 +75,11 @@ const navBarTemplate = `
           <form id="logInForm">
             <div class="form-group">
               <label for="logInEmail">Email address</label>
-              <input type="email" class="form-control" id="logInEmail" value="john@example.com">
+              <input type="email" class="form-control" id="logInEmail" name="logInEmail" value="john@example.com">
             </div>
             <div class="form-group">
               <label for="logInPassword">Password</label>
-              <input type="password" class="form-control" id="logInPassword" value="john12345678">
+              <input type="password" class="form-control" id="logInPassword" name="logInPassword" value="john12345678">
             </div>
             <div class="text-center">
               <div id="logInButton" class="btn btn-primary">Log In</div>
@@ -94,8 +94,8 @@ const navBarTemplate = `
     <strong class="nav-item"></strong>
   </div>
   <form class="form-inline my-2 my-lg-0">
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" id="searchButton" type="submit">Search</button>
   </form>
 </div>
 `;
@@ -196,7 +196,7 @@ const shoppingCartTemplate = `
 const itemInCartTemplate = `
  <li id="list-#ID#" class="list-group-item d-flex justify-content-between align-items-center item-in-cart">
   <span class="d-flex justify-content-between align-items-center">
-    <input type="checkbox" data-id="#ID#">
+    <input type="checkbox" name="cartItem" data-id="#ID#">
     <img src="#IMAGE#" class="card-img-top details-img" alt="#NAME#">
     <h5 class="card-title">#NAME#</h5>
   </span>
@@ -247,9 +247,9 @@ const profileTemplate = `
   <div id="userId" class="hidden">#USER-ID#</div>
   <h4 class="card-title"><b>#NAME#</b></h4>
   <p class="card-text description">
-    <div><b>First Name</b> <input id="profile-firstName" value="#FIRST-NAME#"></div>
-    <div><b>Last Name</b> <input id="profile-lastName"value="#LAST-NAME#"></div>
-    <div><b>Email</b> <input id="profile-email" value="#EMAIL#"></div>
+    <div><b>First Name</b> <input id="profile-firstName" name="profileFirstName" value="#FIRST-NAME#"></div>
+    <div><b>Last Name</b> <input id="profile-lastName" name="profileLastName" value="#LAST-NAME#"></div>
+    <div><b>Email</b> <input id="profile-email" name="profileEmail" value="#EMAIL#"></div>
     <div id="profile-roles"><b>Roles</b>
       <label for="admin-role">
         <input id="admin-role" type="checkbox">

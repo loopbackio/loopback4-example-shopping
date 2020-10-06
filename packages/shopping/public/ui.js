@@ -7,7 +7,8 @@
 'use strict';
 
 function addPagination() {
-  $.get(apiUrl + '/products/count', function (result) {
+  // eslint-disable-next-line no-void
+  void $.get(apiUrl + '/products/count', function (result) {
     const totalPages = Math.ceil(result.count / config.itemsPerPage);
     const currentPageNumber = util.getCurrentPageNumber();
 
