@@ -3,6 +3,8 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+import {SchemaObject} from '@loopback/rest';
+
 // TODO(jannyHou): This should be moved to @loopback/authentication
 export const UserProfileSchema = {
   type: 'object',
@@ -19,7 +21,7 @@ export const UserProfileSchema = {
 // We should either create a Credential model, or
 // infer the spec from User model
 
-const CredentialsSchema = {
+const CredentialsSchema: SchemaObject = {
   type: 'object',
   required: ['email', 'password'],
   properties: {
