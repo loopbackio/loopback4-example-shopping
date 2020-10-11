@@ -5,14 +5,15 @@
 
 import {expect, supertest} from '@loopback/testlab';
 import {ShoppingApplication} from '../..';
-import {PasswordHasherBindings} from '../../keys';
-import {Order, User} from '../../models';
+import {UserWithPassword, Order, User} from '../../models';
 import {OrderRepository, UserRepository} from '../../repositories';
+import {UserManagementService} from '../../services';
 import {setupApplication} from './helper';
 
 describe('UserOrderController acceptance tests', () => {
   let app: ShoppingApplication;
   let client: supertest.SuperTest<supertest.Test>;
+  let userManagementService: UserManagementService;
 
   const userData = {
     email: 'user@loopback.io',
@@ -32,6 +33,7 @@ describe('UserOrderController acceptance tests', () => {
   before(async () => {
     orderRepo = await app.get('repositories.OrderRepository');
     userRepo = await app.get('repositories.UserRepository');
+    userManagementService = await app.get('services.user.service');
   });
 
   beforeEach(clearDatabase);
@@ -107,7 +109,10 @@ describe('UserOrderController acceptance tests', () => {
     let savedOrder1: Order;
     let savedOrder2: Order;
 
-    beforeEach(givenUserAndOrders);
+    beforeEach(async () => {
+      await givenUserAndOrders();
+      userManagementService = await app.get('services.user.service');
+    });
 
     it('retrieves orders for a given user', async () => {
       const fullName = getFullName(user);
@@ -195,31 +200,16 @@ describe('UserOrderController acceptance tests', () => {
   }
 
   async function givenAUser() {
-    const passwordHasher = await app.get(
-      PasswordHasherBindings.PASSWORD_HASHER,
-    );
-    const encryptedPassword = await passwordHasher.hashPassword(userPassword);
-
-    const newUser = await userRepo.create(userData);
-
-    // MongoDB returns an id object we need to convert to string
-    newUser.id = newUser.id.toString();
-
-    await userRepo.userCredentials(newUser.id).create({
-      password: encryptedPassword,
-    });
-
-    return newUser;
+    const userWithPassword = new UserWithPassword(userData);
+    userWithPassword.password = userPassword;
+    return userManagementService.createUser(userWithPassword);
   }
 
   async function authenticateUser(user: User) {
     const res = await client
       .post('/users/login')
       .send({email: user.email, password: userPassword});
-
-    const token = res.body.token;
-
-    return token;
+    return res.body.token;
   }
 
   function givenAOrder(partial: Partial<Order> = {}) {

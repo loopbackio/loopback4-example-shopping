@@ -25,14 +25,17 @@ import {
 } from '@loopback/rest';
 import {Order} from '../models';
 import {UserRepository} from '../repositories';
-import {basicAuthorization} from '../services/basic.authorizor';
+import {basicAuthorization} from '../services';
 import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 
 /**
  * Controller for User's Orders
  */
 export class UserOrderController {
-  constructor(@repository(UserRepository) protected userRepo: UserRepository) {}
+  constructor(
+    @repository(UserRepository)
+    protected userRepo: UserRepository,
+  ) {}
 
   /**
    * Create or update the orders for a given user

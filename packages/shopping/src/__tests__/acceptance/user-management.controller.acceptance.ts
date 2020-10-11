@@ -14,19 +14,21 @@ import {
 } from 'loopback4-example-recommender';
 import {HTTPError} from 'superagent';
 import {ShoppingApplication} from '../..';
-import {PasswordHasherBindings} from '../../keys';
 import {UserRepository} from '../../repositories';
-import {RecommenderService} from '../../services';
-import {PasswordHasher} from '../../services/hash.password.bcryptjs';
-import {JWTService} from '../../services/jwt-service';
+import {
+  JWTService,
+  UserManagementService,
+  RecommenderService,
+} from '../../services';
 import {setupApplication} from './helper';
+import {UserWithPassword} from '../../models';
 
 const recommendations = require('loopback4-example-recommender/data/recommendations.json');
 
 describe('UserController', () => {
   let app: ShoppingApplication;
   let client: Client;
-
+  let userManagementService: UserManagementService;
   let userRepo: UserRepository;
 
   const userData = {
@@ -37,16 +39,14 @@ describe('UserController', () => {
   };
 
   const userPassword = 'p4ssw0rd';
-
-  let passwordHasher: PasswordHasher;
   let expiredToken: string;
 
   before('setupApplication', async () => {
     ({app, client} = await setupApplication());
     userRepo = await app.get('repositories.UserRepository');
+    userManagementService = await app.get('services.user.service');
   });
   before(migrateSchema);
-  before(createPasswordHasher);
   before(givenAnExpiredToken);
 
   beforeEach(clearDatabase);
@@ -342,20 +342,9 @@ describe('UserController', () => {
   }
 
   async function createAUser() {
-    const encryptedPassword = await passwordHasher.hashPassword(userPassword);
-    const newUser = await userRepo.create(userData);
-    // MongoDB returns an id object we need to convert to string
-    newUser.id = newUser.id.toString();
-
-    await userRepo.userCredentials(newUser.id).create({
-      password: encryptedPassword,
-    });
-
-    return newUser;
-  }
-
-  async function createPasswordHasher() {
-    passwordHasher = await app.get(PasswordHasherBindings.PASSWORD_HASHER);
+    const userWithPassword = new UserWithPassword(userData);
+    userWithPassword.password = userPassword;
+    return userManagementService.createUser(userWithPassword);
   }
 
   /**
