@@ -9,13 +9,15 @@ import {repository} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
 import {securityId, UserProfile} from '@loopback/security';
 import {PasswordHasherBindings} from '../keys';
-import {User} from '../models/user.model';
-import {Credentials, UserRepository} from '../repositories/user.repository';
+import {UserWithPassword, User} from '../models';
+import {Credentials, UserRepository} from '../repositories';
 import {PasswordHasher} from './hash.password.bcryptjs';
+import _ from 'lodash';
 
-export class MyUserService implements UserService<User, Credentials> {
+export class UserManagementService implements UserService<User, Credentials> {
   constructor(
-    @repository(UserRepository) public userRepository: UserRepository,
+    @repository(UserRepository)
+    public userRepository: UserRepository,
     @inject(PasswordHasherBindings.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
   ) {}
@@ -61,13 +63,24 @@ export class MyUserService implements UserService<User, Credentials> {
       userName = user.firstName
         ? `${userName} ${user.lastName}`
         : `${user.lastName}`;
-    const userProfile = {
+    return {
       [securityId]: user.id,
       name: userName,
       id: user.id,
       roles: user.roles,
     };
+  }
 
-    return userProfile;
+  async createUser(userWithPassword: UserWithPassword): Promise<User> {
+    const password = await this.passwordHasher.hashPassword(
+      userWithPassword.password,
+    );
+    userWithPassword.password = password;
+    const user = await this.userRepository.create(
+      _.omit(userWithPassword, 'password'),
+    );
+    user.id = user.id.toString();
+    await this.userRepository.userCredentials(user.id).create({password});
+    return user;
   }
 }

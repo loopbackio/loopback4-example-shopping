@@ -12,10 +12,13 @@ import _ from 'lodash';
 import {Suite} from 'mocha';
 import {ShoppingApplication} from '../..';
 import {PasswordHasherBindings, UserServiceBindings} from '../../keys';
-import {User} from '../../models';
+import {UserWithPassword, User} from '../../models';
 import {Credentials, UserRepository} from '../../repositories';
-import {PasswordHasher} from '../../services/hash.password.bcryptjs';
-import {validateCredentials} from '../../services/validator';
+import {
+  UserManagementService,
+  PasswordHasher,
+  validateCredentials,
+} from '../../services';
 import {setupApplication} from './helper';
 
 describe('authentication services', function (this: Suite) {
@@ -31,10 +34,11 @@ describe('authentication services', function (this: Suite) {
 
   const userPassword = 'p4ssw0rd';
 
-  let newUser: User;
+  let user: User;
   let jwtService: TokenService;
   let userService: UserService<User, Credentials>;
   let bcryptHasher: PasswordHasher;
+  let userManagementService: UserManagementService;
 
   before(setupApp);
   after(async () => {
@@ -44,6 +48,7 @@ describe('authentication services', function (this: Suite) {
   let userRepo: UserRepository;
   before(async () => {
     userRepo = await app.get('repositories.UserRepository');
+    userManagementService = await app.get('services.user.service');
   });
 
   before(clearDatabase);
@@ -71,7 +76,7 @@ describe('authentication services', function (this: Suite) {
   });
 
   it('user service verifyCredentials() succeeds', async () => {
-    const {email} = newUser;
+    const {email} = user;
     const credentials = {email, password: userPassword};
 
     const returnedUser = await userService.verifyCredentials(credentials);
@@ -80,7 +85,7 @@ describe('authentication services', function (this: Suite) {
     const returnedUserWithOutPassword = _.omit(returnedUser, 'password');
 
     // create a copy of expected user without password field
-    const expectedUserWithoutPassword = _.omit(newUser, 'password');
+    const expectedUserWithoutPassword = _.omit(user, 'password');
 
     expect(returnedUserWithOutPassword).to.deepEqual(
       expectedUserWithoutPassword,
@@ -100,7 +105,7 @@ describe('authentication services', function (this: Suite) {
   });
 
   it('user service verifyCredentials() fails with incorrect credentials', async () => {
-    const {email} = newUser;
+    const {email} = user;
     const credentials = {email, password: 'invalidp4ssw0rd'};
     const expectedError = new HttpErrors.Unauthorized(
       'Invalid email or password.',
@@ -113,53 +118,53 @@ describe('authentication services', function (this: Suite) {
 
   it('user service convertToUserProfile() succeeds', () => {
     const expectedUserProfile = {
-      [securityId]: newUser.id,
-      id: newUser.id,
-      name: `${newUser.firstName} ${newUser.lastName}`,
+      [securityId]: user.id,
+      id: user.id,
+      name: `${user.firstName} ${user.lastName}`,
       roles: ['customer'],
     };
-    const userProfile = userService.convertToUserProfile(newUser);
+    const userProfile = userService.convertToUserProfile(user);
     expect(userProfile).to.deepEqual(expectedUserProfile);
   });
 
   it('user service convertToUserProfile() succeeds without optional fields : firstName, lastName', () => {
-    const userWithoutFirstOrLastName = Object.assign({}, newUser);
+    const userWithoutFirstOrLastName = Object.assign({}, user);
     delete userWithoutFirstOrLastName.firstName;
     delete userWithoutFirstOrLastName.lastName;
 
     const userProfile = userService.convertToUserProfile(
       userWithoutFirstOrLastName,
     );
-    expect(userProfile[securityId]).to.equal(newUser.id);
+    expect(userProfile[securityId]).to.equal(user.id);
     expect(userProfile.name).to.equal('');
   });
 
   it('user service convertToUserProfile() succeeds without optional field : lastName', () => {
-    const userWithoutLastName = Object.assign({}, newUser);
+    const userWithoutLastName = Object.assign({}, user);
     delete userWithoutLastName.lastName;
 
     const userProfile = userService.convertToUserProfile(userWithoutLastName);
-    expect(userProfile[securityId]).to.equal(newUser.id);
-    expect(userProfile.name).to.equal(newUser.firstName);
+    expect(userProfile[securityId]).to.equal(user.id);
+    expect(userProfile.name).to.equal(user.firstName);
   });
 
   it('user service convertToUserProfile() succeeds without optional field : firstName', () => {
-    const userWithoutFirstName = Object.assign({}, newUser);
+    const userWithoutFirstName = Object.assign({}, user);
     delete userWithoutFirstName.firstName;
 
     const userProfile = userService.convertToUserProfile(userWithoutFirstName);
-    expect(userProfile[securityId]).to.equal(newUser.id);
-    expect(userProfile.name).to.equal(newUser.lastName);
+    expect(userProfile[securityId]).to.equal(user.id);
+    expect(userProfile.name).to.equal(user.lastName);
   });
 
   it('token service generateToken() succeeds', async () => {
-    const userProfile = userService.convertToUserProfile(newUser);
+    const userProfile = userService.convertToUserProfile(user);
     const token = await jwtService.generateToken(userProfile);
     expect(token).to.not.be.empty();
   });
 
   it('token service verifyToken() succeeds', async () => {
-    const userProfile = userService.convertToUserProfile(newUser);
+    const userProfile = userService.convertToUserProfile(user);
     const token = await jwtService.generateToken(userProfile);
     const userProfileFromToken = await jwtService.verifyToken(token);
 
@@ -207,14 +212,9 @@ describe('authentication services', function (this: Suite) {
 
   async function createUser() {
     bcryptHasher = await app.get(PasswordHasherBindings.PASSWORD_HASHER);
-    const encryptedPassword = await bcryptHasher.hashPassword(userPassword);
-    newUser = await userRepo.create(userData);
-    // MongoDB returns an id object we need to convert to string
-    newUser.id = newUser.id.toString();
-
-    await userRepo.userCredentials(newUser.id).create({
-      password: encryptedPassword,
-    });
+    const userWithPassword = new UserWithPassword(userData);
+    userWithPassword.password = userPassword;
+    user = await userManagementService.createUser(userWithPassword);
   }
 
   async function clearDatabase() {

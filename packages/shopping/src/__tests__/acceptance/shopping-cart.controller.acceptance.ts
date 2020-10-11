@@ -5,17 +5,21 @@
 
 import {Client, expect} from '@loopback/testlab';
 import {ShoppingApplication} from '../..';
-import {ShoppingCartRepository, UserRepository} from '../../repositories';
-import {ShoppingCart, ShoppingCartItem, User} from '../../models';
+import {ShoppingCartRepository} from '../../repositories';
+import {
+  UserWithPassword,
+  ShoppingCart,
+  ShoppingCartItem,
+  User,
+} from '../../models';
 import {setupApplication} from './helper';
-import {PasswordHasherBindings} from '../../keys';
+import {UserManagementService} from '../../services';
 
 describe('ShoppingCartController', () => {
   let app: ShoppingApplication;
   let client: Client;
-
   let cartRepo: ShoppingCartRepository;
-  let userRepo: UserRepository;
+  let userManagementService: UserManagementService;
 
   const userData = {
     email: '',
@@ -28,7 +32,7 @@ describe('ShoppingCartController', () => {
   before('setupApplication', async () => {
     ({app, client} = await setupApplication());
     cartRepo = await app.get('repositories.ShoppingCartRepository');
-    userRepo = await app.get('repositories.UserRepository');
+    userManagementService = await app.get('services.user.service');
   });
   after(async () => {
     await app.stop();
@@ -171,30 +175,15 @@ describe('ShoppingCartController', () => {
   }
 
   async function givenAUser() {
-    const passwordHasher = await app.get(
-      PasswordHasherBindings.PASSWORD_HASHER,
-    );
-    const encryptedPassword = await passwordHasher.hashPassword(userPassword);
-
-    const newUser = await userRepo.create(userData);
-
-    // MongoDB returns an id object we need to convert to string
-    newUser.id = newUser.id.toString();
-
-    await userRepo.userCredentials(newUser.id).create({
-      password: encryptedPassword,
-    });
-
-    return newUser;
+    const userWithPassword = new UserWithPassword(userData);
+    userWithPassword.password = userPassword;
+    return userManagementService.createUser(userWithPassword);
   }
 
   async function authenticateUser(user: User) {
     const res = await client
       .post('/users/login')
       .send({email: user.email, password: userPassword});
-
-    const token = res.body.token;
-
-    return token;
+    return res.body.token;
   }
 });

@@ -7,7 +7,7 @@ import {UserService} from '@loopback/authentication';
 import {BindingKey} from '@loopback/context';
 import {User} from './models';
 import {Credentials} from './repositories';
-import {PasswordHasher} from './services/hash.password.bcryptjs';
+import {PasswordHasher} from './services';
 
 export namespace PasswordHasherBindings {
   export const PASSWORD_HASHER = BindingKey.create<PasswordHasher>(

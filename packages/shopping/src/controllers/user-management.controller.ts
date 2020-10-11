@@ -25,12 +25,14 @@ import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import _ from 'lodash';
 import {PasswordHasherBindings, UserServiceBindings} from '../keys';
 import {Product, User} from '../models';
-import {UserRepository} from '../repositories';
-import {Credentials} from '../repositories';
-import {basicAuthorization} from '../services/basic.authorizor';
-import {PasswordHasher} from '../services/hash.password.bcryptjs';
-import {RecommenderService} from '../services';
-import {validateCredentials} from '../services/validator';
+import {Credentials, UserRepository} from '../repositories';
+import {
+  basicAuthorization,
+  PasswordHasher,
+  RecommenderService,
+  UserManagementService,
+  validateCredentials,
+} from '../services';
 import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 import {
   CredentialsRequestBody,
@@ -47,9 +49,10 @@ export class NewUserRequest extends User {
   password: string;
 }
 
-export class UserController {
+export class UserManagementController {
   constructor(
-    @repository(UserRepository) public userRepository: UserRepository,
+    @repository(UserRepository)
+    public userRepository: UserRepository,
     @inject('services.RecommenderService')
     public recommender: RecommenderService,
     @inject(PasswordHasherBindings.PASSWORD_HASHER)
@@ -58,6 +61,8 @@ export class UserController {
     public jwtService: TokenService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
+    @inject(UserServiceBindings.USER_SERVICE)
+    public userManagementService: UserManagementService,
   ) {}
 
   @post('/users', {
@@ -91,23 +96,8 @@ export class UserController {
     // ensure a valid email value and password value
     validateCredentials(_.pick(newUserRequest, ['email', 'password']));
 
-    // encrypt the password
-    const password = await this.passwordHasher.hashPassword(
-      newUserRequest.password,
-    );
-
     try {
-      // create the new user
-      const savedUser = await this.userRepository.create(
-        _.omit(newUserRequest, 'password'),
-      );
-
-      // set the password
-      await this.userRepository
-        .userCredentials(savedUser.id)
-        .create({password});
-
-      return savedUser;
+      return await this.userManagementService.createUser(newUserRequest);
     } catch (error) {
       // MongoError 11000 duplicate key
       if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
@@ -149,8 +139,7 @@ export class UserController {
       if (!currentUserProfile.roles.includes('admin')) {
         delete user.roles;
       }
-      const updatedUser = await this.userRepository.updateById(userId, user);
-      return updatedUser;
+      return await this.userRepository.updateById(userId, user);
     } catch (e) {
       return e;
     }

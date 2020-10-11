@@ -81,12 +81,13 @@ Controllers expose API endpoints for interacting with the models and more.
 In this app, there are four controllers:
 
 1. `ping` - a simple controller to checking the status of the app.
-2. `user` - controller for creating user, fetching user info, updating user
-   info, and logging in.
+2. `user-management` - controller for creating user, fetching user info,
+   updating user info, and logging in.
 3. `shopping-cart` - controller for creating, updating, deleting shopping carts,
    and getting the details about a shopping cart.
 4. `user-order` - controller for creating, updating, deleting orders, and
    getting the details about an order.
+5. `product` - controller for managing products catalog
 
 ## Services
 
@@ -99,13 +100,13 @@ This app has five services:
 1. `services/recommender.service` - responsible for connecting to a "remote"
    server and getting recommendations for a user. The API endpoint at
    `GET /users​/{userId}​/recommend`, is made possible by this service.
-2. `services/user-service` - responsible for verifying if user exists and the
-   submitted password matches that of the existing user.
+2. `services/user-management.service` - responsible for verifying if user exists
+   and the submitted password matches that of the existing user.
 3. `services/hash.password.bcryptjs` - responsible for generating and comparing
    password hashes.
 4. `services/validator` - responsible for validating email and password when a
    new user is created.
-5. `services/jwt-service` - responsible for generating and verifying JSON Web
+5. `services/jwt.service` - responsible for generating and verifying JSON Web
    Token.
 
 ## Authentication
@@ -132,7 +133,7 @@ possible by the use of the `UserService` service provided by
 4. `return {token}` - send the JWT.
 
 You can see the details in
-[`packages/shopping/src/controllers/user.controller.ts`](https://github.com/strongloop/loopback4-example-shopping/blob/master/packages/shopping/src/controllers/user.controller.ts).
+[`packages/shopping/src/controllers/user-management.controller.ts`](https://github.com/strongloop/loopback4-example-shopping/blob/master/packages/shopping/src/controllers/user.controller.ts).
 
 ### Authorization
 
@@ -175,7 +176,8 @@ async set(
 
 There are three roles in this app: `admin`, `support`, and `customer`. You can
 go through the controller methods in
-[user-controller.ts](/packages/shopping/src/controllers/user.controller.ts) and
+[user-controller.ts](/packages/shopping/src/controllers/user-management.controller.ts)
+and
 [shopping-cart.controller.ts](/master/packages/shopping/src/controllers/shopping-cart.controller.ts)
 to see which roles are given access to which methods.
 
