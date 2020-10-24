@@ -13,17 +13,21 @@ context('Profile', () => {
       .then(() => cy.get('[data-cy=logInButton]').click());
 
     cy.get('[data-cy=user]')
+      .should('be.visible')
       .click()
       .then(() => cy.get('[data-cy=card-title]').contains('Doe'));
 
     cy.get('[data-cy=profileFirstName]')
+      .should('be.visible')
       .clear()
       .type('LoopBack')
       .then(() =>
         cy
           .get('[data-cy=update-profile]')
           .click()
-          .then(() => cy.get('[data-cy=user]').contains('LoopBack Doe')),
+          .then(() =>
+            cy.get('[data-cy=user]').should('contain', 'LoopBack Doe'),
+          ),
       );
   });
 
@@ -37,15 +41,15 @@ context('Profile', () => {
 
     cy.get('[data-cy=profileFirstName]')
       .invoke('val')
-      .then(value => expect(value).to.eql('LoopBack'));
+      .then((value: string) => expect(value).to.eql('LoopBack'));
 
     cy.get('[data-cy=profileLastName]')
       .invoke('val')
-      .then(value => expect(value).to.eql('Doe'));
+      .then((value: string) => expect(value).to.eql('Doe'));
 
     cy.get('[data-cy=profileEmail]')
       .invoke('val')
-      .then(value => expect(value).to.eql('john@example.com'));
+      .then((value: string) => expect(value).to.eql('john@example.com'));
     cy.get('[data-cy=update-profile]').contains('Update');
 
     cy.get('[data-cy=logOut').should('be.visible').click();

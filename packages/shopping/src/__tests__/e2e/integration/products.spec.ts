@@ -9,7 +9,7 @@ context('Products', () => {
   it('should have product pagination', () => {
     cy.get('[data-cy=pagination]')
       .find('[data-cy=page-item]')
-      .then(pages => {
+      .then((pages: object) => {
         expect(pages).to.have.length.greaterThan(0);
       });
   });
@@ -17,7 +17,7 @@ context('Products', () => {
   it('should have 4 products on landing page', () => {
     cy.get('[data-cy=products]')
       .find('[data-cy=card]')
-      .then(cards => {
+      .then((cards: object) => {
         expect(cards).to.have.length(4);
       });
   });

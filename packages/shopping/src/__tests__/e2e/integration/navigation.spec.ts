@@ -19,7 +19,7 @@ context('Navigation', () => {
       .then(() => {
         cy.get('[data-cy=products]')
           .find('[data-cy=card]')
-          .then(products => {
+          .then((products: object) => {
             expect(products).to.have.length(4);
           });
       });
@@ -46,7 +46,7 @@ context('Navigation', () => {
   it('should verify search functionality exists', () => {
     cy.get('[data-cy=search]')
       .invoke('val')
-      .then(value => expect(value).to.be.empty);
+      .then((value: string) => expect(value).to.be.empty);
     cy.get('[data-cy=searchButton]').should('have.text', 'Search');
   });
 });

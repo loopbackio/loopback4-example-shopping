@@ -22,5 +22,5 @@ context('Sign Up', () => {
   });
 
   // Negative tests can be added here after the UI is updated
-  // to response accordingly
+  // to respond accordingly
 });
