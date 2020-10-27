@@ -7,11 +7,7 @@
     "helpers:disableTypesNodeMajor"
   ],
 
-  "ignorePaths": [
-    "**/node_modules/**",
-    "**/__tests__/**",
-    "**/test/**"
-  ],
+  "ignorePaths": ["**/node_modules/**", "**/__tests__/**", "**/test/**"],
 
   "automerge": false,
   "branchPrefix": "renovate/",
@@ -35,10 +31,20 @@
   "separateMajorMinor": false,
   "separateMinorPatch": false,
 
-  "packageRules": [{
-    "sourceUrlPrefixes": ["https://github.com/strongloop/loopback-next"],
-    "groupName": "loopback packages"
-  }],
+  "packageRules": [
+    {
+      "sourceUrlPrefixes": ["https://github.com/strongloop/loopback-next"],
+      "groupName": "loopback packages"
+    },
+    {
+      "updateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "depTypeList": ["devDependencies"],
+      "automerge": true
+    }
+  ],
 
   "masterIssue": true,
   "masterIssueApproval": false,
