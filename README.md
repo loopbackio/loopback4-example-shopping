@@ -222,12 +222,12 @@ https://loopback.io/doc/en/lb4/Loopback-component-authorization.html.
 
 There is a tutorial which shows how to apply the JWT strategy to secure your
 endpoint with `@loopback/authentication@2.x`. You can check more details in
-https://loopback.io/doc/en/lb4/Authentication-Tutorial.html
+https://loopback.io/doc/en/lb4/Authentication-tutorial.html
 
 ### Trying It Out
 
 Please check the
-[try it out](https://loopback.io/doc/en/lb4/Authentication-Tutorial.html#try-it-out)
+[try it out](https://loopback.io/doc/en/lb4/Authentication-tutorial.html#try-it-out)
 section in the tutorial.
 
 ## Deploy to Cloud as Microservices
