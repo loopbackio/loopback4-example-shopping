@@ -5,7 +5,7 @@
 
 'use strict';
 
-const apiUrl = 'http://localhost:3000';
+const apiUrl = window.location.origin;
 const homePage = apiUrl + '/shoppy.html';
 const ordersPage = apiUrl + '/orders.html';
 const profilePage = apiUrl + '/profile.html';
