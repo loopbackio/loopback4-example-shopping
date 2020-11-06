@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {Server} from '@grpc/grpc-js';
-import {TokenServiceConstants} from '@loopback/authentication-jwt';
+import {TokenServiceBindings} from '@loopback/authentication-jwt';
 import {securityId} from '@loopback/security';
 import {Client, expect} from '@loopback/testlab';
 import {
@@ -355,10 +355,8 @@ describe('UserController', () => {
    */
   async function givenAnExpiredToken() {
     const newUser = await createAUser();
-    const tokenService: JWTService = new JWTService(
-      TokenServiceConstants.TOKEN_SECRET_VALUE,
-      '-1',
-    );
+    const jwtSecret = app.getSync<string>(TokenServiceBindings.TOKEN_SECRET);
+    const tokenService: JWTService = new JWTService(jwtSecret, '-1');
     const userProfile = {
       [securityId]: newUser.id,
       name: `${newUser.firstName} ${newUser.lastName}`,

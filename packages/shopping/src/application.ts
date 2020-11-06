@@ -22,6 +22,7 @@ import {
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import {PasswordHasherBindings, UserServiceBindings} from './keys';
@@ -101,6 +102,12 @@ export class ShoppingApplication extends BootMixin(
 
     this.bind(UserServiceBindings.USER_SERVICE).toClass(UserManagementService);
     this.add(createBindingFromClass(SecuritySpecEnhancer));
+
+    // Use JWT secret from JWT_SECRET environment variable if set
+    // otherwise create a random string of 64 hex digits
+    const secret =
+      process.env.JWT_SECRET ?? crypto.randomBytes(32).toString('hex');
+    this.bind(TokenServiceBindings.TOKEN_SECRET).to(secret);
   }
 
   // Unfortunately, TypeScript does not allow overriding methods inherited
