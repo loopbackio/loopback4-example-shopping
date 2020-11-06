@@ -157,7 +157,7 @@ possible by the use of the `UserService` service provided by
 4. `return {token}` - send the JWT.
 
 You can see the details in
-[`packages/shopping/src/controllers/user-management.controller.ts`](https://github.com/strongloop/loopback4-example-shopping/blob/master/packages/shopping/src/controllers/user.controller.ts).
+[`packages/shopping/src/controllers/user-management.controller.ts`](https://github.com/strongloop/loopback4-example-shopping/blob/master/packages/shopping/src/controllers/user-management.controller.ts).
 
 ### Authorization
 
@@ -217,6 +217,17 @@ following rules:
 
 For more details about authorization in LoopBack 4, refer to
 https://loopback.io/doc/en/lb4/Loopback-component-authorization.html.
+
+### JWT secret
+
+By default, the JWTs will be signed using HS256 with a 64 character long string
+of random hex digits as secret. To use your own secret, set environment variable
+JWT_SECRET to the value of your own secret. You will want to use your own secret
+if running multiple instances of the application or want to generate or validate
+the JWTs in a different application.
+
+You can see the details in
+[`packages/shopping/src/application.ts`](./packages/shopping/src/application.ts).
 
 ### Tutorial
 
