@@ -89,7 +89,7 @@
     "cypress": "5.5.0",
     "@grpc/grpc-js": "1.1.8",
     "loopback4-example-recommender": "1.1.1",
-    "mocha": "8.2.0",
+    "mocha": "8.2.1",
     "source-map-support": "0.5.19",
     "typescript": "4.0.5"
   },
