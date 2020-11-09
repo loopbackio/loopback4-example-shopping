@@ -11,7 +11,7 @@ async function startRedis() {
     .withName('redis_lb4_shopping_test')
     .withExposedPorts(6379)
     .start();
-  process.env.SHOPPING_APP_REDIS_MASTER_SERVICE_HOST = container.getContainerIpAddress();
+  process.env.SHOPPING_APP_REDIS_MASTER_SERVICE_HOST = container.getHost();
   process.env.SHOPPING_APP_REDIS_MASTER_SERVICE_PORT = container
     .getMappedPort(6379)
     .toString();
@@ -23,7 +23,7 @@ async function startMongoDB() {
     .withName('mongodb_lb4_shopping_test')
     .withExposedPorts(27017)
     .start();
-  process.env.SHOPPING_APP_MONGODB_SERVICE_HOST = container.getContainerIpAddress();
+  process.env.SHOPPING_APP_MONGODB_SERVICE_HOST = container.getHost();
   process.env.SHOPPING_APP_MONGODB_SERVICE_PORT = container
     .getMappedPort(27017)
     .toString();
