@@ -10,9 +10,7 @@ import {RedisDataSource} from '../datasources/redis.datasource';
 import {ShoppingCart, ShoppingCartItem} from '../models';
 import {retry, Task} from '../utils/retry';
 
-export class ShoppingCartRepository extends DefaultKeyValueRepository<
-  ShoppingCart
-> {
+export class ShoppingCartRepository extends DefaultKeyValueRepository<ShoppingCart> {
   constructor(@inject('datasources.redis') dataSource: RedisDataSource) {
     super(ShoppingCart, dataSource);
   }
