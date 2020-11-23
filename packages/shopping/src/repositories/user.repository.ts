@@ -35,9 +35,7 @@ export class UserRepository extends DefaultCrudRepository<
     @inject('datasources.mongo') dataSource: juggler.DataSource,
     @repository(OrderRepository) protected orderRepository: OrderRepository,
     @repository.getter('UserCredentialsRepository')
-    protected userCredentialsRepositoryGetter: Getter<
-      UserCredentialsRepository
-    >,
+    protected userCredentialsRepositoryGetter: Getter<UserCredentialsRepository>,
   ) {
     super(User, dataSource);
     this.userCredentials = this.createHasOneRepositoryFactoryFor(
