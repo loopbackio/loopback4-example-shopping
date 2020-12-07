@@ -70,7 +70,7 @@
     "eslint-plugin-eslint-plugin": "2.3.0",
     "eslint-plugin-mocha": "8.0.0",
     "fs-extra": "9.0.1",
-    "husky": "4.3.0",
+    "husky": "4.3.5",
     "lerna": "3.22.1",
     "mocha": "8.2.1",
     "source-map-support": "0.5.19",
