@@ -72,7 +72,7 @@
     "lodash": "4.17.20",
     "loopback-connector-grpc": "2.0.0",
     "loopback-connector-kv-redis": "4.0.0",
-    "loopback-connector-mongodb": "5.4.0",
+    "loopback-connector-mongodb": "5.5.0",
     "loopback-connector-rest": "4.0.1",
     "yaml": "1.10.0"
   },
