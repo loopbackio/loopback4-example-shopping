@@ -17,8 +17,9 @@ services:
 
 matrix:
   include:
-    - node_js: "12"
+    - node_js: '12'
       os: osx
+      osx_image: xcode12.2
       # using the default script to build & run the tests
 
     - node_js: '12'
