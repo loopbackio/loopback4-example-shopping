@@ -38,7 +38,7 @@
     "test:dev": "lb-mocha --allow-console-logs \"packages/*/dist/__tests__/**/*.js\" && npm run posttest",
     "prestart": "npm run build",
     "start": "concurrently --kill-others \"npm run start:app\" \"npm run start:recommender\"",
-    "start:app": "node ./packages/shopping",
+    "start:app": "node -r dotenv/config ./packages/shopping",
     "start:recommender": "node ./packages/recommender",
     "prepublishOnly": "npm run test"
   },
@@ -64,6 +64,7 @@
     "commitizen": "4.2.2",
     "concurrently": "5.3.0",
     "cz-conventional-changelog": "3.3.0",
+    "dotenv": "8.2.0",
     "eslint": "7.16.0",
     "eslint-config-prettier": "7.1.0",
     "eslint-plugin-cypress": "2.11.2",

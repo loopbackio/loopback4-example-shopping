@@ -2,3 +2,4 @@ email: admin@example.com
 firstName: Administrator
 password: admin12345678
 roles: ['admin']
+resetKey: ''

@@ -13,3 +13,4 @@ export * from './jwt.service';
 export * from './basic.authorizor';
 export * from './hash.password.bcryptjs';
 export * from './validator';
+export * from './email.service';

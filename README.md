@@ -87,6 +87,15 @@ This app has the following models:
    many items (`items`) of the type `ShoppingCartItem`.
 6. `Order` - a model to represent an order by user, can have many products
    (`products`) of the type `ShoppingCartItem`.
+7. `KeyAndPassword` - a model to represent the user's password reset request
+8. `EmailTemplate` - a model to represent the email request template for
+   Nodemailer
+9. `NodeMailer` - a model to represent the response from Nodemailer after
+   sending reset password email
+10. `Envelope` - a model to represent the envelope portion of the response from
+    Nodemailer after sending reset password email
+11. `ResetPasswordInit` - a model to represent the request for initial password
+    reset step
 
 `ShoppingCart` and `Order` are marked as belonging to the `User` model by the
 use of the `@belongsTo` model decorator. Correspondingly, the `User` model is
@@ -132,6 +141,7 @@ This app has five services:
    new user is created.
 5. `services/jwt.service` - responsible for generating and verifying JSON Web
    Token.
+6. `services/email.service` - responsible for sending reset password email
 
 ## Authentication
 
@@ -228,6 +238,26 @@ the JWTs in a different application.
 
 You can see the details in
 [`packages/shopping/src/application.ts`](./packages/shopping/src/application.ts).
+
+### Reset Password
+
+This repository includes a forgot password and reset password functionality that
+illustrates how shoppers can reset their password in the case they forgot them.
+Shoppers can either reset their password while logged in or locked out of the
+application. For this functionality we use Nodemailer. Please see
+https://nodemailer.com/usage/using-gmail/ if you're planning to use Nodemailer
+with Gmail. Additionally, to manage environment variables we use `dotenv`,
+therefore, you must create a `.env` file in the root of the project with the
+below contents:
+
+```dotenv
+SMTP_PORT=587
+SMTP_SERVER=smtp.gmail.com
+APPLICATION_URL=http://localhost:3000/ <endpoint-to-the-page-with-reset-password-form>
+SMTP_USERNAME=<gmail-username-for-account-used-to-send-email>
+SMTP_PASSWORD=<gmail-password-for-account-used-to-send-email>
+PASSWORD_RESET_EMAIL_LIMIT=2
+```
 
 ### Tutorial
 

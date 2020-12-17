@@ -24,7 +24,7 @@
     "test:dev": "lb-mocha --allow-console-logs dist/__tests__/**/*.js && npm run posttest",
     "prestart": "npm run build",
     "start": "concurrently --kill-others \"npm run start:app\" \"npm run start:recommender\"",
-    "start:app": "node .",
+    "start:app": "node -r dotenv/config .",
     "start:recommender": "node ../recommender",
     "prepublishOnly": "npm run test",
     "docker:run": "docker run -p 3000:3000 -d shopping"
@@ -65,6 +65,7 @@
     "bcryptjs": "2.4.3",
     "casbin": "5.2.3",
     "debug": "4.3.1",
+    "dotenv": "8.2.0",
     "express": "4.17.1",
     "isemail": "3.2.0",
     "jsonwebtoken": "8.5.1",
@@ -73,6 +74,8 @@
     "loopback-connector-kv-redis": "4.0.0",
     "loopback-connector-mongodb": "5.5.0",
     "loopback-connector-rest": "4.0.1",
+    "nodemailer": "6.4.17",
+    "uuid": "^8.3.2",
     "yaml": "1.10.0"
   },
   "devDependencies": {
@@ -85,6 +88,8 @@
     "@types/lodash": "4.14.165",
     "@types/mocha": "8.2.0",
     "@types/node": "10.17.35",
+    "@types/nodemailer": "^6.4.0",
+    "@types/uuid": "8.3.0",
     "concurrently": "5.3.0",
     "cypress": "6.2.0",
     "loopback4-example-recommender": "1.1.1",

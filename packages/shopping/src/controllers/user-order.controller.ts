@@ -26,7 +26,7 @@ import {
 import {Order} from '../models';
 import {UserRepository} from '../repositories';
 import {basicAuthorization} from '../services';
-import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
+import {OPERATION_SECURITY_SPEC} from '../utils';
 
 /**
  * Controller for User's Orders

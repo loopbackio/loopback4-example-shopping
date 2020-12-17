@@ -178,3 +178,27 @@
 .inline-block {
   display: inline-block;
 }
+
+#resetPasswordInit {
+  width: 24rem;
+  margin: 18px auto;
+}
+
+#resetPasswordInit input {
+  padding: 1px 8px;
+}
+
+#resetPasswordInit-email {
+  margin-left: 4px;
+}
+
+#resetPasswordFinish {
+  width: 24rem;
+  margin: 18px auto;
+}
+
+#resetPasswordFinish-password {
+  float: right;
+  margin-left: 4px;
+}
+
