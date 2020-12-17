@@ -133,6 +133,9 @@ const navBarTemplate = `
             <div class="text-center">
               <div id="logInButton" data-cy="logInButton" class="btn btn-primary">Log In</div>
             </div>
+            <div class="text-center mt-4 mb-4">
+              <a href="/reset-password-init.html">Reset your password</a>
+            </div>
           </form>
         </div>
       </div>
@@ -322,7 +325,67 @@ const profileTemplate = `
     <div class="btn btn-primary" onclick="updateUser()">Update</div>
   </div>
   <div class="text-center mt-3 mb-3">
-     <a href="javascript:void(0)" data-cy="passwordResetLink" onclick="displayPasswordReset()">Reset your password</a>
+     <a href="javascript:void(0)" data-cy="passwordResetLink" onclick="displayPasswordReset()">Forgot your password?</a>
+  </div>
+</div>
+`;
+
+const resetPasswordInitTemplate = `
+<div class="card-body">
+  <h4 class="card-title" data-cy="card-title"><b>Reset your password</b></h4>
+  <div class="alert alert-danger" id="passwordResetInitInvalidEmail" role="alert">
+     Please enter a valid email address
+   </div>
+   <div class="alert alert-danger" id="passwordResetInitFailed" role="alert">
+     replaceMe
+   </div>
+   <div class="alert alert-success" id="passwordResetInitSuccess" role="alert">
+     An email has been sent to your inbox with instructions on how to reset your password
+   </div>
+ 
+  <p class="card-text description">
+  <p id="resetPasswordInitInstructions">Enter the email address you used to register your account:</p>
+    <div>
+    <b data-cy="resetPasswordInitEmailLabel"
+    id="resetPasswordInitEmailLabel">Email address</b> 
+    <input type="email" id="resetPasswordInit-email" data-cy="resetPasswordInitEmail"
+     name="resetPasswordInitEmail">
+    </div>
+  </p>
+  <div id="init-resetPassword" data-cy="init-resetPassword">
+    <div class="btn btn-primary">Send</div>
+  </div>
+</div>
+`;
+
+const resetPasswordFinishTemplate = `
+<div class="card-body">
+  <h4 class="card-title" data-cy="card-title"><b>Complete password reset</b></h4>
+  <div class="alert alert-success" id="passwordResetFinishSuccess" role="alert">
+     Your password has been successfully changed.
+  </div>
+  <div class="alert alert-danger" id="passwordResetFinishMismatch" role="alert">
+     Password and confirmation password do not match
+  </div>
+  <div class="alert alert-danger" id="passwordResetFinishInvalid" role="alert">
+     Password must be minimum of 8 characters
+  </div>
+  <div class="alert alert-danger" id="passwordResetFinishFailed" role="alert">
+     Error resetting password. Please try again later
+  </div>
+  <p class="card-text description">
+    <div>
+        <b data-cy="resetPasswordFinishPasswordLabel" id="resetPasswordFinishPasswordLabel">New password</b>
+        <input type="password" id="resetPasswordFinish-password" data-cy="resetPasswordFinishPassword" name="resetPasswordFinishPassword">
+    </div>
+    <br>
+    <div>
+        <b data-cy="resetPasswordFinishConfirmPasswordLabel" id="resetPasswordFinishConfirmPasswordLabel">Confirm password</b>
+        <input type="password" style="float: right" id="resetPasswordFinish-confirmPassword" data-cy="resetPasswordFinishConfirmPassword" name="resetPasswordFinishConfirmPassword">
+    </div>
+  </p>
+  <div id="finish-resetPassword" data-cy="finish-resetPassword">
+    <div class="btn btn-primary">Reset</div>
   </div>
 </div>
 `;
@@ -336,4 +399,6 @@ const templates = {
   itemInCart: itemInCartTemplate,
   order: orderTemplate,
   profile: profileTemplate,
+  resetPasswordInit: resetPasswordInitTemplate,
+  resetPasswordFinish: resetPasswordFinishTemplate,
 };

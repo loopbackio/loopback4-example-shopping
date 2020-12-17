@@ -2,3 +2,4 @@ email: support@example.com
 firstName: Support
 password: support12345678
 roles: ['support']
+resetKey: ''

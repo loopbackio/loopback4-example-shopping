@@ -24,7 +24,13 @@ import {
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import _ from 'lodash';
 import {PasswordHasherBindings, UserServiceBindings} from '../keys';
-import {Product, User} from '../models';
+import {
+  NodeMailer,
+  Product,
+  ResetPasswordInit,
+  User,
+  KeyAndPassword,
+} from '../models';
 import {Credentials, UserRepository} from '../repositories';
 import {
   basicAuthorization,
@@ -32,13 +38,15 @@ import {
   RecommenderService,
   UserManagementService,
   validateCredentials,
+  validateKeyPassword,
 } from '../services';
-import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
+import {OPERATION_SECURITY_SPEC} from '../utils';
 import {
   CredentialsRequestBody,
   PasswordResetRequestBody,
   UserProfileSchema,
 } from './specs/user-controller.specs';
+import isemail from 'isemail';
 
 @model()
 export class NewUserRequest extends User {
@@ -97,6 +105,7 @@ export class UserManagementController {
     validateCredentials(_.pick(newUserRequest, ['email', 'password']));
 
     try {
+      newUserRequest.resetKey = '';
       return await this.userManagementService.createUser(newUserRequest);
     } catch (error) {
       // MongoError 11000 duplicate key
@@ -251,7 +260,7 @@ export class UserManagementController {
     return {token};
   }
 
-  @put('/users/password-reset', {
+  @put('/users/forgot-password', {
     security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
@@ -265,7 +274,7 @@ export class UserManagementController {
     },
   })
   @authenticate('jwt')
-  async passwordReset(
+  async forgotPassword(
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
     @requestBody(PasswordResetRequestBody) credentials: Credentials,
@@ -296,5 +305,74 @@ export class UserManagementController {
     const token = await this.jwtService.generateToken(userProfile);
 
     return {token};
+  }
+
+  @post('/users/reset-password/init', {
+    responses: {
+      '200': {
+        description: 'Confirmation that reset password email has been sent',
+      },
+    },
+  })
+  async resetPasswordInit(
+    @requestBody() resetPasswordInit: ResetPasswordInit,
+  ): Promise<string> {
+    if (!isemail.validate(resetPasswordInit.email)) {
+      throw new HttpErrors.UnprocessableEntity('Invalid email address');
+    }
+
+    const nodeMailer: NodeMailer = await this.userManagementService.requestPasswordReset(
+      resetPasswordInit.email,
+    );
+
+    if (nodeMailer.accepted.length) {
+      return 'Successfully sent reset password link';
+    }
+    throw new HttpErrors.InternalServerError(
+      'Error sending reset password email',
+    );
+  }
+
+  @put('/users/reset-password/finish', {
+    responses: {
+      '200': {
+        description: 'A successful password reset response',
+      },
+    },
+  })
+  async resetPasswordFinish(
+    @requestBody() keyAndPassword: KeyAndPassword,
+  ): Promise<string> {
+    validateKeyPassword(keyAndPassword);
+
+    const foundUser = await this.userRepository.findOne({
+      where: {resetKey: keyAndPassword.resetKey},
+    });
+
+    if (!foundUser) {
+      throw new HttpErrors.NotFound(
+        'No associated account for the provided reset key',
+      );
+    }
+
+    const user = await this.userManagementService.validateResetKeyLifeSpan(
+      foundUser,
+    );
+
+    const passwordHash = await this.passwordHasher.hashPassword(
+      keyAndPassword.password,
+    );
+
+    try {
+      await this.userRepository
+        .userCredentials(user.id)
+        .patch({password: passwordHash});
+
+      await this.userRepository.updateById(user.id, user);
+    } catch (e) {
+      return e;
+    }
+
+    return 'Password reset successful';
   }
 }

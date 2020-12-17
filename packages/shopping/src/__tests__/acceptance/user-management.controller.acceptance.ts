@@ -21,21 +21,24 @@ import {
   RecommenderService,
 } from '../../services';
 import {setupApplication} from './helper';
-import {UserWithPassword} from '../../models';
+import {KeyAndPassword, UserWithPassword} from '../../models';
+import {UserManagementController} from '../../controllers';
 
 const recommendations = require('loopback4-example-recommender/data/recommendations.json');
 
-describe('UserController', () => {
+describe('UserManagementController', () => {
   let app: ShoppingApplication;
   let client: Client;
   let userManagementService: UserManagementService;
   let userRepo: UserRepository;
+  let controller: UserManagementController;
 
   const userData = {
     email: 'test@loopback.io',
     firstName: 'Example',
     lastName: 'User',
     roles: ['customer'],
+    resetKey: '',
   };
 
   const userPassword = 'p4ssw0rd';
@@ -45,6 +48,8 @@ describe('UserController', () => {
     ({app, client} = await setupApplication());
     userRepo = await app.get('repositories.UserRepository');
     userManagementService = await app.get('services.user.service');
+    // link tests to controller
+    expect(controller).to.be.undefined();
   });
   before(migrateSchema);
   before(givenAnExpiredToken);
@@ -156,11 +161,11 @@ describe('UserController', () => {
     await client.get(`/users/${newUser.id}`).expect(401);
   });
 
-  describe('password-reset', () => {
-    it('throws error for PUT /users/password-reset when resetting password for non logged in account', async () => {
+  describe('forgot-password', () => {
+    it('throws error for PUT /users/forgot-password when resetting password for non logged in account', async () => {
       const token = await authenticateUser();
       const res = await client
-        .put('/users/password-reset')
+        .put('/users/forgot-password')
         .set('Authorization', 'Bearer ' + token)
         .send({
           email: 'john@example.io',
@@ -175,7 +180,7 @@ describe('UserController', () => {
       const token = await authenticateUser();
 
       const res = await client
-        .put('/users/password-reset')
+        .put('/users/forgot-password')
         .set('Authorization', 'Bearer ' + token)
         .send({email: 'test@example.com', password: '12345'})
         .expect(422);
@@ -189,12 +194,88 @@ describe('UserController', () => {
       const token = await authenticateUser();
 
       const res = await client
-        .put('/users/password-reset')
+        .put('/users/forgot-password')
         .set('Authorization', 'Bearer ' + token)
         .send({email: userData.email, password: 'password@12345678'})
         .expect(200);
 
       expect(res.body.token).to.not.be.empty();
+    });
+  });
+
+  describe('reset-password-init', () => {
+    it('throws error for POST /users/reset-password-init with an invalid email', async () => {
+      const res = await client
+        .post('/users/reset-password/init')
+        .send({email: 'john'})
+        .expect(422);
+      expect(res.body.error.message).to.equal('Invalid email address');
+    });
+
+    it('throws error for POST /users/reset-password-init for non-existent account email', async () => {
+      const res = await client
+        .post('/users/reset-password/init')
+        .send({email: 'john@example'})
+        .expect(404);
+      expect(res.body.error.message).to.equal(
+        'No account associated with the provided email address.',
+      );
+    });
+
+    it('password reset throws error if email config is invalid', async () => {
+      const tempData = {
+        email: 'john@loopback.io',
+        firstName: 'Example',
+        lastName: 'User',
+        roles: ['customer'],
+        resetKey: '',
+      };
+
+      await client
+        .post('/users')
+        .send({...tempData, password: userPassword})
+        .expect(200);
+
+      await client
+        .post('/users/reset-password/init')
+        .send({email: 'john@loopback.io'})
+        .expect(500);
+    });
+
+    // TODO (mrmodise) configure environment variables in pipelines to add positive scenario test cases
+  });
+
+  describe('reset-password-finish', () => {
+    it('throws error for PUT /users/reset-password-finish with an invalid key', async () => {
+      const res = await client
+        .put('/users/reset-password/finish')
+        .send(
+          new KeyAndPassword({
+            resetKey: 'john',
+            password: 'password1234',
+            confirmPassword: 'password1234',
+          }),
+        )
+        .expect(404);
+      expect(res.body.error.message).to.equal(
+        'No associated account for the provided reset key',
+      );
+    });
+
+    it('throws error for PUT /users/reset-password-finish with mismatch passwords', async () => {
+      const res = await client
+        .put('/users/reset-password/finish')
+        .send(
+          new KeyAndPassword({
+            resetKey: 'john',
+            password: 'password123',
+            confirmPassword: 'password1234',
+          }),
+        )
+        .expect(422);
+      expect(res.body.error.message).to.equal(
+        'password and confirmation password do not match',
+      );
     });
   });
 

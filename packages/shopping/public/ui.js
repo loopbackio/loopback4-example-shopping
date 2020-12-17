@@ -116,7 +116,7 @@ async function logIn(email, password) {
   }
 }
 
-async function resetPassword(email, password, confirmPassword) {
+async function forgotPassword(email, password, confirmPassword) {
   email = email || $('#passwordResetEmail').val();
   password = password || $('#passwordResetPassword').val();
   confirmPassword = confirmPassword || $('#passwordResetConfirmPassword').val();
@@ -154,7 +154,7 @@ async function resetPassword(email, password, confirmPassword) {
     return;
   }
 
-  const res = await api.passwordReset({email, password}).catch(() => {
+  const res = await api.forgotPassword({email, password}).catch(() => {
     $('#passwordResetFailed').show();
     setTimeout(() => {
       $('#passwordResetFailed').hide();
@@ -171,6 +171,99 @@ async function resetPassword(email, password, confirmPassword) {
     $('#passwordResetEmail').val('');
     $('#passwordResetPassword').val('');
     $('#passwordResetConfirmPassword').val('');
+  }
+}
+
+function isEmailValid(email) {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
+
+async function passwordResetInit(email) {
+  email = email || $('#resetPasswordInit-email').val();
+
+  if (!isEmailValid(email)) {
+    $('#passwordResetInitInvalidEmail').show();
+    setTimeout(() => {
+      $('#passwordResetInitInvalidEmail').hide();
+    }, 3000);
+    return;
+  }
+
+  const res = await api.passwordResetInit({email}).catch(e => {
+    $('#passwordResetInitFailed')
+      .text(JSON.parse(e.responseText).error.message)
+      .show();
+    setTimeout(() => {
+      $('#passwordResetInitFailed').hide();
+    }, 5000);
+  });
+
+  if (res) {
+    $('#resetPasswordInitEmailLabel').hide();
+    $('#resetPasswordInitInstructions').hide();
+    $('#resetPasswordInit-email').hide();
+    $('#init-resetPassword').hide();
+    $('#passwordResetInitSuccess').show();
+  }
+}
+
+async function passwordResetFinish(resetKey, password, confirmPassword) {
+  password = password || $('#resetPasswordFinish-password').val();
+  confirmPassword =
+    confirmPassword || $('#resetPasswordFinish-confirmPassword').val();
+  const urlParams = new URLSearchParams(window.location.search);
+
+  if (password !== confirmPassword) {
+    $('#passwordResetFinishMismatch').show();
+    setTimeout(() => {
+      $('#passwordResetFinishMismatch').hide();
+    }, 3000);
+    return;
+  }
+
+  if (!password || password.length < 8) {
+    $('#passwordResetFinishInvalid').show();
+    setTimeout(() => {
+      $('#passwordResetFinishInvalid').hide();
+    }, 3000);
+    return;
+  }
+
+  if (urlParams.has('resetKey')) {
+    resetKey = urlParams.get('resetKey');
+
+    const res = await api
+      .passwordResetFinish({
+        resetKey: resetKey,
+        password: password,
+        confirmPassword: confirmPassword,
+      })
+      .catch(e => {
+        $('#passwordResetFinishFailed')
+          .text(JSON.parse(e.responseText).error.message)
+          .show();
+        setTimeout(() => {
+          $('#passwordResetFinishFailed').hide();
+        }, 5000);
+      });
+
+    if (res) {
+      $('#passwordResetFinishSuccess').show();
+      $('#passwordResetFinishMismatch').hide();
+      $('#passwordResetFinishInvalid').hide();
+      $('#passwordResetFinishFailed').hide();
+      $('#resetPasswordFinishPasswordLabel').hide();
+      $('#resetPasswordFinishConfirmPasswordLabel').hide();
+      $('#resetPasswordFinish-password').hide();
+      $('#resetPasswordFinish-confirmPassword').hide();
+      $('#finish-resetPassword').hide();
+    }
+  } else {
+    $('#passwordResetFinishFailed').show();
+    setTimeout(() => {
+      $('#passwordResetFinishFailed').hide();
+    }, 3000);
   }
 }
 
@@ -406,7 +499,15 @@ $(async function () {
   });
 
   $('body').on('click', '#passwordResetButton', async function () {
-    await resetPassword();
+    await forgotPassword();
+  });
+
+  $('body').on('click', '#init-resetPassword', async function () {
+    await passwordResetInit();
+  });
+
+  $('body').on('click', '#finish-resetPassword', async function () {
+    await passwordResetFinish();
   });
 
   $('body').on('click', '#logOut', async function () {

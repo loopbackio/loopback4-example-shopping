@@ -3,3 +3,4 @@ firstName: Jane
 lastName: Doe
 password: jane12345678
 roles: ['customer']
+resetKey: ''

@@ -60,6 +60,26 @@ export class User extends Entity {
   })
   roles?: string[];
 
+  @property({
+    type: 'string',
+  })
+  resetKey?: string;
+
+  @property({
+    type: 'number',
+  })
+  resetCount: number;
+
+  @property({
+    type: 'string',
+  })
+  resetTimestamp: string;
+
+  @property({
+    type: 'string',
+  })
+  resetKeyTimestamp: string;
+
   constructor(data?: Partial<User>) {
     super(data);
   }

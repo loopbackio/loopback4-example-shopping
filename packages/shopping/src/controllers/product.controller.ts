@@ -26,8 +26,8 @@ import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import {Product} from '../models';
 import {ProductRepository} from '../repositories';
-import {basicAuthorization} from '../services/basic.authorizor';
-import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
+import {basicAuthorization} from '../services';
+import {OPERATION_SECURITY_SPEC} from '../utils';
 
 export class ProductController {
   constructor(

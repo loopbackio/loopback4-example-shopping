@@ -19,9 +19,9 @@ import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {ShoppingCartRepository} from '../repositories';
 import {ShoppingCart, ShoppingCartItem} from '../models';
-import {basicAuthorization} from '../services/basic.authorizor';
+import {basicAuthorization} from '../services';
 import debugFactory from 'debug';
-import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
+import {OPERATION_SECURITY_SPEC} from '../utils';
 const debug = debugFactory('loopback:example:shopping');
 
 /**
