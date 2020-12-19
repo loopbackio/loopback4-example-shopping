@@ -6,7 +6,7 @@
     "loopback-application",
     "loopback"
   ],
-  "main": "index.js",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "engines": {
     "node": ">=10.16"
@@ -42,7 +42,6 @@
   "license": "MIT",
   "files": [
     "README.md",
-    "index.js",
     "index.d.ts",
     "dist*/src",
     "dist*/index*",
@@ -77,6 +76,7 @@
     "yaml": "1.10.0"
   },
   "devDependencies": {
+    "@grpc/grpc-js": "1.2.2",
     "@loopback/build": "6.2.8",
     "@loopback/testlab": "3.2.10",
     "@types/bcryptjs": "2.4.2",
@@ -87,7 +87,6 @@
     "@types/node": "10.17.35",
     "concurrently": "5.3.0",
     "cypress": "6.1.0",
-    "@grpc/grpc-js": "1.2.2",
     "loopback4-example-recommender": "1.1.1",
     "mocha": "8.2.1",
     "source-map-support": "0.5.19",
