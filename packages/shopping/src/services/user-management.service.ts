@@ -125,7 +125,7 @@ export class UserManagementService implements UserService<User, Credentials> {
       user.resetCount = user.resetCount + 1;
 
       if (user.resetCount > +(process.env.PASSWORD_RESET_EMAIL_LIMIT ?? 2)) {
-        throw new HttpErrors.BadRequest(
+        throw new HttpErrors.TooManyRequests(
           'Account has reached daily limit for sending password-reset requests',
         );
       }
