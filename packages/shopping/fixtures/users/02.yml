@@ -4,4 +4,3 @@ lastName: Doe
 password: john12345678
 roles: ['customer']
 resetKey: ''
-resetTimestamp: '12/23/2020'

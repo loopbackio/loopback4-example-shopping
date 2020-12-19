@@ -33,7 +33,7 @@ import {
   ShoppingCartRepository,
   UserRepository,
 } from './repositories';
-import {MyAuthenticationSequence} from './sequence';
+import {ShoppySequence} from './sequence';
 import {
   UserManagementService,
   BcryptHasher,
@@ -41,6 +41,7 @@ import {
   JWTService,
 } from './services';
 import YAML = require('yaml');
+import {ErrorHandlerMiddlewareProvider} from './middlewares';
 
 /**
  * Information from package.json
@@ -68,7 +69,7 @@ export class ShoppingApplication extends BootMixin(
     this.setUpBindings();
 
     // Set up the custom sequence
-    this.sequence(MyAuthenticationSequence);
+    this.sequence(ShoppySequence);
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
@@ -102,6 +103,8 @@ export class ShoppingApplication extends BootMixin(
 
     this.bind(UserServiceBindings.USER_SERVICE).toClass(UserManagementService);
     this.add(createBindingFromClass(SecuritySpecEnhancer));
+
+    this.add(createBindingFromClass(ErrorHandlerMiddlewareProvider));
 
     // Use JWT secret from JWT_SECRET environment variable if set
     // otherwise create a random string of 64 hex digits
