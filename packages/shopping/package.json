@@ -75,7 +75,7 @@
     "loopback-connector-mongodb": "5.5.0",
     "loopback-connector-rest": "4.0.1",
     "nodemailer": "6.4.17",
-    "uuid": "^8.3.2",
+    "uuid": "8.3.2",
     "yaml": "1.10.0"
   },
   "devDependencies": {
@@ -88,7 +88,7 @@
     "@types/lodash": "4.14.166",
     "@types/mocha": "8.2.0",
     "@types/node": "10.17.35",
-    "@types/nodemailer": "^6.4.0",
+    "@types/nodemailer": "6.4.0",
     "@types/uuid": "8.3.0",
     "concurrently": "5.3.0",
     "cypress": "6.2.0",
