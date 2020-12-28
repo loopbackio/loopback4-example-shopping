@@ -68,11 +68,12 @@ async function updateCartDetails() {
 
 function applyLoggedInUi(user) {
   const fullName = util.fullName(user);
-  $('#logIn, #signUp').hide();
+  $('#logIn, #signUp, #productsMenu').hide();
   $('#user strong').text(fullName);
   $('#user, #logOut').show();
   if (util.isAdmin() || util.isSupport()) {
     $('.add-to-cart').addClass('disabled');
+    $('#productsMenu').show();
   }
 }
 

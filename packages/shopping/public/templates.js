@@ -16,6 +16,9 @@ const navBarTemplate = `
     <li class="nav-item active" data-cy="nav-item">
       <a class="nav-link" href="/shoppy.html">Home <span class="sr-only">(current)</span></a>
     </li>
+    <li id="productsMenu" data-cy="productsMenu" class="nav-item" >
+    <a class="nav-link" href="/product-management.html" tabindex="-1">Products</a>
+    </li>
     <li class="nav-item" id="shoppingCartLink" data-cy="shoppingCartLink" style="display:none">
       <div class="nav-link">Shopping Cart<span style="display:none" id="itemsInCart" class="badge badge-notify">0</span></div>
     </li>
@@ -390,6 +393,84 @@ const resetPasswordFinishTemplate = `
 </div>
 `;
 
+const productManagement = `
+<div class="card-body">
+<p class="p-1">In this menu, you will be able to create new products, edit or delete existing products</p>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="home-tab" data-toggle="tab"
+    href="#newProduct" role="tab" aria-controls="home" aria-selected="true">New Product</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="profile-tab" data-toggle="tab"
+    href="#updateProduct" role="tab" aria-controls="profile" aria-selected="false">Update/Delete Product</a>
+  </li>
+</ul>
+<div class="tab-content" id="productManagementTabs">
+  <div class="tab-pane fade show active" id="newProduct" role="tabpanel" aria-labelledby="home-tab">
+  <form class="mt-3">
+  <div class="form-group col-md-6">
+    <label for="productManagementName">Product name</label>
+    <input type="text" class="form-control" id="productManagementName">
+  </div>
+  <div class="form-group col-md-6">
+    <label for="productManagementPrice">Price</label>
+    <input type="number" class="form-control" id="productManagementPrice">
+  </div>
+  <div class="form-group col-md-6">
+    <label for="productManagementImageLink">Product image link</label>
+    <input type="text" class="form-control" id="productManagementImageLink">
+  </div>
+  <div class="form-group col-md-6">
+    <label for="productManagementDesc">Description</label>
+    <input type="text" class="form-control" id="productManagementDesc">
+  </div>
+  <div class="form-group col-md-6">
+    <label for="productManagementDetails">Details</label>
+    <textarea cols="5" rows="5" class="form-control" id="productManagementDetails"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Save</button>
+</form>
+</div>
+<div class="tab-pane fade" id="updateProduct" role="tabpanel" aria-labelledby="profile-tab">
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First</th>
+      <th scope="col">Last</th>
+      <th scope="col">Handle</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+      <td>Edit/Delete</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+      <td>Edit/Delete</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td colspan="2">Larry the Bird</td>
+      <td>@twitter</td>
+      <td>Edit/Delete</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+`;
+
 const templates = {
   navBar: navBarTemplate,
   product: productTemplate,
@@ -401,4 +482,5 @@ const templates = {
   profile: profileTemplate,
   resetPasswordInit: resetPasswordInitTemplate,
   resetPasswordFinish: resetPasswordFinishTemplate,
+  productManagement: productManagement,
 };
