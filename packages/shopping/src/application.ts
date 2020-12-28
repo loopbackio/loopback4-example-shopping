@@ -32,6 +32,7 @@ import {
   ProductRepository,
   ShoppingCartRepository,
   UserRepository,
+  UserCredentialsRepository
 } from './repositories';
 import {MyAuthenticationSequence} from './sequence';
 import {
@@ -144,6 +145,8 @@ export class ShoppingApplication extends BootMixin(
     // Pre-populate users
     const userRepo = await this.getRepository(UserRepository);
     await userRepo.deleteAll();
+    const userCredsRepo = await this.getRepository(UserCredentialsRepository);
+    await userCredsRepo.deleteAll();
     const usersDir = path.join(__dirname, '../fixtures/users');
     const userFiles = fs.readdirSync(usersDir);
 
