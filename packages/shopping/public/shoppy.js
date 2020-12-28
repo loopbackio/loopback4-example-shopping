@@ -29,5 +29,5 @@ $(async function () {
     $('.add-to-cart').addClass('disabled');
   }
   $('#products').append(templates.addToCart);
-  ui.addPagination();
+  ui.addPagination('pagination');
 });

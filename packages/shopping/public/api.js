@@ -224,4 +224,30 @@ const api = {
       },
     }).promise();
   },
+
+  deleteProduct(id) {
+    const url = apiUrl + '/products/' + id;
+    const token = localStorage.getItem('shoppyToken');
+    return $.ajax({
+      type: 'DELETE',
+      url: url,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).promise();
+  },
+
+  createProduct(product) {
+    const url = apiUrl + '/products';
+    const token = localStorage.getItem('shoppyToken');
+    return $.ajax({
+      type: 'POST',
+      url: url,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: JSON.stringify(product),
+      contentType: 'application/json',
+    }).promise();
+  },
 };

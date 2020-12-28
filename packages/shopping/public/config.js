@@ -9,6 +9,8 @@ const apiUrl = window.location.origin;
 const homePage = apiUrl + '/shoppy.html';
 const ordersPage = apiUrl + '/orders.html';
 const profilePage = apiUrl + '/profile.html';
+const productManagementPage = apiUrl + '/product-management.html';
+const productPage = apiUrl + '/product.html';
 
 const itemsPerPage = 4;
 
@@ -16,4 +18,6 @@ const config = {
   apiUrl,
   homePage,
   itemsPerPage,
+  productManagementPage,
+  productPage,
 };

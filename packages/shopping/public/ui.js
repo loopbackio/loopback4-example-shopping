@@ -3,10 +3,10 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-/*global apiUrl, localStorage, api, ui, location, config, document, templates, util, alert, DOMPurify, profilePage, ordersPage, homePage, $*/
+/*global apiUrl, localStorage, api, ui, location, config, document, templates, util, alert, DOMPurify, profilePage, ordersPage, homePage, productManagementPage, productPage $*/
 'use strict';
 
-function addPagination() {
+function addPagination(id) {
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   $.get(apiUrl + '/products/count', function (result) {
     const totalPages = Math.ceil(result.count / config.itemsPerPage);
@@ -18,10 +18,14 @@ function addPagination() {
       if (currentPageNumber === pageNumber) {
         pages += `<li data-cy="page-item" class="page-item"><a class="page-link">${pageNumber}</a></li>`;
       } else {
-        pages += `<li data-cy="page-item" class="page-item"><a class="page-link" href="${config.homePage}?page=${pageNumber}">${pageNumber}</a></li>`;
+        pages += `<li data-cy="page-item" class="page-item"><a class="page-link" href="${
+          id === 'productsPagination'
+            ? config.productManagementPage
+            : config.homePage
+        }?page=${pageNumber}">${pageNumber}</a></li>`;
       }
     }
-    $('#pagination').append(pages);
+    $(`#${id}`).append(pages);
   });
 }
 
@@ -68,23 +72,28 @@ async function updateCartDetails() {
 
 function applyLoggedInUi(user) {
   const fullName = util.fullName(user);
-  $('#logIn, #signUp').hide();
+  $('#logIn, #signUp, #productsMenu').hide();
   $('#user strong').text(fullName);
   $('#user, #logOut').show();
   if (util.isAdmin() || util.isSupport()) {
     $('.add-to-cart').addClass('disabled');
+    $('#productsMenu').show();
   }
 }
 
 function applyLoggedOutUi() {
   $('#logIn, #signUp').show();
-  $('#user, #logOut, #shoppingCartLink, #ordersLink').hide();
+  $(
+    '#user, #logOut, #productManagement, #productsMenu, #shoppingCartLink, #ordersLink',
+  ).hide();
   $('#itemsInCart').hide();
   $('.cart-action-button').text('Add to Cart');
   $('.add-to-cart').removeClass('disabled');
   if (
     document.location.href === ordersPage ||
-    document.location.href.startsWith(profilePage)
+    document.location.href.startsWith(profilePage) ||
+    document.location.href.startsWith(productManagementPage) ||
+    document.location.href.startsWith(productPage)
   ) {
     document.location = homePage;
   }
@@ -267,6 +276,43 @@ async function passwordResetFinish(resetKey, password, confirmPassword) {
   }
 }
 
+async function saveProduct() {
+  const product = {
+    name: $('#productManagementName').val(),
+    price: parseFloat($('#productManagementPrice').val() || 0),
+    image: $('#productManagementImageLink').val(),
+    description: $('#productManagementDesc').val(),
+    details: $('#productManagementDetails').val(),
+  };
+
+  if (product.name.length === 0 || product.price === 0) {
+    // we leverage html required for errors
+    return;
+  }
+
+  const res = await api.createProduct(product).catch(e => {
+    alert('Error while trying to save product. Try again');
+  });
+
+  if (res) {
+    alert('Product saved successfully');
+  }
+}
+
+async function deleteProduct(productId) {
+  if (confirm('Are you sure you want to remove this product?')) {
+    await api
+      .deleteProduct(productId)
+      .then(res => {
+        alert('Product removed successfully');
+        location.reload();
+      })
+      .catch(e => {
+        alert('Error removing product. Try again');
+      });
+  }
+}
+
 function displayPasswordReset() {
   $('#logInModal').modal('hide');
   $('#passwordResetModal').modal('show');
@@ -355,6 +401,7 @@ async function displayShoppingCart() {
   const user = await util.isLoggedIn();
   if (user) {
     const cart = await api.getShoppingCartItems();
+
     const items = cart.items;
     $('#shoppingCart .list-group').empty();
     for (const item of items) {
@@ -508,6 +555,10 @@ $(async function () {
 
   $('body').on('click', '#finish-resetPassword', async function () {
     await passwordResetFinish();
+  });
+
+  $('body').on('click', '#createProduct', async function () {
+    await saveProduct();
   });
 
   $('body').on('click', '#logOut', async function () {
