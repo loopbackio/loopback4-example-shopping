@@ -31,15 +31,15 @@ import {
   OrderRepository,
   ProductRepository,
   ShoppingCartRepository,
+  UserCredentialsRepository,
   UserRepository,
-  UserCredentialsRepository
 } from './repositories';
 import {MyAuthenticationSequence} from './sequence';
 import {
-  UserManagementService,
   BcryptHasher,
-  SecuritySpecEnhancer,
   JWTService,
+  SecuritySpecEnhancer,
+  UserManagementService,
 } from './services';
 import YAML = require('yaml');
 
