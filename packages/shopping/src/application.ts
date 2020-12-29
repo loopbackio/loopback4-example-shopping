@@ -33,6 +33,7 @@ import {
   ShoppingCartRepository,
   UserCredentialsRepository,
   UserRepository,
+  UserCredentialsRepository
 } from './repositories';
 import {MyAuthenticationSequence} from './sequence';
 import {
