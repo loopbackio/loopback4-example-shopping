@@ -1,0 +1,110 @@
+name: Continous Integration
+on:
+  push:
+    branches: [master]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [master]
+
+env:
+  CI: true
+  NODE_OPTIONS: --max-old-space-size=4096
+
+jobs:
+  test:
+    name: Test
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [10, 12, 14, 15]
+        mongodb-version: [4.4]
+        redis-version: [6]
+        include:
+          - os: windows-latest
+            node-version: 14
+          - os: macos-latest
+            node-version: 14
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Start MongoDB Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        uses: supercharge/mongodb-github-action@1.3.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+      - name: Start Redis Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        uses: supercharge/redis-github-action@1.2.0
+        with:
+          redis-version: ${{ matrix.redis-version }}
+      - name: Start MongoDB Windows
+        if: matrix.os == 'windows-latest'
+        run: powershell .\bin\windows\install-mongodb.ps1
+      - name: Start Redis Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          nuget install redis-64 -excludeversion
+          redis-64\tools\redis-server.exe --service-install
+          redis-64\tools\redis-server.exe --service-start
+          '@ECHO Redis Started'
+      - name: Start MongoDB MacOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew tap mongodb/brew
+          brew install mongodb-community
+          brew services start mongodb-community
+      - name: Start Redis MacOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install redis
+          brew services start redis
+      - name: Bootstrap project
+        run: |
+          npm ci --ignore-scripts
+          npm run postinstall
+      - name: Build project
+        run: npm run build
+      - name: Run tests
+        run: npm run test:ci
+
+  code-lint:
+    name: Code Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Bootstrap project
+        run: |
+          npm ci --ignore-scripts
+          npm run postinstall
+      - name: Verify code linting
+        run: npm run lint
+
+  commit-lint:
+    name: Commit Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Bootstrap project
+        run: |
+          npm ci --ignore-scripts
+          npm run postinstall
+      - name: Verify commit linting
+        run: npx commitlint --from origin/master --to HEAD --verbose
