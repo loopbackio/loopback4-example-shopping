@@ -1,6 +1,6 @@
 # @loopback/example-shopping
 
-[![Travis Build Status](https://travis-ci.com/strongloop/loopback4-example-shopping.svg?branch=master)](https://travis-ci.com/strongloop/loopback4-example-shopping)
+![Continuous Integration Status](https://github.com/strongloop/loopback4-example-shopping/workflows/Continous%20Integration/badge.svg)
 
 This project aims to represent an online ecommerce platform APIs to validate /
 test the LoopBack 4 framework readiness for GA. See
