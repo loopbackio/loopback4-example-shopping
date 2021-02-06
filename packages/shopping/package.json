@@ -63,7 +63,7 @@
     "@types/jsonwebtoken": "8.5.0",
     "@types/yaml": "1.9.7",
     "bcryptjs": "2.4.3",
-    "casbin": "5.3.1",
+    "casbin": "5.4.0",
     "debug": "4.3.1",
     "dotenv": "8.2.0",
     "express": "4.17.1",
