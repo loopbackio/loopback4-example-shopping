@@ -93,7 +93,7 @@
     "concurrently": "5.3.0",
     "cypress": "6.4.0",
     "loopback4-example-recommender": "1.1.1",
-    "mocha": "8.2.1",
+    "mocha": "8.3.0",
     "source-map-support": "0.5.19",
     "typescript": "4.1.5"
   },
