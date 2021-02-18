@@ -279,6 +279,12 @@ deployed to a cloud environment as a Kubernetes cluster.
 Please check out
 [Deploy Shopping Application as Cloud-native Microservices](kubernetes/README.md).
 
+## Build and deploy on Red Hat OpenShift
+
+You can find [instructions](openshift/README.md), Dockerfiles and resource
+definition files for building and deploying on Red Hat OpenShift Container
+Platform in the openshift directory.
+
 ## Contributing
 
 This project uses [DCO](https://developercertificate.org/). Be sure to sign off

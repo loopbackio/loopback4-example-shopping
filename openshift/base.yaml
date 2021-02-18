@@ -1,0 +1,25 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: shopping-base-image
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: shopping-base:latest
+  source:
+    git:
+      uri: https://github.com/strongloop/loopback4-example-shopping.git
+      ref: master
+    type: Git
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: nodejs:12
+        namespace: openshift
+      dockerfilePath: openshift/Dockerfile.monorepo
+  triggers:
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
