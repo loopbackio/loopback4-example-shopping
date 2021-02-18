@@ -1,0 +1,33 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: shopping-image
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: shopping:latest
+  source:
+    images:
+    - from:
+        kind: ImageStreamTag
+        name: shopping-base:latest
+      paths:
+      - destinationDir: base
+        sourcePath: /home/node/app/.
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: nodejs:12
+        namespace: openshift
+      dockerfilePath: base/openshift/Dockerfile.shopping
+  triggers:
+  - type: ConfigChange
+  - imageChange: {}
+    type: ImageChange
+  - imageChange:
+      from:
+        kind: "ImageStreamTag"
+        name: "shopping-base:latest"
+    type: ImageChange
