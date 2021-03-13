@@ -76,7 +76,7 @@
     "loopback-connector-rest": "4.0.1",
     "nodemailer": "6.5.0",
     "uuid": "8.3.2",
-    "yaml": "1.10.0"
+    "yaml": "1.10.1"
   },
   "devDependencies": {
     "@grpc/grpc-js": "1.2.11",
