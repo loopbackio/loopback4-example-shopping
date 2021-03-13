@@ -88,7 +88,7 @@
     "@types/lodash": "4.14.168",
     "@types/mocha": "8.2.1",
     "@types/node": "10.17.35",
-    "@types/nodemailer": "6.4.0",
+    "@types/nodemailer": "6.4.1",
     "@types/uuid": "8.3.0",
     "concurrently": "6.0.0",
     "cypress": "6.6.0",
