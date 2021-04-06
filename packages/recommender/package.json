@@ -38,7 +38,7 @@
   ],
   "dependencies": {
     "@grpc/grpc-js": "1.2.12",
-    "@grpc/proto-loader": "0.5.6",
+    "@grpc/proto-loader": "0.6.0",
     "@loopback/http-server": "2.4.0",
     "express": "4.17.1"
   },
