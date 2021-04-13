@@ -57,7 +57,7 @@
     "@loopback/build": "6.3.1",
     "@loopback/eslint-config": "10.1.1",
     "@loopback/testlab": "3.3.1",
-    "@types/fs-extra": "9.0.10",
+    "@types/fs-extra": "9.0.11",
     "@types/node": "12.12.62",
     "@typescript-eslint/eslint-plugin": "4.21.0",
     "@typescript-eslint/parser": "4.21.0",
