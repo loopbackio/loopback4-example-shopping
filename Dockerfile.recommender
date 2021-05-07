@@ -3,7 +3,7 @@ ARG version=1.1.0
 FROM loopback4-example-shopping-monorepo:${version} AS builder
 
 # Stage 2: create the recommender image
-FROM node:12-slim
+FROM node:16-slim
 
 # Set to a non-root built-in user `node`
 USER node
