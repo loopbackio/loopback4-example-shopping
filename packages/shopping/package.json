@@ -65,7 +65,7 @@
     "bcryptjs": "2.4.3",
     "casbin": "5.6.3",
     "debug": "4.3.1",
-    "dotenv": "9.0.0",
+    "dotenv": "9.0.1",
     "express": "4.17.1",
     "isemail": "3.2.0",
     "jsonwebtoken": "8.5.1",
