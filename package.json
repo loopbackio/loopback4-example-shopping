@@ -62,7 +62,7 @@
     "@typescript-eslint/eslint-plugin": "4.24.0",
     "@typescript-eslint/parser": "4.24.0",
     "commitizen": "4.2.4",
-    "concurrently": "6.1.0",
+    "concurrently": "6.2.0",
     "cz-conventional-changelog": "3.3.0",
     "dotenv": "9.0.2",
     "eslint": "7.27.0",
