@@ -35,7 +35,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Start MongoDB Ubuntu
         if: matrix.os == 'ubuntu-latest'
-        uses: supercharge/mongodb-github-action@1.4.1
+        uses: supercharge/mongodb-github-action@1.5.0
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
       - name: Start Redis Ubuntu
