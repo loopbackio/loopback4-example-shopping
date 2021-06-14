@@ -46,7 +46,8 @@ const recommenderFilter: BindingFilter = binding => {
  * the value of `RECOMMENDER_PROTOCOL` environment variable
  */
 export class RecommenderServiceProvider
-  implements Provider<RecommenderService> {
+  implements Provider<RecommenderService>
+{
   constructor(
     @inject(recommenderFilter)
     private recommenderServices: RecommenderService[],
