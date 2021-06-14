@@ -13,7 +13,8 @@ import {RecommenderService, recommender} from './recommender.service';
  */
 @bind(recommender('rest'))
 export class RecommenderRestServiceProvider
-  implements Provider<RecommenderService> {
+  implements Provider<RecommenderService>
+{
   constructor(
     @inject('datasources.recommender')
     protected datasource: RecommenderDataSource,

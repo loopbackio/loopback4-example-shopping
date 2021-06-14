@@ -21,7 +21,8 @@ export interface RecommenderGrpc {
  */
 @bind(recommender('grpc'))
 export class RecommenderGrpcServiceProvider
-  implements Provider<RecommenderService> {
+  implements Provider<RecommenderService>
+{
   constructor(
     // recommender must match the name property in the datasource json file
     @inject('datasources.recommender_grpc')

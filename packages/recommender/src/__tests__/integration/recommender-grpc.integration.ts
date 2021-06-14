@@ -30,7 +30,8 @@ describe('recommender', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let client: any;
   before(() => {
-    const RecommendationService = (loadRecommendationService() as unknown) as typeof Client;
+    const RecommendationService =
+      loadRecommendationService() as unknown as typeof Client;
     client = new RecommendationService(
       `localhost:${port}`,
       credentials.createInsecure(),

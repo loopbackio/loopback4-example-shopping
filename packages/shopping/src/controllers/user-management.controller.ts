@@ -321,9 +321,10 @@ export class UserManagementController {
       throw new HttpErrors.UnprocessableEntity('Invalid email address');
     }
 
-    const nodeMailer: NodeMailer = await this.userManagementService.requestPasswordReset(
-      resetPasswordInit.email,
-    );
+    const nodeMailer: NodeMailer =
+      await this.userManagementService.requestPasswordReset(
+        resetPasswordInit.email,
+      );
 
     if (nodeMailer.accepted.length) {
       return 'Successfully sent reset password link';
