@@ -91,7 +91,7 @@
     "@types/nodemailer": "6.4.1",
     "@types/uuid": "8.3.1",
     "concurrently": "6.2.0",
-    "cypress": "7.6.0",
+    "cypress": "7.7.0",
     "loopback4-example-recommender": "1.1.1",
     "mocha": "9.0.2",
     "source-map-support": "0.5.19",
