@@ -9,7 +9,7 @@ spec:
       name: shopping-base:latest
   source:
     git:
-      uri: https://github.com/strongloop/loopback4-example-shopping.git
+      uri: https://github.com/loopbackio/loopback4-example-shopping.git
       ref: master
     type: Git
   strategy:

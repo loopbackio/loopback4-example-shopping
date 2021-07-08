@@ -64,10 +64,10 @@ oc start-build shopping-base-image
 
 ## Use your forked repo as source
 
-If you fork the strongloop/loopback4-example-shopping repo and want to use your
+If you fork the loopbackio/loopback4-example-shopping repo and want to use your
 own repo as source instead, you should edit base.yaml and change uri and ref:
 
-1. Change uri `https://github.com/strongloop/loopback4-example-shopping.git` to
+1. Change uri `https://github.com/loopbackio/loopback4-example-shopping.git` to
    the uri of your git repository.
 2. Change ref `master` to the branch of your repo that you want to build from.
 3. Then run these commands to update the buildconfig and start a new build:
@@ -117,7 +117,7 @@ outside the scope of this README.
 
 If you want to use databases that are password protected or set up with
 different names, in different projects or outside the cluster, you will have to
-fork strongloop/loopback4-example-shopping and change the mongo.datasource.ts
+fork loopbackio/loopback4-example-shopping and change the mongo.datasource.ts
 and/or redis.datasource.ts in the packages/shopping/src/datasources directory.
 
 ## Exposing the application over https instead of http

@@ -29,8 +29,8 @@ There are a few approaches that we use to run or test the application:
 Similarly, we install/start `mongodb` and `redis` in different ways:
 
 1. Install `mongodb` and `redis` locally and start them as local processes
-2. [Use `travis` services for `mongodb` and `redis` for the CI](https://github.com/strongloop/loopback4-example-shopping/blob/master/.travis.yml#L15-L17)
-3. [Use `docker` to start `mongodb` and `redis` containers](https://github.com/strongloop/loopback4-example-shopping/blob/master/bin/start-dbs.sh)
+2. [Use `travis` services for `mongodb` and `redis` for the CI](https://github.com/loopbackio/loopback4-example-shopping/blob/master/.travis.yml#L15-L17)
+3. [Use `docker` to start `mongodb` and `redis` containers](https://github.com/loopbackio/loopback4-example-shopping/blob/master/bin/start-dbs.sh)
 
 You may start to wonder what's the best practice to deploy a composite
 application, such as the shopping example that consists of multiple
