@@ -1,6 +1,6 @@
 # @loopback/example-shopping
 
-![Continuous Integration Status](https://github.com/strongloop/loopback4-example-shopping/workflows/Continous%20Integration/badge.svg)
+![Continuous Integration Status](https://github.com/loopbackio/loopback4-example-shopping/workflows/Continous%20Integration/badge.svg)
 
 This project aims to represent an online ecommerce platform APIs to validate /
 test the LoopBack 4 framework readiness for GA. See
@@ -26,7 +26,7 @@ install MongoDB and Redis, you can run `npm run docker:start` to download their
 images and start the servers. Otherwise, you can skip this command.
 
 ```sh
-$ git clone https://github.com/strongloop/loopback4-example-shopping.git
+$ git clone https://github.com/loopbackio/loopback4-example-shopping.git
 $ cd loopback4-example-shopping
 $ npm i
 $ npm run docker:start
@@ -167,7 +167,7 @@ possible by the use of the `UserService` service provided by
 4. `return {token}` - send the JWT.
 
 You can see the details in
-[`packages/shopping/src/controllers/user-management.controller.ts`](https://github.com/strongloop/loopback4-example-shopping/blob/master/packages/shopping/src/controllers/user-management.controller.ts).
+[`packages/shopping/src/controllers/user-management.controller.ts`](https://github.com/loopbackio/loopback4-example-shopping/blob/master/packages/shopping/src/controllers/user-management.controller.ts).
 
 ### Authorization
 
@@ -306,7 +306,7 @@ started:
 ## Team
 
 See
-[all contributors](https://github.com/strongloop/loopback4-example-shopping/graphs/contributors).
+[all contributors](https://github.com/loopbackioo/loopback4-example-shopping/graphs/contributors).
 
 ## License
 

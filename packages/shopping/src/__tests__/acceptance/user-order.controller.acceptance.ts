@@ -5,7 +5,7 @@
 
 import {expect, supertest} from '@loopback/testlab';
 import {ShoppingApplication} from '../..';
-import {UserWithPassword, Order, User} from '../../models';
+import {Order, User, UserWithPassword} from '../../models';
 import {OrderRepository, UserRepository} from '../../repositories';
 import {UserManagementService} from '../../services';
 import {setupApplication} from './helper';
