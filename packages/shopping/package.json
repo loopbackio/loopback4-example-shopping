@@ -74,7 +74,7 @@
     "loopback-connector-kv-redis": "4.0.0",
     "loopback-connector-mongodb": "6.0.1",
     "loopback-connector-rest": "4.0.1",
-    "nodemailer": "6.6.1",
+    "nodemailer": "6.6.3",
     "uuid": "8.3.2",
     "yaml": "1.10.2"
   },
@@ -88,7 +88,7 @@
     "@types/lodash": "4.14.171",
     "@types/mocha": "9.0.0",
     "@types/node": "10.17.35",
-    "@types/nodemailer": "6.4.1",
+    "@types/nodemailer": "6.4.4",
     "@types/uuid": "8.3.1",
     "concurrently": "6.2.0",
     "cypress": "8.0.0",
