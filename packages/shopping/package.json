@@ -51,7 +51,7 @@
     "@loopback/authentication": "7.3.1",
     "@loopback/authentication-jwt": "0.9.2",
     "@loopback/authorization": "0.9.2",
-    "@loopback/boot": "3.4.1",
+    "@loopback/boot": "3.4.2",
     "@loopback/context": "3.17.0",
     "@loopback/core": "2.16.1",
     "@loopback/openapi-v3": "5.3.1",
