@@ -186,7 +186,7 @@ describe('UserManagementController', () => {
         .expect(422);
 
       expect(res.body.error.details[0].message).to.equal(
-        'should NOT be shorter than 8 characters',
+        'must NOT have fewer than 8 characters',
       );
     });
 
