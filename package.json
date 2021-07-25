@@ -55,7 +55,7 @@
     "@commitlint/config-lerna-scopes": "13.1.0",
     "@commitlint/travis-cli": "13.1.0",
     "@loopback/build": "7.0.0",
-    "@loopback/eslint-config": "10.2.1",
+    "@loopback/eslint-config": "11.0.0",
     "@loopback/testlab": "3.4.2",
     "@types/fs-extra": "9.0.12",
     "@types/node": "12.12.62",
