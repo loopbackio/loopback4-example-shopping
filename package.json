@@ -56,7 +56,7 @@
     "@commitlint/travis-cli": "12.1.4",
     "@loopback/build": "6.4.1",
     "@loopback/eslint-config": "10.2.1",
-    "@loopback/testlab": "3.4.1",
+    "@loopback/testlab": "3.4.2",
     "@types/fs-extra": "9.0.12",
     "@types/node": "12.12.62",
     "@typescript-eslint/eslint-plugin": "4.28.2",
