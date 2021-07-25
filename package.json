@@ -75,7 +75,7 @@
     "lerna": "4.0.0",
     "mocha": "9.0.2",
     "source-map-support": "0.5.19",
-    "testcontainers": "7.17.0",
+    "testcontainers": "7.18.0",
     "typescript": "4.3.5"
   },
   "copyright.owner": "IBM Corp.",
