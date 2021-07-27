@@ -24,13 +24,7 @@ import {
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import _ from 'lodash';
 import {PasswordHasherBindings, UserServiceBindings} from '../keys';
-import {
-  NodeMailer,
-  Product,
-  ResetPasswordInit,
-  User,
-  KeyAndPassword,
-} from '../models';
+import {Product, ResetPasswordInit, User, KeyAndPassword} from '../models';
 import {Credentials, UserRepository} from '../repositories';
 import {
   basicAuthorization,
@@ -47,6 +41,7 @@ import {
   UserProfileSchema,
 } from './specs/user-controller.specs';
 import isemail from 'isemail';
+import {SentMessageInfo} from 'nodemailer';
 
 @model()
 export class NewUserRequest extends User {
@@ -321,12 +316,12 @@ export class UserManagementController {
       throw new HttpErrors.UnprocessableEntity('Invalid email address');
     }
 
-    const nodeMailer: NodeMailer =
+    const sentMessageInfo: SentMessageInfo =
       await this.userManagementService.requestPasswordReset(
         resetPasswordInit.email,
       );
 
-    if (nodeMailer.accepted.length) {
+    if (sentMessageInfo.accepted.length) {
       return 'Successfully sent reset password link';
     }
     throw new HttpErrors.InternalServerError(
