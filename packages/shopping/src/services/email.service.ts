@@ -4,8 +4,8 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {bind, BindingScope} from '@loopback/core';
-import {EmailTemplate, NodeMailer, User} from '../models';
-import {createTransport} from 'nodemailer';
+import {EmailTemplate, User} from '../models';
+import {createTransport, SentMessageInfo} from 'nodemailer';
 
 @bind({scope: BindingScope.TRANSIENT})
 export class EmailService {
@@ -23,7 +23,7 @@ export class EmailService {
       },
     });
   }
-  async sendResetPasswordMail(user: User): Promise<NodeMailer> {
+  async sendResetPasswordMail(user: User): Promise<SentMessageInfo> {
     const transporter = await EmailService.setupTransporter();
     const emailTemplate = new EmailTemplate({
       to: user.email,

@@ -9,13 +9,14 @@ import {repository} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
 import {securityId, UserProfile} from '@loopback/security';
 import {PasswordHasherBindings} from '../keys';
-import {NodeMailer, User, UserWithPassword} from '../models';
+import {User, UserWithPassword} from '../models';
 import {Credentials, UserRepository} from '../repositories';
 import {PasswordHasher} from './hash.password.bcryptjs';
 import _ from 'lodash';
 import {EmailService} from './email.service';
 import {v4 as uuidv4} from 'uuid';
 import {subtractDates} from '../utils';
+import {SentMessageInfo} from 'nodemailer';
 
 export class UserManagementService implements UserService<User, Credentials> {
   constructor(
@@ -89,7 +90,7 @@ export class UserManagementService implements UserService<User, Credentials> {
     return user;
   }
 
-  async requestPasswordReset(email: string): Promise<NodeMailer> {
+  async requestPasswordReset(email: string): Promise<SentMessageInfo> {
     const noAccountFoundError =
       'No account associated with the provided email address.';
     const foundUser = await this.userRepository.findOne({
