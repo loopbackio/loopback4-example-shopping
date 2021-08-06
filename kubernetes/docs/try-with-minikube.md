@@ -89,5 +89,5 @@ minikube dashboard -p shopping-cluster
 ## Open the home page
 
 ```sh
-minikube service shopping-app -p shopping-cluster
+minikube service shopping -p shopping-cluster
 ```
