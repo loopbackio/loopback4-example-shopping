@@ -77,7 +77,7 @@ npm run docker:build
 
 ```sh
 helm dependency build kubernetes/shopping-app
-helm install --name shopping-app --debug kubernetes/shopping-app
+helm upgrade --install shopping-app --debug kubernetes/shopping-app -n shopping-app --create-namespace
 ```
 
 ## Start Minikube dashboard
