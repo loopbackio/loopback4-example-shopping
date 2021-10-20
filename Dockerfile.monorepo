@@ -1,6 +1,6 @@
 # Stage 1: build the monorepo
 # Use the full image so that binary modules can be built
-FROM node:16
+FROM node:17
 
 # Set to a non-root built-in user `node`
 USER node
