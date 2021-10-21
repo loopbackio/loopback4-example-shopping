@@ -85,7 +85,7 @@
     "@types/bcryptjs": "2.4.2",
     "@types/debug": "4.1.7",
     "@types/express": "4.17.13",
-    "@types/lodash": "4.14.175",
+    "@types/lodash": "4.14.176",
     "@types/mocha": "9.0.0",
     "@types/node": "10.17.35",
     "@types/nodemailer": "6.4.4",
