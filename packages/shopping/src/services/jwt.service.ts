@@ -46,7 +46,7 @@ export class JWTService implements TokenService {
       );
     } catch (error) {
       throw new HttpErrors.Unauthorized(
-        `Error verifying token : ${error.message}`,
+        `Error verifying token : ${(error as Error).message}`,
       );
     }
     return userProfile;

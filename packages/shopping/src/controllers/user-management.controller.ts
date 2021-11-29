@@ -6,7 +6,7 @@
 import {
   authenticate,
   TokenService,
-  UserService,
+  UserService
 } from '@loopback/authentication';
 import {TokenServiceBindings} from '@loopback/authentication-jwt';
 import {authorize} from '@loopback/authorization';
@@ -19,12 +19,14 @@ import {
   param,
   post,
   put,
-  requestBody,
+  requestBody
 } from '@loopback/rest';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
+import isemail from 'isemail';
 import _ from 'lodash';
+import {SentMessageInfo} from 'nodemailer';
 import {PasswordHasherBindings, UserServiceBindings} from '../keys';
-import {Product, ResetPasswordInit, User, KeyAndPassword} from '../models';
+import {KeyAndPassword, Product, ResetPasswordInit, User} from '../models';
 import {Credentials, UserRepository} from '../repositories';
 import {
   basicAuthorization,
@@ -32,16 +34,14 @@ import {
   RecommenderService,
   UserManagementService,
   validateCredentials,
-  validateKeyPassword,
+  validateKeyPassword
 } from '../services';
 import {OPERATION_SECURITY_SPEC} from '../utils';
 import {
   CredentialsRequestBody,
   PasswordResetRequestBody,
-  UserProfileSchema,
+  UserProfileSchema
 } from './specs/user-controller.specs';
-import isemail from 'isemail';
-import {SentMessageInfo} from 'nodemailer';
 
 @model()
 export class NewUserRequest extends User {
@@ -104,7 +104,7 @@ export class UserManagementController {
       return await this.userManagementService.createUser(newUserRequest);
     } catch (error) {
       // MongoError 11000 duplicate key
-      if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
+      if (error?.code === 11000 && error?.errmsg?.includes('index: uniqueEmail')) {
         throw new HttpErrors.Conflict('Email value is already taken');
       } else {
         throw error;
@@ -138,15 +138,11 @@ export class UserManagementController {
     @param.path.string('userId') userId: string,
     @requestBody({description: 'update user'}) user: User,
   ): Promise<void> {
-    try {
-      // Only admin can assign roles
-      if (!currentUserProfile.roles.includes('admin')) {
-        delete user.roles;
-      }
-      return await this.userRepository.updateById(userId, user);
-    } catch (e) {
-      return e;
+    // Only admin can assign roles
+    if (!currentUserProfile.roles.includes('admin')) {
+      delete user.roles;
     }
+    return await this.userRepository.updateById(userId, user);
   }
 
   @get('/users/{userId}', {

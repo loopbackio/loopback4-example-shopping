@@ -3,11 +3,8 @@ import {
   asMiddleware,
   HttpErrors,
   LogError,
-  Middleware,
-  Response,
-  MiddlewareContext,
-  RestBindings,
-  RestMiddlewareGroups,
+  Middleware, MiddlewareContext, Response, RestBindings,
+  RestMiddlewareGroups
 } from '@loopback/rest';
 
 @injectable(
@@ -32,7 +29,7 @@ export class ErrorHandlerMiddlewareProvider implements Provider<Middleware> {
         return await next();
       } catch (err) {
         // Any error handling goes here
-        return this.handleError(ctx, err);
+        return this.handleError(ctx, err as Error);
       }
     };
     return middleware;

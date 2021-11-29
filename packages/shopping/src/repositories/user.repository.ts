@@ -9,7 +9,7 @@ import {
   HasManyRepositoryFactory,
   HasOneRepositoryFactory,
   juggler,
-  repository,
+  repository
 } from '@loopback/repository';
 import {Order, User, UserCredentials} from '../models';
 import {OrderRepository} from './order.repository';
@@ -54,7 +54,7 @@ export class UserRepository extends DefaultCrudRepository<
     try {
       return await this.userCredentials(userId).get();
     } catch (err) {
-      if (err.code === 'ENTITY_NOT_FOUND') {
+      if (err?.code === 'ENTITY_NOT_FOUND') {
         return undefined;
       }
       throw err;
