@@ -89,7 +89,7 @@
     "@types/mocha": "9.0.0",
     "@types/node": "10.17.35",
     "@types/nodemailer": "6.4.4",
-    "@types/uuid": "8.3.3",
+    "@types/uuid": "8.3.4",
     "concurrently": "7.0.0",
     "cypress": "9.2.0",
     "loopback4-example-recommender": "1.1.1",
