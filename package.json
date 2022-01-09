@@ -50,10 +50,10 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "@commitlint/cli": "16.0.1",
+    "@commitlint/cli": "16.0.2",
     "@commitlint/config-conventional": "16.0.0",
     "@commitlint/config-lerna-scopes": "16.0.0",
-    "@commitlint/travis-cli": "16.0.1",
+    "@commitlint/travis-cli": "16.0.2",
     "@loopback/build": "7.0.1",
     "@loopback/eslint-config": "11.0.1",
     "@loopback/testlab": "3.4.3",
