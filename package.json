@@ -64,7 +64,7 @@
     "commitizen": "4.2.4",
     "concurrently": "7.0.0",
     "cz-conventional-changelog": "3.3.0",
-    "dotenv": "11.0.0",
+    "dotenv": "12.0.4",
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-cypress": "2.12.1",
