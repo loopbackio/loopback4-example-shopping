@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [10, 12, 14, 16, 17]
+        node-version: [12, 14, 16, 17]
         mongodb-version: [4.4]
         redis-version: [6]
         include:
@@ -66,7 +66,7 @@ jobs:
           brew services start redis
       - name: Bootstrap project
         run: |
-          npm ci --ignore-scripts
+          npm ci --ignore-scripts --no-audit --prefer-offline
           npm run postinstall
       - name: Build project
         run: npm run build
@@ -85,7 +85,7 @@ jobs:
           node-version: 16
       - name: Bootstrap project
         run: |
-          npm ci --ignore-scripts
+          npm ci --ignore-scripts --no-audit --prefer-offline
           npm run postinstall
       - name: Verify code linting
         run: npm run lint
@@ -104,7 +104,7 @@ jobs:
           node-version: 16
       - name: Bootstrap project
         run: |
-          npm ci --ignore-scripts
+          npm ci --ignore-scripts --no-audit --prefer-offline
           npm run postinstall
       - name: Verify commit linting
         run: npx commitlint --from origin/master --to HEAD --verbose
