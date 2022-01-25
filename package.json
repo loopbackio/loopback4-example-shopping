@@ -74,7 +74,7 @@
     "husky": "7.0.4",
     "lerna": "4.0.0",
     "mocha": "9.1.3",
-    "source-map-support": "0.5.20",
+    "source-map-support": "0.5.21",
     "testcontainers": "8.2.0",
     "typescript": "4.3.5"
   },
