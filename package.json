@@ -11,7 +11,7 @@
     "node": ">=8.9"
   },
   "scripts": {
-    "postinstall": "lerna bootstrap",
+    "postinstall": "lerna bootstrap --force-local",
     "build": "lerna run build",
     "clean": "lerna run clean",
     "commit": "git-cz",
