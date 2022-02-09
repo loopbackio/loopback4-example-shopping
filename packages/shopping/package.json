@@ -57,7 +57,7 @@
     "@loopback/openapi-v3": "6.0.1",
     "@loopback/repository": "3.7.2",
     "@loopback/rest": "10.0.1",
-    "@loopback/rest-explorer": "3.3.3",
+    "@loopback/rest-explorer": "4.0.1",
     "@loopback/security": "0.5.3",
     "@loopback/service-proxy": "3.2.3",
     "@types/jsonwebtoken": "8.5.8",
