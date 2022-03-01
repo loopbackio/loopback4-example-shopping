@@ -40,7 +40,7 @@
     "@grpc/grpc-js": "1.5.6",
     "@grpc/proto-loader": "0.6.6",
     "@loopback/http-server": "2.5.3",
-    "express": "4.17.1"
+    "express": "4.17.3"
   },
   "devDependencies": {
     "@loopback/build": "7.0.1",
