@@ -16,6 +16,12 @@ module.exports = {
   ],
   rules: {
     'mocha/handle-done-callback': 'off',
+    '@typescript-eslint/no-misused-promises': [
+      'error',
+      {
+        checksVoidReturn: false,
+      },
+    ],
   },
   parserOptions: {
     createDefaultProgram: true,
