@@ -95,7 +95,7 @@
     "loopback4-example-recommender": "1.1.1",
     "mocha": "9.2.1",
     "source-map-support": "0.5.21",
-    "typescript": "4.5.5"
+    "typescript": "4.6.2"
   },
   "copyright.owner": "IBM Corp."
 }
