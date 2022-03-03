@@ -65,7 +65,7 @@
     "concurrently": "7.0.0",
     "cz-conventional-changelog": "3.3.0",
     "dotenv": "16.0.0",
-    "eslint": "7.32.0",
+    "eslint": "8.10.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-cypress": "2.12.1",
     "eslint-plugin-eslint-plugin": "4.0.2",
