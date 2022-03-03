@@ -76,7 +76,7 @@
     "mocha": "9.2.1",
     "source-map-support": "0.5.21",
     "testcontainers": "8.4.0",
-    "typescript": "4.5.5"
+    "typescript": "4.6.2"
   },
   "copyright.owner": "IBM Corp.",
   "config": {
