@@ -79,7 +79,7 @@
     "yaml": "2.0.1"
   },
   "devDependencies": {
-    "@grpc/grpc-js": "1.6.6",
+    "@grpc/grpc-js": "1.6.7",
     "@loopback/build": "8.1.2",
     "@loopback/testlab": "4.1.2",
     "@types/bcryptjs": "2.4.2",
