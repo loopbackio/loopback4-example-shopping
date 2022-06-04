@@ -12,7 +12,7 @@ env:
 
 jobs:
   test:
-    name: Test
+    name: Tests
     timeout-minutes: 60
     strategy:
       matrix:
