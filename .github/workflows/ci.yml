@@ -17,14 +17,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: 16
+        node-version: [14, 16, 17, 18]
         mongodb-version: [4.4]
         redis-version: [6]
         include:
           - os: windows-latest
-            node-version: 16
+            node-version: [14, 16, 17, 18]
           - os: macos-latest
-            node-version: 16
+            node-version: [14, 16, 17, 18]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
