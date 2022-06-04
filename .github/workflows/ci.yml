@@ -22,9 +22,9 @@ jobs:
         redis-version: [6]
         include:
           - os: windows-latest
-            node-version: [14, 16, 17, 18]
+            node-version: 16
           - os: macos-latest
-            node-version: [14, 16, 17, 18]
+            node-version: 16
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
