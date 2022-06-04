@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        os: [ubuntu-18.04]
+        os: [ubuntu-latest]
         node-version: [14, 16, 17, 18]
         mongodb-version: [4.4]
         redis-version: [6]
