@@ -40,7 +40,7 @@ jobs:
           mongodb-version: ${{ matrix.mongodb-version }}
       - name: Start Redis Ubuntu
         if: matrix.os == 'ubuntu-latest'
-        uses: supercharge/redis-github-action@1.4.0
+        uses: supercharge/redis-github-action@1.8.0
         with:
           redis-version: ${{ matrix.redis-version }}
       - name: Start MongoDB Windows
