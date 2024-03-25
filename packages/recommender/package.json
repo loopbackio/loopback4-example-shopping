@@ -40,12 +40,12 @@
     "@grpc/grpc-js": "1.6.7",
     "@grpc/proto-loader": "0.6.13",
     "@loopback/http-server": "4.0.0",
-    "express": "4.18.1"
+    "express": "4.19.2"
   },
   "devDependencies": {
     "@loopback/build": "9.0.0",
     "@loopback/testlab": "5.0.0",
-    "@types/express": "4.17.13",
+    "@types/express": "4.17.21",
     "@types/node": "17.0.42",
     "typescript": "4.7.3"
   },
