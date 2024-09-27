@@ -61,7 +61,7 @@
     "@types/node": "17.0.42",
     "@typescript-eslint/eslint-plugin": "5.27.1",
     "@typescript-eslint/parser": "5.27.1",
-    "commitizen": "4.2.4",
+    "commitizen": "4.3.1",
     "concurrently": "7.2.1",
     "cz-conventional-changelog": "3.3.0",
     "dotenv": "16.0.1",
