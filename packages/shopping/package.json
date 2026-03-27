@@ -69,7 +69,7 @@
     "express": "4.18.1",
     "isemail": "3.2.0",
     "jsonwebtoken": "8.5.1",
-    "lodash": "4.17.21",
+    "lodash": "4.17.23",
     "loopback-connector-grpc": "2.0.0",
     "loopback-connector-kv-redis": "4.0.0",
     "loopback-connector-mongodb": "6.2.0",
