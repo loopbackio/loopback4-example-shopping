@@ -28,9 +28,9 @@ jobs:
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.7.0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v2.5.2
         with:
           node-version: ${{ matrix.node-version }}
       - name: Start MongoDB Ubuntu
@@ -78,11 +78,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.7.0
       - name: Use Node.js 16
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v2.5.2
         with:
-          node-version: 16
+          node-version: 16.20.2
       - name: Bootstrap project
         run: |
           npm ci --ignore-scripts
@@ -95,13 +95,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.7.0
         with:
           fetch-depth: 0
       - name: Use Node.js 16
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v2.5.2
         with:
-          node-version: 16
+          node-version: 16.20.2
       - name: Bootstrap project
         run: |
           npm ci --ignore-scripts
