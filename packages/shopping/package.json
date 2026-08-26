@@ -75,7 +75,7 @@
     "loopback-connector-mongodb": "6.2.0",
     "loopback-connector-rest": "4.0.1",
     "nodemailer": "6.7.5",
-    "uuid": "8.3.2",
+    "uuid": "11.1.1",
     "yaml": "2.1.1"
   },
   "devDependencies": {
